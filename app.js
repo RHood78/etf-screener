@@ -99,7 +99,7 @@ function initializeUI() {
     }
 }
 
-// --- 3. BROWSER-NATIVE LIVE API INTERACTION (SERVERLESS BYPASS VIA ALLORIGINS) ---
+// --- 3. BROWSER-NATIVE LIVE API INTERACTION (SERVERLESS BYPASS VIA ALLORIGINS RAW) ---
 async function fetchAutomatedDataStream() {
     const statusBox = document.getElementById("fed-status");
     const factorBox = document.getElementById("macro-factor-display");
@@ -110,27 +110,23 @@ async function fetchAutomatedDataStream() {
     }
 
     try {
-        // Collect core 52 real stock tickers from the array
+        // Collect core 52 real stock tickers from the database layout
         const realTickers = etfDatabase.slice(0, 52).map(etf => etf.ticker);
         const symbolsString = realTickers.join(',');
 
-        // Formulate the target Yahoo Finance JSON REST query endpoint
+        // Formulate target Yahoo Finance JSON REST query endpoint
         const rawYahooUrl = `https://yahoo.com{symbolsString}`;
         
-        // Wrap the query using the resilient AllOrigins parsing cloud proxy
+        // Use the /raw endpoint with explicit URL formatting to bypass JSON string wrapping
         const secureProxyUrl = `https://allorigins.win{encodeURIComponent(rawYahooUrl)}`;
 
         let response = await fetch(secureProxyUrl);
-        if (!response.ok) throw new Error("AllOrigins network channel connection rejected.");
+        if (!response.ok) throw new Error("AllOrigins proxy link handshake rejected.");
         
-        let wrapperResult = await response.json();
-        
-        // AllOrigins returns the raw API response safely wrapped as a text string inside the '.contents' field
-        if (!wrapperResult.contents) throw new Error("Empty telemetry response.");
-        let jsonResult = JSON.parse(wrapperResult.contents);
-        
+        // /raw directly outputs Yahoo's structural JSON without text container boxing
+        let jsonResult = await response.json();
         let quotesArray = jsonResult.quoteResponse.result;
-        if (!quotesArray || quotesArray.length === 0) throw new Error("Malformed finance quote structure.");
+        if (!quotesArray || quotesArray.length === 0) throw new Error("Malformed finance stream.");
         
         let liveMarketMap = {};
         quotesArray.forEach(quote => {
@@ -143,7 +139,7 @@ async function fetchAutomatedDataStream() {
             }
         });
 
-        // Merge hot variables right back over static layouts
+        // Merge hot variables right back over static matrix layouts
         currentDataset = etfDatabase.map(asset => {
             const fresh = liveMarketMap[asset.ticker];
             if (fresh) {
@@ -152,7 +148,7 @@ async function fetchAutomatedDataStream() {
                     cat: asset.cat,
                     price: fresh.price && fresh.price > 0 ? fresh.price : asset.price,
                     pe: fresh.pe && fresh.pe > 0 ? fresh.pe : asset.pe,
-                    // Convert decimal structures (0.0345) to readable percentage format metrics (3.45)
+                    // Convert decimal formatting structures (0.0345) to readable percentage format fields (3.45)
                     yield: fresh.yield && fresh.yield > 0 ? parseFloat((fresh.yield * 100).toFixed(2)) : asset.yield
                 };
             }
@@ -161,7 +157,7 @@ async function fetchAutomatedDataStream() {
 
         if (statusBox) {
             statusBox.className = "status-badge success";
-            statusBox.innerText = "✓ Serverless Mirror Active: Synced Live via Yahoo Finance & AllOrigins.";
+            statusBox.innerText = "✓ Serverless Mirror Active: Synced Live via Yahoo Finance Network.";
         }
         if (factorBox) {
             factorBox.innerText = "Macro Scale Factor: " + macroScaleFactor.toFixed(4) + " (Live Sync)";
@@ -181,6 +177,7 @@ async function fetchAutomatedDataStream() {
 
     calculateMetrics();
 }
+
 
 // --- 4. MULTI-FACTOR MATHEMATICAL CALCULATIONS PIPELINE ---
 function calculateMetrics() {
