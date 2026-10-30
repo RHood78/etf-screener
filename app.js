@@ -108,14 +108,9 @@ async function fetchAutomatedDataStream() {
     statusBox.innerText = "Querying Live Market Data (Serverless Engine)...";
 
     try {
-        // Collect core 52 real stock tickers from the array
         const realTickers = etfDatabase.slice(0, 52).map(etf => etf.ticker);
         const symbolsString = realTickers.join(',');
-
-        // Reach out to Yahoo Finance's native open query layout endpoint
         const rawYahooUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbolsString}`;
-        
-        // Pass through an open CORS proxy so the web browser lets the script pull the data
         const secureProxyUrl = `https://corsproxy.io/?${encodeURIComponent(rawYahooUrl)}`;
 
         let response = await fetch(secureProxyUrl);
@@ -135,7 +130,6 @@ async function fetchAutomatedDataStream() {
             }
         });
 
-        // Merge hot variables right back over static layouts
         currentDataset = etfDatabase.map(asset => {
             const fresh = liveMarketMap[asset.ticker];
             if (fresh) {
@@ -144,7 +138,6 @@ async function fetchAutomatedDataStream() {
                     cat: asset.cat,
                     price: fresh.price && fresh.price > 0 ? fresh.price : asset.price,
                     pe: fresh.pe && fresh.pe > 0 ? fresh.pe : asset.pe,
-                    // Convert decimal structures (0.0345) to readable percentage format metrics (3.45)
                     yield: fresh.yield && fresh.yield > 0 ? parseFloat((fresh.yield * 100).toFixed(2)) : asset.yield
                 };
             }
@@ -289,8 +282,7 @@ function exportResultsToCSV() {
     });
 
     let csvContent = "data:text/csv;charset=utf-8," 
-        + csvRows.map(e => e.map(val => '"' + val + '"').join(",")).join("
-");
+        + csvRows.map(e => e.map(val => '"' + val + '"').join(",")).join("\n");
 
     const encodedUri = encodeURI(csvContent);
     const downloadAnchor = document.createElement("a");
