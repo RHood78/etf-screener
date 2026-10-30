@@ -182,7 +182,6 @@ async function fetchAutomatedDataStream() {
     calculateMetrics();
 }
 
-
 // --- 4. MULTI-FACTOR MATHEMATICAL CALCULATIONS PIPELINE ---
 function calculateMetrics() {
     let results = [];
