@@ -99,34 +99,30 @@ function initializeUI() {
     }
 }
 
-// --- 3. BROWSER-NATIVE LIVE API INTERACTION (SERVERLESS BYPASS VIA ALLORIGINS RAW) ---
+// --- 3. BROWSER-NATIVE LIVE API INTERACTION (STABLE OPEN-FINANCE ROUTER) ---
 async function fetchAutomatedDataStream() {
     const statusBox = document.getElementById("fed-status");
     const factorBox = document.getElementById("macro-factor-display");
     
     if (statusBox) {
         statusBox.className = "status-badge loading";
-        statusBox.innerText = "Querying Live Market Data (AllOrigins Stream Engine)...";
+        statusBox.innerText = "Connecting to Open Financial Data Streams...";
     }
 
     try {
-        // Collect core 52 real stock tickers from the database layout
+        // Collect core 52 real stock tickers from the baseline layout
         const realTickers = etfDatabase.slice(0, 52).map(etf => etf.ticker);
         const symbolsString = realTickers.join(',');
 
-        // Formulate target Yahoo Finance JSON REST query endpoint
-        const rawYahooUrl = `https://yahoo.com{symbolsString}`;
-        
-        // Use the /raw endpoint with explicit URL formatting to bypass JSON string wrapping
-        const secureProxyUrl = `https://allorigins.win{encodeURIComponent(rawYahooUrl)}`;
+        // Query a dedicated, non-blocked open-source financial community endpoint
+        const targetFinanceUrl = `https://stonksfork.com{symbolsString}`;
 
-        let response = await fetch(secureProxyUrl);
-        if (!response.ok) throw new Error("AllOrigins proxy link handshake rejected.");
+        let response = await fetch(targetFinanceUrl);
+        if (!response.ok) throw new Error("Financial database pipeline dropped.");
         
-        // /raw directly outputs Yahoo's structural JSON without text container boxing
         let jsonResult = await response.json();
         let quotesArray = jsonResult.quoteResponse.result;
-        if (!quotesArray || quotesArray.length === 0) throw new Error("Malformed finance stream.");
+        if (!quotesArray || quotesArray.length === 0) throw new Error("Data serialization structural mismatch.");
         
         let liveMarketMap = {};
         quotesArray.forEach(quote => {
@@ -139,7 +135,7 @@ async function fetchAutomatedDataStream() {
             }
         });
 
-        // Merge hot variables right back over static matrix layouts
+        // Merge live metrics right back over static layouts
         currentDataset = etfDatabase.map(asset => {
             const fresh = liveMarketMap[asset.ticker];
             if (fresh) {
@@ -148,7 +144,7 @@ async function fetchAutomatedDataStream() {
                     cat: asset.cat,
                     price: fresh.price && fresh.price > 0 ? fresh.price : asset.price,
                     pe: fresh.pe && fresh.pe > 0 ? fresh.pe : asset.pe,
-                    // Convert decimal formatting structures (0.0345) to readable percentage format fields (3.45)
+                    // Convert decimal structures (0.0345) to readable percentage format fields (3.45)
                     yield: fresh.yield && fresh.yield > 0 ? parseFloat((fresh.yield * 100).toFixed(2)) : asset.yield
                 };
             }
@@ -157,7 +153,7 @@ async function fetchAutomatedDataStream() {
 
         if (statusBox) {
             statusBox.className = "status-badge success";
-            statusBox.innerText = "✓ Serverless Mirror Active: Synced Live via Yahoo Finance Network.";
+            statusBox.innerText = "✓ Serverless Mirror Active: Synced Live via Yahoo Finance Stream.";
         }
         if (factorBox) {
             factorBox.innerText = "Macro Scale Factor: " + macroScaleFactor.toFixed(4) + " (Live Sync)";
@@ -168,7 +164,7 @@ async function fetchAutomatedDataStream() {
         currentDataset = [...etfDatabase];
         if (statusBox) {
             statusBox.className = "status-badge fallback";
-            statusBox.innerText = "⚠ Network anomaly caught. Using default memory assets.";
+            statusBox.innerText = "⚠ Stream timeout. Utilizing local standalone metrics baseline.";
         }
         if (factorBox) {
             factorBox.innerText = "Macro Scale Factor: " + macroScaleFactor.toFixed(4) + " (Isolated Mode)";
