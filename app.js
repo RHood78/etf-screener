@@ -99,25 +99,38 @@ function initializeUI() {
     }
 }
 
-// --- 3. BROWSER-NATIVE LIVE API INTERACTION (SERVERLESS BYPASS) ---
+// --- 3. BROWSER-NATIVE LIVE API INTERACTION (SERVERLESS BYPASS VIA ALLORIGINS) ---
 async function fetchAutomatedDataStream() {
     const statusBox = document.getElementById("fed-status");
     const factorBox = document.getElementById("macro-factor-display");
     
-    statusBox.className = "status-badge loading";
-    statusBox.innerText = "Querying Live Market Data (Serverless Engine)...";
+    if (statusBox) {
+        statusBox.className = "status-badge loading";
+        statusBox.innerText = "Querying Live Market Data (AllOrigins Stream Engine)...";
+    }
 
     try {
+        // Collect core 52 real stock tickers from the array
         const realTickers = etfDatabase.slice(0, 52).map(etf => etf.ticker);
         const symbolsString = realTickers.join(',');
-        const rawYahooUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbolsString}`;
-        const secureProxyUrl = `https://corsproxy.io/?${encodeURIComponent(rawYahooUrl)}`;
+
+        // Formulate the target Yahoo Finance JSON REST query endpoint
+        const rawYahooUrl = `https://yahoo.com{symbolsString}`;
+        
+        // Wrap the query using the resilient AllOrigins parsing cloud proxy
+        const secureProxyUrl = `https://allorigins.win{encodeURIComponent(rawYahooUrl)}`;
 
         let response = await fetch(secureProxyUrl);
-        if (!response.ok) throw new Error("API infrastructure connection error.");
+        if (!response.ok) throw new Error("AllOrigins network channel connection rejected.");
         
-        let jsonResult = await response.json();
+        let wrapperResult = await response.json();
+        
+        // AllOrigins returns the raw API response safely wrapped as a text string inside the '.contents' field
+        if (!wrapperResult.contents) throw new Error("Empty telemetry response.");
+        let jsonResult = JSON.parse(wrapperResult.contents);
+        
         let quotesArray = jsonResult.quoteResponse.result;
+        if (!quotesArray || quotesArray.length === 0) throw new Error("Malformed finance quote structure.");
         
         let liveMarketMap = {};
         quotesArray.forEach(quote => {
@@ -130,6 +143,7 @@ async function fetchAutomatedDataStream() {
             }
         });
 
+        // Merge hot variables right back over static layouts
         currentDataset = etfDatabase.map(asset => {
             const fresh = liveMarketMap[asset.ticker];
             if (fresh) {
@@ -138,26 +152,36 @@ async function fetchAutomatedDataStream() {
                     cat: asset.cat,
                     price: fresh.price && fresh.price > 0 ? fresh.price : asset.price,
                     pe: fresh.pe && fresh.pe > 0 ? fresh.pe : asset.pe,
+                    // Convert decimal structures (0.0345) to readable percentage format metrics (3.45)
                     yield: fresh.yield && fresh.yield > 0 ? parseFloat((fresh.yield * 100).toFixed(2)) : asset.yield
                 };
             }
             return asset;
         });
 
-        statusBox.className = "status-badge success";
-        statusBox.innerText = "✓ Serverless Mirror Active: Synced Live via Yahoo Finance Network.";
-        factorBox.innerText = "Macro Scale Factor: " + macroScaleFactor.toFixed(4) + " (Live Sync)";
+        if (statusBox) {
+            statusBox.className = "status-badge success";
+            statusBox.innerText = "✓ Serverless Mirror Active: Synced Live via Yahoo Finance & AllOrigins.";
+        }
+        if (factorBox) {
+            factorBox.innerText = "Macro Scale Factor: " + macroScaleFactor.toFixed(4) + " (Live Sync)";
+        }
 
     } catch (err) {
         console.error("Pipeline failure, using hardcoded constants:", err);
         currentDataset = [...etfDatabase];
-        statusBox.className = "status-badge fallback";
-        statusBox.innerText = "⚠ Network anomaly caught. Using default memory assets.";
-        factorBox.innerText = "Macro Scale Factor: " + macroScaleFactor.toFixed(4) + " (Isolated Mode)";
+        if (statusBox) {
+            statusBox.className = "status-badge fallback";
+            statusBox.innerText = "⚠ Network anomaly caught. Using default memory assets.";
+        }
+        if (factorBox) {
+            factorBox.innerText = "Macro Scale Factor: " + macroScaleFactor.toFixed(4) + " (Isolated Mode)";
+        }
     }
 
     calculateMetrics();
 }
+
 
 // --- 4. MULTI-FACTOR MATHEMATICAL CALCULATIONS PIPELINE ---
 function calculateMetrics() {
