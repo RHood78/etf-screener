@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Dividend ETF Asset Screener</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Quantum Dividend ETF Asset Screener</h1>
+            <p class="subtitle">Multi-Factor Mathematical Evaluation Matrix Pipeline</p>
+        </div>
+    </header>
+    <main>
+        <div class="macro-banner">
+            <span id="fed-status" class="status-badge normal">Initializing Matrix...</span>
+            <span id="macro-factor-display" class="factor-display">Macro Scale Factor: 1.0450</span>
+        </div>
+
+        <section class="control-panel">
+            <h2>Ingestion & Workbook Configuration</h2>
+            <button id="toggle-importer" class="btn-secondary">⚙️ Toggle Manual CSV Workbook Feed</button>
+            <div id="import-container" class="import-area hidden">
+                <textarea id="csv-input" placeholder="Paste workbook data here... (Format: Ticker, Price, P/E, Yield, Category)"></textarea>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button id="btn-process-csv" class="btn-primary">⚡ Ingest CSV Workbook</button>
+                    <button id="btn-reset" class="btn-secondary">🔄 Reset Stream to Live Baseline</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="results-panel">
+            <div class="results-header">
+                <h2>Top 20 Filtered Investment Assets</h2>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Asset Profile</th>
+                            <th>Market Price</th>
+                            <th>Adjusted P/E</th>
+                            <th>Blended Growth</th>
+                            <th>Dividend Yield</th>
+                            <th>PEGY Ratio</th>
+                            <th>FCF Yield</th>
+                            <th>Strategy Profile</th>
+                            <th>Cash Flow Insight</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr>
+                            <td colspan="9" style="text-align:center; color:var(--text-muted);">Awaiting telemetry stream sync sequence...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>Quantum Screener Core Engine — Powered by Yahoo Finance Open Datastreams</p>
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>
