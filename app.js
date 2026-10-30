@@ -99,84 +99,135 @@ function initializeUI() {
     }
 }
 
-// --- 3. BROWSER-NATIVE LIVE API INTERACTION (RESILIENT, NON-BLOCKING PIPELINE) ---
+/**
+ * SECTION 3: RESILIENT, NON-BLOCKING API CONNECTOR & FALLBACK ROUTINE
+ * Replaces the existing data fetching mechanism to handle public CORS proxy throttling gracefully.
+ * Fails over to static baseline telemetry math calculations when live streams are blocked.
+ */
+
 async function fetchAutomatedDataStream() {
-    const statusBox = document.getElementById("fed-status");
-    const factorBox = document.getElementById("macro-factor-display");
+    console.log("Initializing telemetry stream sync sequence...");
     
-    if (statusBox) {
-        statusBox.className = "status-badge loading";
-        statusBox.innerText = "Querying Live Market Data (Resilient Engine)...";
-    }
+    // Explicit baseline tickers and math parameters to construct matrix if live API fails
+    const baselineDefinitions = {
+        MACRO_SCALE_FACTOR: 1.0450,
+        assets: [
+            { ticker: 'SCHD', basePrice: 82.50, pe: 15.2, growth: 0.075, divYield: 0.034, fcf: 0.062 },
+            { ticker: 'VYM', basePrice: 121.20, pe: 16.1, growth: 0.068, divYield: 0.031, fcf: 0.058 },
+            { ticker: 'DGRO', basePrice: 58.40, pe: 17.5, growth: 0.092, divYield: 0.024, fcf: 0.065 },
+            { ticker: 'VIG', basePrice: 192.10, pe: 22.4, growth: 0.085, divYield: 0.019, fcf: 0.052 },
+            { ticker: 'JEPI', basePrice: 56.80, pe: 14.0, growth: 0.045, divYield: 0.072, fcf: 0.081 }
+        ]
+    };
 
+    // Primary live data stream configuration using standard endpoints
+    const primaryUrl = 'https://yahoo.com' + 
+                       baselineDefinitions.assets.map(a => a.ticker).join(',');
+    
+    // Non-blocking architecture uses a robust fallback catch block
     try {
-        const realTickers = etfDatabase.slice(0, 52).map(etf => etf.ticker);
-        const symbolsString = realTickers.join(',');
+        // Attempt live stream pull using a standard public CORS proxy architecture
+        const proxyUrl = 'https://allorigins.win' + encodeURIComponent(primaryUrl);
         
-        // Using an open-source, ultra-stable data mirror network
-        const targetUrl = `https://allorigins.win{encodeURIComponent('https://yahoo.com' + symbolsString)}`;
-
-        let response = await fetch(targetUrl);
-        if (!response.ok) throw new Error("API stream connection dropped.");
+        const response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error(`Network throttled or proxy down (Status: ${response.status})`);
         
-        let jsonResult = await response.json();
-        let quotesArray = jsonResult?.quoteResponse?.result;
+        const wrapper = await response.json();
+        const data = JSON.parse(wrapper.contents);
         
-        if (quotesArray && quotesArray.length > 0) {
-            let liveMarketMap = {};
-            quotesArray.forEach(quote => {
-                if (quote && quote.symbol) {
-                    liveMarketMap[quote.symbol] = {
-                        price: quote.regularMarketPrice,
-                        pe: quote.trailingPE || null,
-                        yield: quote.dividendYield || quote.trailingAnnualDividendYield || null
-                    };
-                }
-            });
-
-            // Merge variables over baseline
-            currentDataset = etfDatabase.map(asset => {
-                const fresh = liveMarketMap[asset.ticker];
-                if (fresh) {
-                    return {
-                        ticker: asset.ticker,
-                        cat: asset.cat,
-                        price: fresh.price && fresh.price > 0 ? fresh.price : asset.price,
-                        pe: fresh.pe && fresh.pe > 0 ? fresh.pe : asset.pe,
-                        yield: fresh.yield && fresh.yield > 0 ? parseFloat((fresh.yield * 100).toFixed(2)) : asset.yield
-                    };
-                }
-                return asset;
-            });
-
-            if (statusBox) {
-                statusBox.className = "status-badge success";
-                statusBox.innerText = "✓ Serverless Mirror Active: Synced Live via Financial Network.";
-            }
-        } else {
-            throw new Error("Empty or malformed market data response.");
+        if (!data.quoteResponse || !data.quoteResponse.result) {
+            throw new Error("Invalid telemetry stream format received.");
         }
-
-    } catch (err) {
-        console.warn("API proxy block caught. Gracefully reverting to internal data baseline:", err.message);
         
-        // Crucial Fix: If the internet or proxy fails, load the baseline data instantly instead of freezing the table!
-        currentDataset = [...etfDatabase];
+        console.log("Live stream active. Syncing Yahoo Finance matrix data...");
+        const processedAssets = data.quoteResponse.result.map(quote => {
+            const base = baselineDefinitions.assets.find(a => a.ticker === quote.symbol) || {};
+            return calculateMatrixWeights({
+                ticker: quote.symbol,
+                price: quote.regularMarketPrice || base.basePrice,
+                pe: quote.trailingPE || base.pe,
+                growth: base.growth || 0.05,
+                divYield: (quote.trailingAnnualDividendYield) || base.divYield,
+                fcf: base.fcf || 0.05
+            }, baselineDefinitions.MACRO_SCALE_FACTOR);
+        });
+
+        renderMatrixTable(processedAssets);
         
-        if (statusBox) {
-            statusBox.className = "status-badge fallback";
-            statusBox.innerText = "⚠ API Throttled. Serving Local Baseline Asset Definitions Safely.";
-        }
+    } catch (error) {
+        console.warn(`⚠️ CORS Proxy Throttled or Blocked: ${error.message}`);
+        console.log("Activating resilient non-blocking baseline mathematical definitions sequence...");
+        
+        // Execute math locally on fallback definitions to ensure table renders completely
+        const fallbackAssets = baselineDefinitions.assets.map(asset => {
+            return calculateMatrixWeights({
+                ticker: asset.ticker,
+                price: asset.basePrice,
+                pe: asset.pe,
+                growth: asset.growth,
+                divYield: asset.divYield,
+                fcf: asset.fcf
+            }, baselineDefinitions.MACRO_SCALE_FACTOR);
+        });
+        
+        renderMatrixTable(fallbackAssets);
     }
-
-    if (factorBox) {
-        factorBox.innerText = "Macro Scale Factor: " + macroScaleFactor.toFixed(4);
-    }
-
-    // Always run calculation pipeline, regardless of API errors
-    calculateMetrics();
 }
 
+/**
+ * Audit and Calculation Weights Evaluator
+ * Runs the Multi-Factor Mathematical Evaluation Matrix Pipeline formulas
+ */
+function calculateMatrixWeights(raw, scaleFactor) {
+    // PEGY Ratio = P/E / (Blended Growth Rate + Dividend Yield)
+    const pegyDenominator = (raw.growth * 100) + (raw.divYield * 100);
+    const pegyRatio = pegyDenominator > 0 ? (raw.pe / pegyDenominator) : 0;
+    
+    // Scale yields and prices uniformly against the macro metrics
+    return {
+        ticker: raw.ticker,
+        price: (raw.price * scaleFactor).toFixed(2),
+        pe: raw.pe.toFixed(2),
+        growth: (raw.growth * 100).toFixed(2) + '%',
+        divYield: (raw.divYield * 100).toFixed(2) + '%',
+        pegy: pegyRatio.toFixed(2),
+        fcfYield: (raw.fcf * 100 * scaleFactor).toFixed(2) + '%',
+        strategyProfile: pegyRatio < 1.2 ? 'Undervalued Dividend Growth' : 'Core Equity Position',
+        cashFlowInsight: raw.fcf > 0.06 ? 'High Quality Coverage' : 'Stable Coverage'
+    };
+}
+
+/**
+ * Complete DOM Rendering Sequence
+ */
+function renderMatrixTable(assets) {
+    const tableBody = document.querySelector('table tbody, #matrix-awaiting-telemetry');
+    if (!tableBody) return;
+    
+    // Clear out "Awaiting telemetry stream sync sequence..." message row completely
+    let htmlContent = '';
+    
+    assets.forEach(asset => {
+        htmlContent += `
+            <tr>
+                <td class="font-bold">${asset.ticker}</td>
+                <td>$${asset.price}</td>
+                <td>${asset.pe}</td>
+                <td>${asset.growth}</td>
+                <td class="text-green-600 font-medium">${asset.divYield}</td>
+                <td>${asset.pegy}</td>
+                <td>${asset.fcfYield}</td>
+                <td><span class="badge-strategy">${asset.strategyProfile}</span></td>
+                <td><span class="badge-cash">${asset.cashFlowInsight}</span></td>
+            </tr>
+        `;
+    });
+    
+    // Inject components into table frame layout asynchronously 
+    const targetContainer = document.getElementById('matrix-table-body') || tableBody;
+    targetContainer.innerHTML = htmlContent;
+    console.log("Matrix table rendered completely.");
+}
 
 // --- 4. MULTI-FACTOR MATHEMATICAL CALCULATIONS PIPELINE ---
 function calculateMetrics() {
