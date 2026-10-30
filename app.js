@@ -99,78 +99,81 @@ function initializeUI() {
     }
 }
 
-// --- 3. BROWSER-NATIVE LIVE API INTERACTION (STABLE OPEN-FINANCE ROUTER) ---
+// --- 3. BROWSER-NATIVE LIVE API INTERACTION (RESILIENT, NON-BLOCKING PIPELINE) ---
 async function fetchAutomatedDataStream() {
     const statusBox = document.getElementById("fed-status");
     const factorBox = document.getElementById("macro-factor-display");
     
     if (statusBox) {
         statusBox.className = "status-badge loading";
-        statusBox.innerText = "Connecting to Open Financial Data Streams...";
+        statusBox.innerText = "Querying Live Market Data (Resilient Engine)...";
     }
 
     try {
-        // Collect core 52 real stock tickers from the baseline layout
         const realTickers = etfDatabase.slice(0, 52).map(etf => etf.ticker);
         const symbolsString = realTickers.join(',');
+        
+        // Using an open-source, ultra-stable data mirror network
+        const targetUrl = `https://allorigins.win{encodeURIComponent('https://yahoo.com' + symbolsString)}`;
 
-        // Query a dedicated, non-blocked open-source financial community endpoint
-        const targetFinanceUrl = `https://stonksfork.com{symbolsString}`;
-
-        let response = await fetch(targetFinanceUrl);
-        if (!response.ok) throw new Error("Financial database pipeline dropped.");
+        let response = await fetch(targetUrl);
+        if (!response.ok) throw new Error("API stream connection dropped.");
         
         let jsonResult = await response.json();
-        let quotesArray = jsonResult.quoteResponse.result;
-        if (!quotesArray || quotesArray.length === 0) throw new Error("Data serialization structural mismatch.");
+        let quotesArray = jsonResult?.quoteResponse?.result;
         
-        let liveMarketMap = {};
-        quotesArray.forEach(quote => {
-            if (quote && quote.symbol) {
-                liveMarketMap[quote.symbol] = {
-                    price: quote.regularMarketPrice,
-                    pe: quote.trailingPE || null,
-                    yield: quote.dividendYield || quote.trailingAnnualDividendYield || null
-                };
-            }
-        });
+        if (quotesArray && quotesArray.length > 0) {
+            let liveMarketMap = {};
+            quotesArray.forEach(quote => {
+                if (quote && quote.symbol) {
+                    liveMarketMap[quote.symbol] = {
+                        price: quote.regularMarketPrice,
+                        pe: quote.trailingPE || null,
+                        yield: quote.dividendYield || quote.trailingAnnualDividendYield || null
+                    };
+                }
+            });
 
-        // Merge live metrics right back over static layouts
-        currentDataset = etfDatabase.map(asset => {
-            const fresh = liveMarketMap[asset.ticker];
-            if (fresh) {
-                return {
-                    ticker: asset.ticker,
-                    cat: asset.cat,
-                    price: fresh.price && fresh.price > 0 ? fresh.price : asset.price,
-                    pe: fresh.pe && fresh.pe > 0 ? fresh.pe : asset.pe,
-                    // Convert decimal structures (0.0345) to readable percentage format fields (3.45)
-                    yield: fresh.yield && fresh.yield > 0 ? parseFloat((fresh.yield * 100).toFixed(2)) : asset.yield
-                };
-            }
-            return asset;
-        });
+            // Merge variables over baseline
+            currentDataset = etfDatabase.map(asset => {
+                const fresh = liveMarketMap[asset.ticker];
+                if (fresh) {
+                    return {
+                        ticker: asset.ticker,
+                        cat: asset.cat,
+                        price: fresh.price && fresh.price > 0 ? fresh.price : asset.price,
+                        pe: fresh.pe && fresh.pe > 0 ? fresh.pe : asset.pe,
+                        yield: fresh.yield && fresh.yield > 0 ? parseFloat((fresh.yield * 100).toFixed(2)) : asset.yield
+                    };
+                }
+                return asset;
+            });
 
-        if (statusBox) {
-            statusBox.className = "status-badge success";
-            statusBox.innerText = "✓ Serverless Mirror Active: Synced Live via Yahoo Finance Stream.";
-        }
-        if (factorBox) {
-            factorBox.innerText = "Macro Scale Factor: " + macroScaleFactor.toFixed(4) + " (Live Sync)";
+            if (statusBox) {
+                statusBox.className = "status-badge success";
+                statusBox.innerText = "✓ Serverless Mirror Active: Synced Live via Financial Network.";
+            }
+        } else {
+            throw new Error("Empty or malformed market data response.");
         }
 
     } catch (err) {
-        console.error("Pipeline failure, using hardcoded constants:", err);
+        console.warn("API proxy block caught. Gracefully reverting to internal data baseline:", err.message);
+        
+        // Crucial Fix: If the internet or proxy fails, load the baseline data instantly instead of freezing the table!
         currentDataset = [...etfDatabase];
+        
         if (statusBox) {
             statusBox.className = "status-badge fallback";
-            statusBox.innerText = "⚠ Stream timeout. Utilizing local standalone metrics baseline.";
-        }
-        if (factorBox) {
-            factorBox.innerText = "Macro Scale Factor: " + macroScaleFactor.toFixed(4) + " (Isolated Mode)";
+            statusBox.innerText = "⚠ API Throttled. Serving Local Baseline Asset Definitions Safely.";
         }
     }
 
+    if (factorBox) {
+        factorBox.innerText = "Macro Scale Factor: " + macroScaleFactor.toFixed(4);
+    }
+
+    // Always run calculation pipeline, regardless of API errors
     calculateMetrics();
 }
 
