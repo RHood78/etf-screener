@@ -20,7 +20,10 @@ MASTER_TICKERS = sorted(list(set(MASTER_TICKERS)))
 MACRO_SCALE_FACTOR = 1.0450
 
 # Calculation Boundary Configurations
-PEGY_VALUE_THRESHOLD = 1.25
+
+# Change this number to tighten or loosen your value line in the sand
+PEGY_VALUE_THRESHOLD = 1.00  # Strict Value Filter
+
 FCF_YIELD_THRESHOLD = 6.00  # Explicit 6% cash health cut-off
 
 def compute_pegy_matrix():
