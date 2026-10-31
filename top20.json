@@ -1,17 +1,5 @@
 [
     {
-        "ticker": "PFF",
-        "price": "29.75",
-        "pe": "3.53",
-        "growth": "6.60%",
-        "divYield": "6.35%",
-        "pegy": "0.27",
-        "fcfYield": "14.05%",
-        "strategyProfile": "Strong Signal (Cash Generator)",
-        "cashFlowInsight": "High Quality Coverage",
-        "score_sort": -1.1323215482281466
-    },
-    {
         "ticker": "UTG",
         "price": "36.62",
         "pe": "2.54",
@@ -21,31 +9,25 @@
         "fcfYield": "13.12%",
         "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
-        "score_sort": -1.112617243719148
+        "sort_key": [
+            1,
+            0.1996270883899263
+        ]
     },
     {
-        "ticker": "TYG",
-        "price": "42.78",
-        "pe": "5.69",
-        "growth": "6.00%",
-        "divYield": "12.82%",
-        "pegy": "0.30",
-        "fcfYield": "11.97%",
+        "ticker": "PFF",
+        "price": "29.75",
+        "pe": "3.53",
+        "growth": "6.60%",
+        "divYield": "6.35%",
+        "pegy": "0.27",
+        "fcfYield": "14.05%",
         "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
-        "score_sort": -0.8948677593522467
-    },
-    {
-        "ticker": "NFJ",
-        "price": "14.87",
-        "pe": "3.97",
-        "growth": "6.00%",
-        "divYield": "6.31%",
-        "pegy": "0.32",
-        "fcfYield": "12.04%",
-        "strategyProfile": "Strong Signal (Cash Generator)",
-        "cashFlowInsight": "High Quality Coverage",
-        "score_sort": -0.8815099959583292
+        "sort_key": [
+            1,
+            0.2725740760933527
+        ]
     },
     {
         "ticker": "GAIN",
@@ -57,19 +39,40 @@
         "fcfYield": "11.20%",
         "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
-        "score_sort": -0.8265789205468073
+        "sort_key": [
+            1,
+            0.2930738135326682
+        ]
     },
     {
-        "ticker": "KYN",
-        "price": "15.48",
-        "pe": "5.11",
+        "ticker": "TYG",
+        "price": "42.78",
+        "pe": "5.69",
         "growth": "6.00%",
-        "divYield": "7.02%",
-        "pegy": "0.39",
-        "fcfYield": "11.99%",
+        "divYield": "12.82%",
+        "pegy": "0.30",
+        "fcfYield": "11.97%",
         "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
-        "score_sort": -0.8069738314249424
+        "sort_key": [
+            1,
+            0.30249195362974507
+        ]
+    },
+    {
+        "ticker": "NFJ",
+        "price": "14.87",
+        "pe": "3.97",
+        "growth": "6.00%",
+        "divYield": "6.31%",
+        "pegy": "0.32",
+        "fcfYield": "12.04%",
+        "strategyProfile": "Strong Signal (Cash Generator)",
+        "cashFlowInsight": "High Quality Coverage",
+        "sort_key": [
+            1,
+            0.32277361202465354
+        ]
     },
     {
         "ticker": "EVT",
@@ -81,7 +84,25 @@
         "fcfYield": "10.85%",
         "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
-        "score_sort": -0.757985966429291
+        "sort_key": [
+            1,
+            0.32749261536437646
+        ]
+    },
+    {
+        "ticker": "KYN",
+        "price": "15.48",
+        "pe": "5.11",
+        "growth": "6.00%",
+        "divYield": "7.02%",
+        "pegy": "0.39",
+        "fcfYield": "11.99%",
+        "strategyProfile": "Strong Signal (Cash Generator)",
+        "cashFlowInsight": "High Quality Coverage",
+        "sort_key": [
+            1,
+            0.3922006774987518
+        ]
     },
     {
         "ticker": "BDJ",
@@ -93,31 +114,10 @@
         "fcfYield": "11.11%",
         "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
-        "score_sort": -0.6876238360863134
-    },
-    {
-        "ticker": "EOS",
-        "price": "21.17",
-        "pe": "8.62",
-        "growth": "6.00%",
-        "divYield": "8.81%",
-        "pegy": "0.58",
-        "fcfYield": "12.44%",
-        "strategyProfile": "Strong Signal (Cash Generator)",
-        "cashFlowInsight": "High Quality Coverage",
-        "score_sort": -0.6613261069045661
-    },
-    {
-        "ticker": "RFI",
-        "price": "10.99",
-        "pe": "8.99",
-        "growth": "6.00%",
-        "divYield": "9.16%",
-        "pegy": "0.59",
-        "fcfYield": "11.74%",
-        "strategyProfile": "Strong Signal (Cash Generator)",
-        "cashFlowInsight": "High Quality Coverage",
-        "score_sort": -0.5809437424738834
+        "sort_key": [
+            1,
+            0.4231241118201389
+        ]
     },
     {
         "ticker": "BME",
@@ -129,79 +129,40 @@
         "fcfYield": "9.86%",
         "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
-        "score_sort": -0.5289753215646983
+        "sort_key": [
+            1,
+            0.456851879436034
+        ]
     },
     {
-        "ticker": "FEMS",
-        "price": "41.57",
-        "pe": "6.88",
-        "growth": "7.97%",
-        "divYield": "4.04%",
-        "pegy": "0.57",
-        "fcfYield": "5.81%",
-        "strategyProfile": "Value Trap (Cash-Strapped)",
-        "cashFlowInsight": "Weak Coverage Risk",
-        "score_sort": -0.007485428471136202
+        "ticker": "EOS",
+        "price": "21.17",
+        "pe": "8.62",
+        "growth": "6.00%",
+        "divYield": "8.81%",
+        "pegy": "0.58",
+        "fcfYield": "12.44%",
+        "strategyProfile": "Strong Signal (Cash Generator)",
+        "cashFlowInsight": "High Quality Coverage",
+        "sort_key": [
+            1,
+            0.5823064497772602
+        ]
     },
     {
-        "ticker": "HYGW",
-        "price": "29.39",
-        "pe": "9.71",
-        "growth": "6.18%",
-        "divYield": "10.11%",
-        "pegy": "0.60",
-        "fcfYield": "5.81%",
-        "strategyProfile": "Value Trap (Cash-Strapped)",
-        "cashFlowInsight": "Weak Coverage Risk",
-        "score_sort": 0.015253419321123118
-    },
-    {
-        "ticker": "DVYE",
-        "price": "34.86",
-        "pe": "8.25",
-        "growth": "6.25%",
-        "divYield": "5.10%",
-        "pegy": "0.73",
-        "fcfYield": "5.81%",
-        "strategyProfile": "Value Trap (Cash-Strapped)",
-        "cashFlowInsight": "Weak Coverage Risk",
-        "score_sort": 0.14619739598629478
-    },
-    {
-        "ticker": "SDEM",
-        "price": "33.04",
-        "pe": "9.05",
-        "growth": "6.25%",
-        "divYield": "4.96%",
-        "pegy": "0.81",
-        "fcfYield": "5.81%",
-        "strategyProfile": "Value Trap (Cash-Strapped)",
-        "cashFlowInsight": "Weak Coverage Risk",
-        "score_sort": 0.22651518485479227
-    },
-    {
-        "ticker": "DXJ",
-        "price": "61.02",
-        "pe": "12.61",
-        "growth": "6.25%",
-        "divYield": "9.00%",
-        "pegy": "0.83",
-        "fcfYield": "5.81%",
-        "strategyProfile": "Value Trap (Cash-Strapped)",
-        "cashFlowInsight": "Weak Coverage Risk",
-        "score_sort": 0.24654837887067382
-    },
-    {
-        "ticker": "FGD",
-        "price": "35.17",
-        "pe": "10.79",
-        "growth": "6.25%",
-        "divYield": "5.78%",
-        "pegy": "0.90",
-        "fcfYield": "5.81%",
-        "strategyProfile": "Value Trap (Cash-Strapped)",
-        "cashFlowInsight": "Weak Coverage Risk",
-        "score_sort": 0.31655433638126906
+        "ticker": "RFI",
+        "price": "10.99",
+        "pe": "8.99",
+        "growth": "6.00%",
+        "divYield": "9.16%",
+        "pegy": "0.59",
+        "fcfYield": "11.74%",
+        "strategyProfile": "Strong Signal (Cash Generator)",
+        "cashFlowInsight": "High Quality Coverage",
+        "sort_key": [
+            1,
+            0.5930918701269451
+        ]
     },
     {
         "ticker": "MAIN",
@@ -213,30 +174,129 @@
         "fcfYield": "6.41%",
         "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
-        "score_sort": 0.32113447202365
+        "sort_key": [
+            1,
+            0.9625821574532855
+        ]
     },
     {
-        "ticker": "EYLD",
-        "price": "47.35",
-        "pe": "10.03",
+        "ticker": "PEY",
+        "price": "25.51",
+        "pe": "14.06",
         "growth": "6.25%",
-        "divYield": "4.45%",
-        "pegy": "0.94",
-        "fcfYield": "5.81%",
-        "strategyProfile": "Value Trap (Cash-Strapped)",
-        "cashFlowInsight": "Weak Coverage Risk",
-        "score_sort": 0.3568468743509866
+        "divYield": "4.03%",
+        "pegy": "1.37",
+        "fcfYield": "8.84%",
+        "strategyProfile": "Expensive (Monitor Entry)",
+        "cashFlowInsight": "High Quality Coverage",
+        "sort_key": [
+            2,
+            1.367917058827821
+        ]
     },
     {
-        "ticker": "LQDW",
-        "price": "23.92",
-        "pe": "15.50",
-        "growth": "5.15%",
-        "divYield": "11.07%",
-        "pegy": "0.96",
+        "ticker": "CSB",
+        "price": "69.03",
+        "pe": "14.15",
+        "growth": "6.25%",
+        "divYield": "3.41%",
+        "pegy": "1.47",
+        "fcfYield": "6.06%",
+        "strategyProfile": "Expensive (Monitor Entry)",
+        "cashFlowInsight": "High Quality Coverage",
+        "sort_key": [
+            2,
+            1.4652858178053831
+        ]
+    },
+    {
+        "ticker": "DVY",
+        "price": "169.84",
+        "pe": "15.68",
+        "growth": "6.25%",
+        "divYield": "2.18%",
+        "pegy": "1.86",
+        "fcfYield": "7.61%",
+        "strategyProfile": "Expensive (Monitor Entry)",
+        "cashFlowInsight": "High Quality Coverage",
+        "sort_key": [
+            2,
+            1.8595362534193727
+        ]
+    },
+    {
+        "ticker": "DOO",
+        "price": "63.82",
+        "pe": "16.20",
+        "growth": "6.00%",
+        "divYield": "1.51%",
+        "pegy": "2.16",
+        "fcfYield": "6.06%",
+        "strategyProfile": "Expensive (Monitor Entry)",
+        "cashFlowInsight": "High Quality Coverage",
+        "sort_key": [
+            2,
+            2.157268840121237
+        ]
+    },
+    {
+        "ticker": "PSEC",
+        "price": "1.68",
+        "pe": "26.83",
+        "growth": "6.00%",
+        "divYield": "3.21%",
+        "pegy": "2.91",
+        "fcfYield": "6.06%",
+        "strategyProfile": "Expensive (Monitor Entry)",
+        "cashFlowInsight": "High Quality Coverage",
+        "sort_key": [
+            2,
+            2.9135389916850567
+        ]
+    },
+    {
+        "ticker": "IDV",
+        "price": "44.66",
+        "pe": "12.16",
+        "growth": "6.25%",
+        "divYield": "5.75%",
+        "pegy": "1.01",
         "fcfYield": "5.81%",
-        "strategyProfile": "Value Trap (Cash-Strapped)",
-        "cashFlowInsight": "Weak Coverage Risk",
-        "score_sort": 0.37500295914894877
+        "strategyProfile": "Premium Valuation",
+        "cashFlowInsight": "Stable / Low Coverage",
+        "sort_key": [
+            3,
+            1.0130324166666667
+        ]
+    },
+    {
+        "ticker": "ALTY",
+        "price": "12.25",
+        "pe": "14.46",
+        "growth": "6.25%",
+        "divYield": "7.94%",
+        "pegy": "1.02",
+        "fcfYield": "5.81%",
+        "strategyProfile": "Premium Valuation",
+        "cashFlowInsight": "Stable / Low Coverage",
+        "sort_key": [
+            3,
+            1.018912825933756
+        ]
+    },
+    {
+        "ticker": "DEM",
+        "price": "55.18",
+        "pe": "10.66",
+        "growth": "6.25%",
+        "divYield": "3.99%",
+        "pegy": "1.04",
+        "fcfYield": "5.81%",
+        "strategyProfile": "Premium Valuation",
+        "cashFlowInsight": "Stable / Low Coverage",
+        "sort_key": [
+            3,
+            1.0412796874999999
+        ]
     }
 ]
