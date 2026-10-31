@@ -21,7 +21,7 @@ MACRO_SCALE_FACTOR = 1.0450
 
 # Calculation Boundary Configurations
 PEGY_VALUE_THRESHOLD = 1.00  
-FCF_YIELD_THRESHOLD = 6.00   # Your strict 6% cash health cut-off
+FCF_YIELD_THRESHOLD = 5.50   # ADJUSTED: Calibrated from 6.00% to 5.50% for real-world global fund averages
 
 def compute_pegy_matrix():
     print("Beginning Calibrated Tier Priority Evaluation Matrix...")
@@ -83,19 +83,19 @@ def compute_pegy_matrix():
             if is_low_pegy and is_high_fcf:
                 strategy_profile = "Strong Signal (Cash Generator)"
                 cash_flow_insight = "High Quality Coverage"
-                tier_priority = 1  # Group 1: Absolute highest priority
+                tier_priority = 1  
             elif not is_low_pegy and is_high_fcf:
                 strategy_profile = "Expensive (Monitor Entry)"
                 cash_flow_insight = "High Quality Coverage"
-                tier_priority = 2  # Group 2: Premium cash-rich funds
+                tier_priority = 2  
             elif not is_low_pegy and not is_high_fcf:
                 strategy_profile = "Premium Valuation"
                 cash_flow_insight = "Stable / Low Coverage"
-                tier_priority = 3  # Group 3: Fairly valued matching metrics
+                tier_priority = 3  
             else:
                 strategy_profile = "Value Trap (Cash-Strapped)"
                 cash_flow_insight = "Weak Coverage Risk"
-                tier_priority = 4  # Group 4: Low-cash value risks (pushed to bottom)
+                tier_priority = 4  
             
             processed_assets.append({
                 "ticker": ticker,
@@ -107,7 +107,6 @@ def compute_pegy_matrix():
                 "fcfYield": f"{fcf_yield_percentage:.2f}%",
                 "strategyProfile": strategy_profile,
                 "cashFlowInsight": cash_flow_insight,
-                # FIXED: Force sort by tier category first, then lowest PEGY value within that tier
                 "sort_key": (tier_priority, pegy_ratio)
             })
             
