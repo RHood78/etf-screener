@@ -100,25 +100,40 @@ function initializeUI() {
 }
 
 /**
- * SECTION 3: RESILIENT, NON-BLOCKING API CONNECTOR & FALLBACK ROUTINE
- * Replaces the existing data fetching mechanism to handle public CORS proxy throttling gracefully.
- * Fails over to static baseline telemetry math calculations when live streams are blocked.
+ * SECTION 3: LIGHTNING-FAST LOCAL JSON DATALAYER CONSUMER
+ * Removes public CORS proxy chains to eliminate network blocking risks.
+ * Consumes the daily cloud-processed Top 20 array directly from the local repository cache.
  */
-
 async function fetchAutomatedDataStream() {
-    console.log("Initializing telemetry stream sync sequence...");
+    console.log("Initializing local cloud-processed matrix stream sync...");
     
-    // Explicit baseline tickers and math parameters to construct matrix if live API fails
-    const baselineDefinitions = {
-        MACRO_SCALE_FACTOR: 1.0450,
-        assets: [
-            { ticker: 'SCHD', basePrice: 82.50, pe: 15.2, growth: 0.075, divYield: 0.034, fcf: 0.062 },
-            { ticker: 'VYM', basePrice: 121.20, pe: 16.1, growth: 0.068, divYield: 0.031, fcf: 0.058 },
-            { ticker: 'DGRO', basePrice: 58.40, pe: 17.5, growth: 0.092, divYield: 0.024, fcf: 0.065 },
-            { ticker: 'VIG', basePrice: 192.10, pe: 22.4, growth: 0.085, divYield: 0.019, fcf: 0.052 },
-            { ticker: 'JEPI', basePrice: 56.80, pe: 14.0, growth: 0.045, divYield: 0.072, fcf: 0.081 }
-        ]
-    };
+    try {
+        // Fetch directly from the repository relative root path
+        const response = await fetch('./top20.json');
+        
+        if (!response.ok) {
+            throw new Error(`Local data store asset missing or unreachable (Status: ${response.status})`);
+        }
+        
+        const processedTop20Assets = await response.json();
+        console.log(`Live dataset sync complete. Rendering ${processedTop20Assets.length} top-valued global assets.`);
+        
+        // Pass array directly to your existing UI generator logic
+        renderMatrixTable(processedTop20Assets);
+        
+    } catch (error) {
+        console.error("⚠️ Local Matrix Read Failure:", error.message);
+        console.log("Activating resilient baseline mathematical failover fallback...");
+        
+        // Safety Emergency Net: Keep your 5-asset static routine right here as an absolute fallback
+        const standardEmergencyFallback = [
+            { ticker: 'SCHD', price: "86.21", pe: "15.20", growth: "7.50%", divYield: "3.40%", pegy: "0.98", fcfYield: "6.48%", strategyProfile: "Undervalued Dividend Growth", cashFlowInsight: "High Quality Coverage" },
+            { ticker: 'VYM', price: "126.65", pe: "16.10", growth: "6.80%", divYield: "3.10%", pegy: "1.12", fcfYield: "6.06%", strategyProfile: "Undervalued Dividend Growth", cashFlowInsight: "Stable Coverage" }
+        ];
+        renderMatrixTable(standardEmergencyFallback);
+    }
+}
+
 
     // Primary live data stream configuration using standard endpoints
     const primaryUrl = 'https://yahoo.com' + 
