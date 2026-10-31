@@ -134,61 +134,6 @@ async function fetchAutomatedDataStream() {
     }
 }
 
-
-    // Primary live data stream configuration using standard endpoints
-    const primaryUrl = 'https://yahoo.com' + 
-                       baselineDefinitions.assets.map(a => a.ticker).join(',');
-    
-    // Non-blocking architecture uses a robust fallback catch block
-    try {
-        // Attempt live stream pull using a standard public CORS proxy architecture
-        const proxyUrl = 'https://allorigins.win' + encodeURIComponent(primaryUrl);
-        
-        const response = await fetch(proxyUrl);
-        if (!response.ok) throw new Error(`Network throttled or proxy down (Status: ${response.status})`);
-        
-        const wrapper = await response.json();
-        const data = JSON.parse(wrapper.contents);
-        
-        if (!data.quoteResponse || !data.quoteResponse.result) {
-            throw new Error("Invalid telemetry stream format received.");
-        }
-        
-        console.log("Live stream active. Syncing Yahoo Finance matrix data...");
-        const processedAssets = data.quoteResponse.result.map(quote => {
-            const base = baselineDefinitions.assets.find(a => a.ticker === quote.symbol) || {};
-            return calculateMatrixWeights({
-                ticker: quote.symbol,
-                price: quote.regularMarketPrice || base.basePrice,
-                pe: quote.trailingPE || base.pe,
-                growth: base.growth || 0.05,
-                divYield: (quote.trailingAnnualDividendYield) || base.divYield,
-                fcf: base.fcf || 0.05
-            }, baselineDefinitions.MACRO_SCALE_FACTOR);
-        });
-
-        renderMatrixTable(processedAssets);
-        
-    } catch (error) {
-        console.warn(`⚠️ CORS Proxy Throttled or Blocked: ${error.message}`);
-        console.log("Activating resilient non-blocking baseline mathematical definitions sequence...");
-        
-        // Execute math locally on fallback definitions to ensure table renders completely
-        const fallbackAssets = baselineDefinitions.assets.map(asset => {
-            return calculateMatrixWeights({
-                ticker: asset.ticker,
-                price: asset.basePrice,
-                pe: asset.pe,
-                growth: asset.growth,
-                divYield: asset.divYield,
-                fcf: asset.fcf
-            }, baselineDefinitions.MACRO_SCALE_FACTOR);
-        });
-        
-        renderMatrixTable(fallbackAssets);
-    }
-}
-
 /**
  * Audit and Calculation Weights Evaluator
  * Runs the Multi-Factor Mathematical Evaluation Matrix Pipeline formulas
@@ -223,9 +168,12 @@ function renderMatrixTable(assets) {
     let htmlContent = '';
     
     assets.forEach(asset => {
+        // Safe check for handling both array strings and normal strings
+        const displayTicker = Array.isArray(asset.ticker) ? asset.ticker[0] : asset.ticker;
+        
         htmlContent += `
             <tr>
-                <td class="font-bold">${asset.ticker}</td>
+                <td class="font-bold">${displayTicker}</td>
                 <td>$${asset.price}</td>
                 <td>${asset.pe}</td>
                 <td>${asset.growth}</td>
@@ -243,6 +191,7 @@ function renderMatrixTable(assets) {
     targetContainer.innerHTML = htmlContent;
     console.log("Matrix table rendered completely.");
 }
+
 
 // --- 4. MULTI-FACTOR MATHEMATICAL CALCULATIONS PIPELINE ---
 function calculateMetrics() {
