@@ -7,8 +7,8 @@
         "divYield": "355.00%",
         "pegy": "0.00",
         "fcfYield": "5.56%",
-        "strategyProfile": "Undervalued Growth",
-        "cashFlowInsight": "Stable Coverage",
+        "strategyProfile": "Value Trap (Cash-Strapped)",
+        "cashFlowInsight": "Weak Coverage Risk",
         "score_sort": 0.004775121606648199
     },
     {
@@ -19,7 +19,7 @@
         "divYield": "1011.00%",
         "pegy": "0.01",
         "fcfYield": "15.85%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.009544578142642752
     },
@@ -31,7 +31,7 @@
         "divYield": "1107.00%",
         "pegy": "0.01",
         "fcfYield": "17.35%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.014836116480886119
     },
@@ -43,7 +43,7 @@
         "divYield": "1077.00%",
         "pegy": "0.02",
         "fcfYield": "16.88%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.015244187074643418
     },
@@ -55,7 +55,7 @@
         "divYield": "510.00%",
         "pegy": "0.02",
         "fcfYield": "7.99%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.015505098424476052
     },
@@ -67,7 +67,7 @@
         "divYield": "404.00%",
         "pegy": "0.02",
         "fcfYield": "6.33%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.016705597557332787
     },
@@ -79,7 +79,7 @@
         "divYield": "496.00%",
         "pegy": "0.02",
         "fcfYield": "7.77%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.01755121038043892
     },
@@ -91,7 +91,7 @@
         "divYield": "578.00%",
         "pegy": "0.02",
         "fcfYield": "9.06%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.017853822161093203
     },
@@ -103,7 +103,7 @@
         "divYield": "794.00%",
         "pegy": "0.02",
         "fcfYield": "12.45%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.017914543685485132
     },
@@ -115,7 +115,7 @@
         "divYield": "784.00%",
         "pegy": "0.02",
         "fcfYield": "12.29%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.01844490129893023
     },
@@ -127,7 +127,7 @@
         "divYield": "755.00%",
         "pegy": "0.02",
         "fcfYield": "11.83%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.01910896478668061
     },
@@ -139,7 +139,7 @@
         "divYield": "575.00%",
         "pegy": "0.02",
         "fcfYield": "9.01%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.020176255428398352
     },
@@ -151,7 +151,7 @@
         "divYield": "445.00%",
         "pegy": "0.02",
         "fcfYield": "6.98%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.021385853750842863
     },
@@ -163,7 +163,7 @@
         "divYield": "486.00%",
         "pegy": "0.02",
         "fcfYield": "7.62%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.0233348525270541
     },
@@ -175,7 +175,7 @@
         "divYield": "1105.00%",
         "pegy": "0.02",
         "fcfYield": "17.32%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.023514250745932514
     },
@@ -187,7 +187,7 @@
         "divYield": "685.00%",
         "pegy": "0.02",
         "fcfYield": "10.74%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.023911333977290384
     },
@@ -199,7 +199,7 @@
         "divYield": "399.00%",
         "pegy": "0.03",
         "fcfYield": "6.25%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.02552415491463101
     },
@@ -211,7 +211,7 @@
         "divYield": "433.00%",
         "pegy": "0.03",
         "fcfYield": "6.79%",
-        "strategyProfile": "Undervalued Growth",
+        "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "score_sort": 0.026504233101034804
     },
@@ -223,8 +223,8 @@
         "divYield": "377.00%",
         "pegy": "0.03",
         "fcfYield": "5.91%",
-        "strategyProfile": "Undervalued Growth",
-        "cashFlowInsight": "Stable Coverage",
+        "strategyProfile": "Value Trap (Cash-Strapped)",
+        "cashFlowInsight": "Weak Coverage Risk",
         "score_sort": 0.028202852411001178
     },
     {
@@ -235,8 +235,8 @@
         "divYield": "354.00%",
         "pegy": "0.03",
         "fcfYield": "5.55%",
-        "strategyProfile": "Undervalued Growth",
-        "cashFlowInsight": "Stable Coverage",
+        "strategyProfile": "Value Trap (Cash-Strapped)",
+        "cashFlowInsight": "Weak Coverage Risk",
         "score_sort": 0.028598207783887157
     }
 ]
