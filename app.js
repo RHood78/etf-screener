@@ -97,7 +97,7 @@ function renderMatrixTable(assets) {
     let htmlContent = '';
     
     assets.forEach((asset, index) => {
-        const displayTicker = Array.isArray(asset.ticker) ? asset.ticker[0] : asset.ticker;
+        const displayTicker = Array.isArray(asset.ticker) ? asset.ticker : asset.ticker;
         
         // Normalize object variable map paths dynamically to support both live cloud fields and uploaded keys
         const price = asset.price;
@@ -111,15 +111,15 @@ function renderMatrixTable(assets) {
         
         htmlContent += `
             <tr class="hover:bg-gray-50 border-b border-gray-100 transition-colors">
-                <td class="px-4 py-3 font-bold text-gray-900">#${index + 1} - ${displayTicker}</td>
-                <td class="px-4 py-3">$${price}</td>
-                <td class="px-4 py-3">${pe}</td>
-                <td class="px-4 py-3">${growth}</td>
-                <td class="px-4 py-3 text-green-600 font-medium">${divYield}</td>
-                <td class="px-4 py-3 font-medium">${pegy}</td>
-                <td class="px-4 py-3">${fcfYield}</td>
-                <td class="px-4 py-3"><span class="badge-strategy">${strategyProfile}</span></td>
-                <td class="px-4 py-3"><span class="badge-cash">${cashInsight}</span></td>
+                <td class="px-4 py-3 font-bold text-gray-900">#\${index + 1} - \${displayTicker}</td>
+                <td class="px-4 py-3">$\${price}</td>
+                <td class="px-4 py-3">\${pe}</td>
+                <td class="px-4 py-3">\${growth}</td>
+                <td class="px-4 py-3 text-green-600 font-medium">\${divYield}</td>
+                <td class="px-4 py-3 font-medium">\${pegy}</td>
+                <td class="px-4 py-3">\${fcfYield}</td>
+                <td class="px-4 py-3"><span class="badge-strategy">\${strategyProfile}</span></td>
+                <td class="px-4 py-3"><span class="badge-cash">\${cashInsight}</span></td>
             </tr>
         `;
     });
@@ -203,7 +203,7 @@ function exportResultsToCSV() {
     ];
 
     calculatedTop20.forEach((row, index) => {
-        const displayTicker = Array.isArray(row.ticker) ? row.ticker[0] : row.ticker;
+        const displayTicker = Array.isArray(row.ticker) ? row.ticker : row.ticker;
         csvRows.push([
             index + 1,
             displayTicker,
@@ -219,7 +219,8 @@ function exportResultsToCSV() {
     });
 
     let csvContent = "data:text/csv;charset=utf-8," 
-        + csvRows.map(e => e.map(val => '"' + val + '"').join(",")).join("\n");
+        + csvRows.map(e => e.map(val => '"' + val + '"').join(",")).join("
+");
 
     const encodedUri = encodeURI(csvContent);
     const downloadAnchor = document.createElement("a");
@@ -247,25 +248,29 @@ function processUserCSV() {
         
         let cols = row.split(",");
         if (cols.length >= 4) {
-        let ticker = cols[0].trim().toUpperCase();
-        let price = parseFloat(cols[1]);
-        let pe = parseFloat(cols[2]);
-        let yieldVal = parseFloat(cols[3]);
-        let category = cols[4] ? cols[4].trim().toUpperCase() : "US";
-        if (ticker && !isNaN(price) && !isNaN(pe) && !isNaN(yieldVal)) {
-        parsedDataset.push({ ticker: ticker, cat: category, price: price, pe: pe, yield: yieldVal });
+            let ticker = cols[0].trim().toUpperCase();
+            let price = parseFloat(cols[1]);
+            let pe = parseFloat(cols[2]);
+            let yieldVal = parseFloat(cols[3]);
+            let category = cols[4] ? cols[4].trim().toUpperCase() : "US";
+
+            if (ticker && !isNaN(price) && !isNaN(pe) && !isNaN(yieldVal)) {
+                parsedDataset.push({ ticker: ticker, cat: category, price: price, pe: pe, yield: yieldVal });
+            }
         }
-        }
-        });
-        if (parsedDataset.length > 0) {
+    });
+
+    if (parsedDataset.length > 0) {
         currentDataset = parsedDataset;
+        
         const statusBox = document.getElementById("fed-status");
         if (statusBox) {
-        statusBox.className = "status-badge success";
-        statusBox.innerText = "✓ Solution 1 Active: Manual Workbook Feed Processed Safely (" + parsedDataset.length + " Assets Loaded).";
+            statusBox.className = "status-badge success";
+            statusBox.innerText = "✓ Solution 1 Active: Manual Workbook Feed Processed Safely (" + parsedDataset.length + " Assets Loaded).";
         }
+        
         calculateManualMetrics();
-        } else {
+    } else {
         alert("Parsing configuration mismatch. Verify column structure matches: Ticker, Price, P/E, Yield.");
-        }
-        }
+    }
+}
