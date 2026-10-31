@@ -2,7 +2,7 @@ name: Update Global Dividend Matrix Data
 on:
   schedule:
     - cron: '0 5 * * 1-5' # Runs automatically Monday-Friday at 5:00 AM UTC
-  workflow_dispatch: # Adds a manual run "Play" button straight inside your GitHub Actions UI tab
+  workflow_dispatch: # Allows you to click the manual "Run workflow" button
 
 jobs:
   build:
@@ -15,6 +15,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+
+      # FIX: Installs yfinance so the Python script has an open, unblocked data stream
+      - name: Install Python Dependencies
+        run: pip install yfinance
 
       - name: Run Telemetry Processing Script
         run: python update_data.py
