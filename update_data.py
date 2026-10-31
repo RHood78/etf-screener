@@ -21,10 +21,10 @@ MACRO_SCALE_FACTOR = 1.0450
 
 # Calculation Boundary Configurations
 PEGY_VALUE_THRESHOLD = 1.00  
-FCF_YIELD_THRESHOLD = 6.00   
+FCF_YIELD_THRESHOLD = 6.00   # Your strict 6% cash health cut-off
 
 def compute_pegy_matrix():
-    print("Beginning Unified Valuation & Cash Health Ranking Sequence...")
+    print("Beginning Calibrated Tier Priority Evaluation Matrix...")
     processed_assets = []
     
     tickers_string = " ".join(MASTER_TICKERS)
@@ -76,10 +76,6 @@ def compute_pegy_matrix():
             adjusted_price = raw_price * MACRO_SCALE_FACTOR
             fcf_yield_percentage = dynamic_fcf * MACRO_SCALE_FACTOR
             
-            # --- FIXED: UNIFIED MULTI-FACTOR RANKING SCORE ---
-            # Combines valuation metrics directly with actual cash generation health
-            quantum_score = pegy_ratio - (fcf_yield_percentage / 10.0)
-            
             # --- UNIFIED MULTI-FACTOR STRATEGY MATRIX LOGIC ---
             is_low_pegy = pegy_ratio < PEGY_VALUE_THRESHOLD
             is_high_fcf = fcf_yield_percentage > FCF_YIELD_THRESHOLD
@@ -87,15 +83,19 @@ def compute_pegy_matrix():
             if is_low_pegy and is_high_fcf:
                 strategy_profile = "Strong Signal (Cash Generator)"
                 cash_flow_insight = "High Quality Coverage"
-            elif is_low_pegy and not is_high_fcf:
-                strategy_profile = "Value Trap (Cash-Strapped)"
-                cash_flow_insight = "Weak Coverage Risk"
+                tier_priority = 1  # Group 1: Absolute highest priority
             elif not is_low_pegy and is_high_fcf:
                 strategy_profile = "Expensive (Monitor Entry)"
                 cash_flow_insight = "High Quality Coverage"
-            else:
+                tier_priority = 2  # Group 2: Premium cash-rich funds
+            elif not is_low_pegy and not is_high_fcf:
                 strategy_profile = "Premium Valuation"
                 cash_flow_insight = "Stable / Low Coverage"
+                tier_priority = 3  # Group 3: Fairly valued matching metrics
+            else:
+                strategy_profile = "Value Trap (Cash-Strapped)"
+                cash_flow_insight = "Weak Coverage Risk"
+                tier_priority = 4  # Group 4: Low-cash value risks (pushed to bottom)
             
             processed_assets.append({
                 "ticker": ticker,
@@ -107,21 +107,22 @@ def compute_pegy_matrix():
                 "fcfYield": f"{fcf_yield_percentage:.2f}%",
                 "strategyProfile": strategy_profile,
                 "cashFlowInsight": cash_flow_insight,
-                "score_sort": quantum_score  # Sorts ascendingly by unified mathematical power
+                # FIXED: Force sort by tier category first, then lowest PEGY value within that tier
+                "sort_key": (tier_priority, pegy_ratio)
             })
             
         except Exception as e:
             print(f"Skipping processing parameters for {ticker}: {e}")
             continue
 
-    # Sort ascendingly (Lowest combined score = Best Overall Risk/Reward Profile)
-    processed_assets.sort(key=lambda x: x["score_sort"])
+    # Execute structured multi-tier tuple sort
+    processed_assets.sort(key=lambda x: x["sort_key"])
     top_20 = processed_assets[:20]
 
     with open("top20.json", "w") as f:
         json.dump(top_20, f, indent=4)
         
-    print(f"Saved multi-factor ranked top20.json profile artifact with {len(top_20)} entries.")
+    print(f"Saved structural tier priority top20.json artifact with {len(top_20)} entries.")
 
 if __name__ == "__main__":
     compute_pegy_matrix()
