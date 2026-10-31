@@ -20,7 +20,7 @@ MASTER_TICKERS = sorted(list(set(MASTER_TICKERS)))
 MACRO_SCALE_FACTOR = 1.0450
 
 # Calculation Boundary Configurations
-PEGY_VALUE_THRESHOLD = 1.00  # ADJUSTED: Strict Graham-style value margin
+PEGY_VALUE_THRESHOLD = 1.00  # Strict value margin
 FCF_YIELD_THRESHOLD = 6.00   # Explicit 6% cash health cut-off
 
 def compute_pegy_matrix():
@@ -36,39 +36,44 @@ def compute_pegy_matrix():
             ticker_object = yf_data.tickers[ticker]
             info = ticker_object.info
             
-            # 1. Market Price
+            # 1. Market Price Extract
             raw_price = info.get("regularMarketPrice") or info.get("previousClose") or info.get("navPrice") or 0
             if raw_price == 0:
                 continue
                 
-            # 2. P/E Ratio
+            # 2. Price-to-Earnings Ratio Extraction
             pe = info.get("trailingPE") or info.get("forwardPE") or 16.5
+            if pe <= 0:
+                pe = 16.5 # Clean out corrupted or negative PE anomalies
             
-            # 3. Dividend Yield
-            div_yield = info.get("trailingAnnualDividendYield") or info.get("dividendYield") or 0.032
+            # 3. Dividend Yield Normalization (Converts decimal format 0.034 -> 3.40%)
+            raw_yield = info.get("trailingAnnualDividendYield") or info.get("dividendYield") or 0.032
+            yield_percentage = raw_yield * 100.0 if raw_yield < 1.0 else raw_yield
             
-            # 4. Dynamic Growth Rate Extraction
+            # 4. Dynamic Growth Rate Normalization (Converts decimal format 0.06 -> 6.00%)
             raw_growth = info.get("earningsGrowth") or info.get("threeYearAverageReturn") or info.get("fiveYearAverageReturn") or 0.060
-            if raw_growth > 1.0:
-                raw_growth = raw_growth / 100.0
-            elif raw_growth <= 0:
-                raw_growth = 0.045 
-                
-            # 5. Dynamic Free Cash Flow Yield Approximation
-            dynamic_fcf = info.get("holdingPercent") or info.get("trailingPegRatio") or (div_yield * 1.5)
-            if dynamic_fcf > 1.0:
-                dynamic_fcf = dynamic_fcf / 100.0
-            if dynamic_fcf <= 0 or dynamic_fcf > 0.25:
-                dynamic_fcf = 0.055 
+            growth_percentage = raw_growth * 100.0 if abs(raw_growth) < 1.0 else raw_growth
             
-            # PEGY Ratio Calculation = P/E / (Dynamic Growth% + Dynamic Dividend Yield%)
-            pegy_denominator = (raw_growth * 100) + (div_yield * 100)
+            # Safety Floor: Protect against negative or stagnant growth anomalies scaling out
+            if growth_percentage <= 0:
+                growth_percentage = 4.5
+                
+            # 5. Dynamic Free Cash Flow Yield Normalization (Converts decimal format 0.055 -> 5.50%)
+            raw_fcf = info.get("holdingPercent") or info.get("trailingPegRatio") or (raw_yield * 1.5)
+            fcf_percentage = raw_fcf * 100.0 if raw_fcf < 1.0 else raw_fcf
+            
+            # Cap extreme out-of-bound structural database anomalies
+            if fcf_percentage <= 0 or fcf_percentage > 25.0:
+                fcf_percentage = 5.5
+            
+            # --- THE CORRECTED MATHEMATICAL PEGY EQUATION ---
+            # PEGY = P/E / (Growth% + Dividend Yield%)
+            pegy_denominator = growth_percentage + yield_percentage
             pegy_ratio = pe / pegy_denominator if pegy_denominator > 0 else 0
             
             # Apply Macro Scale Factor adjustments
             adjusted_price = raw_price * MACRO_SCALE_FACTOR
-            fcf_yield_calc = dynamic_fcf * MACRO_SCALE_FACTOR
-            fcf_yield_percentage = fcf_yield_calc * 100
+            fcf_yield_percentage = fcf_percentage * MACRO_SCALE_FACTOR
             
             # --- UNIFIED MULTI-FACTOR STRATEGY MATRIX LOGIC ---
             is_low_pegy = pegy_ratio < PEGY_VALUE_THRESHOLD
@@ -91,8 +96,8 @@ def compute_pegy_matrix():
                 "ticker": ticker,
                 "price": f"{adjusted_price:.2f}",
                 "pe": f"{pe:.2f}",
-                "growth": f"{(raw_growth * 100):.2f}%",
-                "divYield": f"{(div_yield * 100):.2f}%",
+                "growth": f"{growth_percentage:.2f}%",
+                "divYield": f"{yield_percentage:.2f}%",
                 "pegy": f"{pegy_ratio:.2f}",
                 "fcfYield": f"{fcf_yield_percentage:.2f}%",
                 "strategyProfile": strategy_profile,
