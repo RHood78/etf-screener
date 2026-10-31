@@ -107,7 +107,8 @@ def compute_pegy_matrix():
                 "fcfYield": f"{fcf_yield_percentage:.2f}%",
                 "strategyProfile": strategy_profile,
                 "cashFlowInsight": cash_flow_insight,
-                "sort_key": (tier_priority, pegy_ratio)
+                "tier_priority": tier_priority,
+                "score_sort": pegy_ratio # Standardizes the sorting key for browser compatibility
             })
             
         except Exception as e:
@@ -115,7 +116,8 @@ def compute_pegy_matrix():
             continue
 
     # Execute structured multi-tier tuple sort
-    processed_assets.sort(key=lambda x: x["sort_key"])
+    # Sorts perfectly by Tier group first, then sequentially by raw PEGY ratio second
+    processed_assets.sort(key=lambda x: (x["tier_priority"], x["score_sort"]))
     top_20 = processed_assets[:20]
 
     with open("top20.json", "w") as f:
