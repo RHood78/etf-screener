@@ -20,11 +20,8 @@ MASTER_TICKERS = sorted(list(set(MASTER_TICKERS)))
 MACRO_SCALE_FACTOR = 1.0450
 
 # Calculation Boundary Configurations
-
-# Change this number to tighten or loosen your value line in the sand
-PEGY_VALUE_THRESHOLD = 1.00  # Strict Value Filter
-
-FCF_YIELD_THRESHOLD = 6.00  # Explicit 6% cash health cut-off
+PEGY_VALUE_THRESHOLD = 1.00  # ADJUSTED: Strict Graham-style value margin
+FCF_YIELD_THRESHOLD = 6.00   # Explicit 6% cash health cut-off
 
 def compute_pegy_matrix():
     print("Beginning Multi-Factor Evaluation Matrix Pipeline Sequence via Yahoo Cloud Engine...")
@@ -73,7 +70,7 @@ def compute_pegy_matrix():
             fcf_yield_calc = dynamic_fcf * MACRO_SCALE_FACTOR
             fcf_yield_percentage = fcf_yield_calc * 100
             
-            # --- FIXED: UNIFIED MULTI-FACTOR STRATEGY MATRIX LOGIC ---
+            # --- UNIFIED MULTI-FACTOR STRATEGY MATRIX LOGIC ---
             is_low_pegy = pegy_ratio < PEGY_VALUE_THRESHOLD
             is_high_fcf = fcf_yield_percentage > FCF_YIELD_THRESHOLD
             
