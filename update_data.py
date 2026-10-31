@@ -1,25 +1,44 @@
 import json
 import yfinance as yf
 
-# --- MASTER TICKER SHEET ---
-# Mapped back to standard tickers (No Stooq suffixes required!)
+# --- COMPREHENSIVE GLOBAL DIVIDEND ETF MASTER SEED SHEET ---
 MASTER_TICKERS = [
-    "SCHD", "VYM", "DGRO", "VIG", "JEPI", "JEPQ", "DVY", "SDY", 
-    "DGRW", "HDV", "SPHD", "RDVY", "NOBL", "FVD", "CGDV", "PEY", 
-    "SDVY", "DIVB", "REGL", "DIVO", "FDL", "DON", "DES", "DHS",
-    "VYMI", "VIGI", "IDV", "LVHI", "SCHY", "IGRO", "DVYE", "FNDF"
+    # US Dividend Growth, Quality & Aristocrats
+    "SCHD", "VYM", "DGRO", "VIG", "DVY", "SDY", "DGRW", "HDV", "NOBL", "FVD", 
+    "CGDV", "RDVY", "DIVB", "REGL", "FDL", "DON", "DES", "DHS", "DLN", "DTD", 
+    "PEY", "SMDV", "CSB", "CDC", "CDL", "FNDX", "TDV", "KNG", "FTCS", "DNL", 
+    "BBDY", "SDOG", "SPDV",
+    
+    # US High-Yield, Fixed Income Proxies & Covered Calls
+    "JEPI", "JEPQ", "SPHD", "DIVO", "SDVY", "MLPA", "AMLP", "ALTY", "PFF", "PGX", 
+    "TLTW", "HYGW", "LQDW", "UTG", "STK", "RFI", "BME", "EVT", "EOS", "BDJ", 
+    "NFJ", "TYG", "KYN", "MAIN", "GAIN", "PSEC",
+    
+    # International Developed Markets (ex-US Dividend Growth & Yield)
+    "VYMI", "VIGI", "IDV", "LVHI", "SCHY", "IGRO", "FNDF", "FNDC", "PXF", "PID", 
+    "IQDF", "EFV", "HEFX", "IQDG", "DOO", "GWX", "EFAV", "EFAS", "FIDI", "IEDI", 
+    "DOL", "DIM", "DLS", "DWM", "IHDG", "DXJ", "HEDJ", "DFE", "DXGE",
+    
+    # Emerging Markets & Global Allocations
+    "DVYE", "DEM", "EMDV", "FNDE", "EDIV", "DEW", "FNDB", "GCOW", "DIVI", "FGD", 
+    "WDIV", "DEEF", "DTH", "FDT", "HILO", "EYLD", "FYLD", "DGS", "FEMS", "EEMS", 
+    "DVYA", "AUSE", "SDEM", "ADRE", "GVAL"
 ]
+
+# Ensure we keep strings clean and deduplicated
+MASTER_TICKERS = sorted(list(set(MASTER_TICKERS)))
 
 MACRO_SCALE_FACTOR = 1.0450
 DEFAULT_GROWTH = 0.065     # 6.5% baseline dividend growth rate proxy
 DEFAULT_FCF_YIELD = 0.058  # 5.8% baseline free cash flow yield proxy
 
 def compute_pegy_matrix():
-    print("Beginning Multi-Factor Evaluation Matrix Pipeline Sequence via Yahoo Cloud Engine...")
+    print(f"Beginning Multi-Factor Evaluation Matrix Pipeline Sequence via Yahoo Cloud Engine...")
+    print(f"Syncing telemetry metadata profiles for {len(MASTER_TICKERS)} global assets...")
+    
     processed_assets = []
     
-    # Fetch all tickers in bulk to optimize execution speed
-    print(f"Syncing telemetry metadata profiles for {len(MASTER_TICKERS)} assets...")
+    # Batch download ticker objects to maximize server processing performance limits
     tickers_string = " ".join(MASTER_TICKERS)
     yf_data = yf.Tickers(tickers_string)
     
@@ -28,20 +47,20 @@ def compute_pegy_matrix():
             ticker_object = yf_data.tickers[ticker]
             info = ticker_object.info
             
-            # Extract live values or slide to standard baselines if fields are missing
+            # Extract live field streams, fallback gracefully to structural definitions if missing
             raw_price = info.get("regularMarketPrice") or info.get("previousClose") or info.get("navPrice") or 0
-            pe = info.get("trailingPE") or 16.5
+            pe = info.get("trailingPE") or info.get("forwardPE") or 16.5
             div_yield = info.get("trailingAnnualDividendYield") or info.get("dividendYield") or 0.032
             
             if raw_price == 0:
-                print(f"Skipping {ticker}: Pricing telemetry field is zero.")
+                # If an asset has changed its symbol or been delisted, bypass gracefully
                 continue
                 
-            # PEGY Ratio = P/E / (Blended Growth Rate% + Dividend Yield%)
+            # PEGY Ratio Formula = P/E / (Blended Growth Rate% + Dividend Yield%)
             pegy_denominator = (DEFAULT_GROWTH * 100) + (div_yield * 100)
             pegy_ratio = pe / pegy_denominator if pegy_denominator > 0 else 0
             
-            # Apply Macro Scale Factor modifiers uniformly 
+            # Apply Macro Scale Factor adjustments
             adjusted_price = raw_price * MACRO_SCALE_FACTOR
             fcf_yield_calc = DEFAULT_FCF_YIELD * MACRO_SCALE_FACTOR
             
@@ -57,20 +76,22 @@ def compute_pegy_matrix():
                 "cashFlowInsight": "High Quality Coverage" if fcf_yield_calc > 0.06 else "Stable Coverage",
                 "score_sort": pegy_ratio
             })
-            print(f"Successfully processed matrix calculations for {ticker}")
             
         except Exception as e:
-            print(f"Skipping tracking loop parameters for {ticker}: {e}")
+            # Safe isolation handler protects loop processing from individual ticker errors
+            print(f"Telemetry tracking omitted for asset {ticker}: {e}")
             continue
 
-    # Sort items based on value (Lowest PEGY = Best Value Rank)
+    # Sort array descendingly by absolute value metrics (Lowest PEGY = Strongest Score)
     processed_assets.sort(key=lambda x: x["score_sort"])
     top_20 = processed_assets[:20]
 
-    # Save artifact strictly as static text mapping layer inside repository
+    # Save artifact as static text matrix array mapping layer inside repository
     with open("top20.json", "w") as f:
         json.dump(top_20, f, indent=4)
-    print(f"Successfully built top20.json matrix profile artifact with {len(top_20)} entries.")
+        
+    print(f"Successfully processed {len(processed_assets)} records.")
+    print(f"Saved optimized top20.json matrix profile artifact with {len(top_20)} entries.")
 
 if __name__ == "__main__":
     compute_pegy_matrix()
