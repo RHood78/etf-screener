@@ -1,92 +1,40 @@
-// --- 1. CORE COMPREHENSIVE 198 DIVIDEND ETF ASSET DATABASE ---
-const etfDatabase = [
-    { ticker: "SCHD", cat: "US", price: 82.40, pe: 15.1, yield: 3.45 },
-    { ticker: "VYM",  cat: "US", price: 124.50, pe: 16.2, yield: 3.10 },
-    { ticker: "JEPI", cat: "US", price: 56.10, pe: 11.4, yield: 7.20 },
-    { ticker: "DVY",  cat: "US", price: 132.80, pe: 17.4, yield: 3.80 },
-    { ticker: "HDV",  cat: "US", price: 112.30, pe: 14.8, yield: 3.95 },
-    { ticker: "NOBL", cat: "US", price: 98.15, pe: 19.5, yield: 2.45 },
-    { ticker: "VIG",  cat: "US", price: 186.40, pe: 22.1, yield: 1.90 },
-    { ticker: "DGRO", cat: "US", price: 61.25, pe: 18.2, yield: 2.30 },
-    { ticker: "SPYV", cat: "US", price: 49.60, pe: 15.6, yield: 2.15 },
-    { ticker: "COWZ", cat: "US", price: 54.30, pe: 12.1, yield: 2.60 },
-    { ticker: "FDL",  cat: "US", price: 41.10, pe: 13.9, yield: 4.10 },
-    { ticker: "SPYD", cat: "US", price: 44.20, pe: 14.1, yield: 4.45 },
-    { ticker: "DHS",  cat: "US", price: 88.50, pe: 15.3, yield: 4.25 },
-    { ticker: "SDY",  cat: "US", price: 134.10, pe: 19.1, yield: 2.65 },
-    { ticker: "RDIV", cat: "US", price: 42.70, pe: 12.8, yield: 4.05 },
-    { ticker: "DON",  cat: "US", price: 45.90, pe: 16.8, yield: 2.80 },
-    { ticker: "DLN",  cat: "US", price: 64.20, pe: 17.1, yield: 2.50 },
-    { ticker: "DES",  cat: "US", price: 31.40, pe: 15.9, yield: 3.20 },
-    { ticker: "FDVV", cat: "US", price: 41.80, pe: 15.4, yield: 3.30 },
-    { ticker: "PEY",  cat: "US", price: 21.40, pe: 13.5, yield: 5.10 },
-    { ticker: "DGRW", cat: "US", price: 73.60, pe: 20.4, yield: 1.85 },
-    { ticker: "QYLD", cat: "US", price: 17.20, pe: 11.1, yield: 11.50 },
-    { ticker: "XYLD", cat: "US", price: 39.40, pe: 12.4, yield: 9.20 },
-    { ticker: "DJD",  cat: "US", price: 46.10, pe: 14.6, yield: 3.65 },
-    { ticker: "OUSA", cat: "US", price: 42.50, pe: 18.1, yield: 2.85 },
-    { ticker: "DIV",  cat: "US", price: 16.80, pe: 12.2, yield: 6.95 },
-    { ticker: "SDOG", cat: "US", price: 52.30, pe: 13.4, yield: 4.60 },
-    { ticker: "SPVM", cat: "US", price: 48.70, pe: 11.8, yield: 3.85 },
-    { ticker: "VYMI", cat: "INT", price: 65.40, pe: 12.3, yield: 4.65 },
-    { ticker: "PID",  cat: "INT", price: 40.50, pe: 14.5, yield: 3.70 },
-    { ticker: "IDV",  cat: "INT", price: 28.10, pe: 9.4,  yield: 6.80 },
-    { ticker: "FNDF", cat: "INT", price: 33.20, pe: 13.1, yield: 3.90 },
-    { ticker: "DWM",  cat: "INT", price: 51.40, pe: 13.5, yield: 3.75 },
-    { ticker: "VIGI", cat: "INT", price: 78.50, pe: 18.4, yield: 2.20 },
-    { ticker: "DTH",  cat: "INT", price: 42.10, pe: 12.9, yield: 4.30 },
-    { ticker: "IHDG", cat: "INT", price: 38.60, pe: 13.8, yield: 3.65 },
-    { ticker: "IQDF", cat: "INT", price: 22.40, pe: 10.9, yield: 5.80 },
-    { ticker: "DOL",  cat: "INT", price: 49.30, pe: 14.1, yield: 3.40 },
-    { ticker: "DIM",  cat: "INT", price: 67.20, pe: 13.6, yield: 3.80 },
-    { ticker: "DLS",  cat: "INT", price: 64.90, pe: 12.5, yield: 4.10 },
-    { ticker: "KBWD", cat: "SEC", price: 16.20, pe: 9.1,  yield: 12.10 },
-    { ticker: "JEPQ", cat: "SEC", price: 54.80, pe: 11.9, yield: 9.40 },
-    { ticker: "AML_P",cat: "SEC", price: 42.60, pe: 12.4, yield: 7.85 },
-    { ticker: "MLPA", cat: "SEC", price: 46.20, pe: 11.1, yield: 7.50 },
-    { ticker: "XLU",  cat: "SEC", price: 68.30, pe: 16.9, yield: 3.35 },
-    { ticker: "XLRE", cat: "SEC", price: 39.10, pe: 32.4, yield: 3.90 },
-    { ticker: "VNQ",  cat: "SEC", price: 87.40, pe: 28.5, yield: 4.10 },
-    { ticker: "FUTY", cat: "SEC", price: 44.20, pe: 16.5, yield: 3.40 },
-    { ticker: "VPU",  cat: "SEC", price: 142.10, pe: 16.7, yield: 3.30 },
-    { ticker: "XLP",  cat: "SEC", price: 76.50, pe: 20.2, yield: 2.65 },
-    { ticker: "VDC",  cat: "SEC", price: 194.20, pe: 20.5, yield: 2.55 },
-    { ticker: "XLF",  cat: "SEC", price: 38.20, pe: 14.5, yield: 1.90 }
-];
-
-// Generate synthetic items to cleanly fill out the roster to the requested 198 count
-for (let i = 1; i <= 140; i++) {
-    etfDatabase.push({
-        ticker: "DIV" + i,
-        cat: i % 3 === 0 ? "US" : (i % 3 === 1 ? "INT" : "SEC"),
-        price: parseFloat((30 + Math.random() * 70).toFixed(2)),
-        pe: parseFloat((9 + Math.random() * 11).toFixed(1)),
-        yield: parseFloat((2.0 + Math.random() * 6).toFixed(2))
-    });
-}
+/**
+ * Quantum Dividend ETF Asset Screener - Core Application Script
+ * Optimized Pipeline Architecture using Local Cloud-Processed JSON Cache
+ */
 
 let macroScaleFactor = 1.0450; 
 let currentDataset = [];
 let calculatedTop20 = []; 
 
-// --- 2. INITIALIZATION LIFECYCLE ---
+// --- 1. INITIALIZATION LIFECYCLE ---
 document.addEventListener("DOMContentLoaded", () => {
     initializeUI();
     fetchAutomatedDataStream();
 });
 
 function initializeUI() {
-    document.getElementById("toggle-importer").addEventListener("click", () => {
-        document.getElementById("import-container").classList.toggle("hidden");
-    });
+    const toggleBtn = document.getElementById("toggle-importer");
+    if (toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+            document.getElementById("import-container").classList.toggle("hidden");
+        });
+    }
 
-    document.getElementById("btn-process-csv").addEventListener("click", processUserCSV);
+    const processBtn = document.getElementById("btn-process-csv");
+    if (processBtn) {
+        processBtn.addEventListener("click", processUserCSV);
+    }
     
-    document.getElementById("btn-reset").addEventListener("click", () => {
-        document.getElementById("csv-input").value = "";
-        fetchAutomatedDataStream();
-    });
+    const resetBtn = document.getElementById("btn-reset");
+    if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+            document.getElementById("csv-input").value = "";
+            fetchAutomatedDataStream();
+        });
+    }
 
+    // Bind or generate the Export Button cleanly within the results panel
     const resultsHeader = document.querySelector(".results-header");
     if (resultsHeader && !document.getElementById("btn-export-csv")) {
         const exportBtn = document.createElement("button");
@@ -100,7 +48,7 @@ function initializeUI() {
 }
 
 /**
- * SECTION 3: LIGHTNING-FAST LOCAL JSON DATALAYER CONSUMER
+ * --- 2. LIGHTNING-FAST LOCAL JSON DATALAYER CONSUMER ---
  * Removes public CORS proxy chains to eliminate network blocking risks.
  * Consumes the daily cloud-processed Top 20 array directly from the local repository cache.
  */
@@ -108,7 +56,6 @@ async function fetchAutomatedDataStream() {
     console.log("Initializing local cloud-processed matrix stream sync...");
     
     try {
-        // Fetch directly from the repository relative root path
         const response = await fetch('./top20.json');
         
         if (!response.ok) {
@@ -118,83 +65,74 @@ async function fetchAutomatedDataStream() {
         const processedTop20Assets = await response.json();
         console.log(`Live dataset sync complete. Rendering ${processedTop20Assets.length} top-valued global assets.`);
         
-        // Pass array directly to your existing UI generator logic
+        // Cache the incoming payload so the Export engine can read it instantly
+        calculatedTop20 = processedTop20Assets;
+        
+        // Pass array directly to your standard UI generator logic
         renderMatrixTable(processedTop20Assets);
         
     } catch (error) {
         console.error("⚠️ Local Matrix Read Failure:", error.message);
         console.log("Activating resilient baseline mathematical failover fallback...");
         
-        // Safety Emergency Net: Keep your 5-asset static routine right here as an absolute fallback
         const standardEmergencyFallback = [
             { ticker: 'SCHD', price: "86.21", pe: "15.20", growth: "7.50%", divYield: "3.40%", pegy: "0.98", fcfYield: "6.48%", strategyProfile: "Undervalued Dividend Growth", cashFlowInsight: "High Quality Coverage" },
             { ticker: 'VYM', price: "126.65", pe: "16.10", growth: "6.80%", divYield: "3.10%", pegy: "1.12", fcfYield: "6.06%", strategyProfile: "Undervalued Dividend Growth", cashFlowInsight: "Stable Coverage" }
         ];
+        calculatedTop20 = standardEmergencyFallback;
         renderMatrixTable(standardEmergencyFallback);
     }
 }
 
 /**
- * Audit and Calculation Weights Evaluator
- * Runs the Multi-Factor Mathematical Evaluation Matrix Pipeline formulas
- */
-function calculateMatrixWeights(raw, scaleFactor) {
-    // PEGY Ratio = P/E / (Blended Growth Rate + Dividend Yield)
-    const pegyDenominator = (raw.growth * 100) + (raw.divYield * 100);
-    const pegyRatio = pegyDenominator > 0 ? (raw.pe / pegyDenominator) : 0;
-    
-    // Scale yields and prices uniformly against the macro metrics
-    return {
-        ticker: raw.ticker,
-        price: (raw.price * scaleFactor).toFixed(2),
-        pe: raw.pe.toFixed(2),
-        growth: (raw.growth * 100).toFixed(2) + '%',
-        divYield: (raw.divYield * 100).toFixed(2) + '%',
-        pegy: pegyRatio.toFixed(2),
-        fcfYield: (raw.fcf * 100 * scaleFactor).toFixed(2) + '%',
-        strategyProfile: pegyRatio < 1.2 ? 'Undervalued Dividend Growth' : 'Core Equity Position',
-        cashFlowInsight: raw.fcf > 0.06 ? 'High Quality Coverage' : 'Stable Coverage'
-    };
-}
-
-/**
- * Complete DOM Rendering Sequence
+ * --- 3. COMPLETE DOM RENDERING SEQUENCE ---
  */
 function renderMatrixTable(assets) {
-    const tableBody = document.querySelector('table tbody, #matrix-awaiting-telemetry');
-    if (!tableBody) return;
+    const targetContainer = document.getElementById('matrix-table-body');
+    if (!targetContainer) {
+        console.warn("Aborting render: Anchor element '#matrix-table-body' was not discovered in layout.");
+        return;
+    }
     
-    // Clear out "Awaiting telemetry stream sync sequence..." message row completely
     let htmlContent = '';
     
-    assets.forEach(asset => {
-        // Safe check for handling both array strings and normal strings
+    assets.forEach((asset, index) => {
         const displayTicker = Array.isArray(asset.ticker) ? asset.ticker[0] : asset.ticker;
         
+        // Normalize object variable map paths dynamically to support both live cloud fields and uploaded keys
+        const price = asset.price;
+        const pe = asset.pe;
+        const growth = asset.growth.toString().includes('%') ? asset.growth : `${parseFloat(asset.growth).toFixed(2)}%`;
+        const divYield = asset.divYield ? asset.divYield : (asset.yield ? `${parseFloat(asset.yield).toFixed(2)}%` : '0.00%');
+        const pegy = asset.pegy;
+        const fcfYield = asset.fcfYield ? asset.fcfYield : (asset.fcf ? `${parseFloat(asset.fcf).toFixed(2)}%` : '0.00%');
+        const strategyProfile = asset.strategyProfile || asset.profile || "Core Position";
+        const cashInsight = asset.cashFlowInsight || asset.insight || "Stable Coverage";
+        
         htmlContent += `
-            <tr>
-                <td class="font-bold">${displayTicker}</td>
-                <td>$${asset.price}</td>
-                <td>${asset.pe}</td>
-                <td>${asset.growth}</td>
-                <td class="text-green-600 font-medium">${asset.divYield}</td>
-                <td>${asset.pegy}</td>
-                <td>${asset.fcfYield}</td>
-                <td><span class="badge-strategy">${asset.strategyProfile}</span></td>
-                <td><span class="badge-cash">${asset.cashFlowInsight}</span></td>
+            <tr class="hover:bg-gray-50 border-b border-gray-100 transition-colors">
+                <td class="px-4 py-3 font-bold text-gray-900">#${index + 1} - ${displayTicker}</td>
+                <td class="px-4 py-3">$${price}</td>
+                <td class="px-4 py-3">${pe}</td>
+                <td class="px-4 py-3">${growth}</td>
+                <td class="px-4 py-3 text-green-600 font-medium">${divYield}</td>
+                <td class="px-4 py-3 font-medium">${pegy}</td>
+                <td class="px-4 py-3">${fcfYield}</td>
+                <td class="px-4 py-3"><span class="badge-strategy">${strategyProfile}</span></td>
+                <td class="px-4 py-3"><span class="badge-cash">${cashInsight}</span></td>
             </tr>
         `;
     });
     
-    // Inject components into table frame layout asynchronously 
-    const targetContainer = document.getElementById('matrix-table-body') || tableBody;
     targetContainer.innerHTML = htmlContent;
     console.log("Matrix table rendered completely.");
 }
 
-
-// --- 4. MULTI-FACTOR MATHEMATICAL CALCULATIONS PIPELINE ---
-function calculateMetrics() {
+/**
+ * --- 4. MANUAL WORKBOOK OVERWRITE CALCULATIONS ---
+ * Processes local multi-factor math dynamically ONLY when a user manually drops in an external CSV spreadsheet.
+ */
+function calculateManualMetrics() {
     let results = [];
 
     currentDataset.forEach(asset => {
@@ -205,90 +143,55 @@ function calculateMetrics() {
         let trailingPE = basePE * macroScaleFactor;
         if (trailingPE <= 0 || price <= 0) return;
 
+        // Custom fund financial profile approximations
         let impliedCashFlowPerShare = (price / trailingPE) * 1.15;
         let fcfYield = (impliedCashFlowPerShare / price) * 100;
 
-        let growthSum = 0;
-        growthSum += (7.25 * macroScaleFactor); 
-        growthSum += 8.20;                      
-        growthSum += 6.50;                      
-        growthSum += 7.10;                      
+        let growthSum = (7.25 * macroScaleFactor) + 8.20 + 6.50 + 7.10;                      
         let blendedGrowth = growthSum / 4;
-
         if (blendedGrowth <= 0) return;
 
         let pegy = trailingPE / (blendedGrowth + divYieldPercent);
         if (pegy <= 0) return;
 
-        let strategyProfile = "Mature Dividend Value";
-        if (blendedGrowth >= 8.0 && blendedGrowth <= 15.0) {
-            strategyProfile = "GARP Stock W/ Yield";
-        }
-
-        let cashInsight = "Average Market Balance";
-        let signalClass = "signal-normal";
-        if (pegy < 1.4 && fcfYield >= 5.0) {
-            cashInsight = "Undervalued & Cash Rich (Strong Signal)";
-            signalClass = "signal-strong";
-        } else if (pegy < 1.4 && fcfYield < 2.0) {
-            cashInsight = "Cheap but Cash-Strapped (Value Trap Risk)";
-            signalClass = "signal-trap";
+        let strategyProfile = "Premium Valuation";
+        let cashInsight = "Stable / Low Coverage";
+        
+        // Apply your signature multi-factor threshold strategy logic
+        if (pegy < 1.00 && fcfYield > 5.50) {
+            strategyProfile = "Strong Signal (Cash Generator)";
+            cashInsight = "High Quality Coverage";
+        } else if (pegy < 1.00 && fcfYield <= 5.50) {
+            strategyProfile = "Value Trap (Cash-Strapped)";
+            cashInsight = "Weak Coverage Risk";
+        } else if (pegy >= 1.00 && fcfYield > 5.50) {
+            strategyProfile = "Expensive (Monitor Entry)";
+            cashInsight = "High Quality Coverage";
         }
 
         results.push({
             ticker: asset.ticker,
-            cat: asset.cat || "US",
             price: price.toFixed(2),
             pe: trailingPE.toFixed(2),
             growth: blendedGrowth.toFixed(2),
-            yield: divYieldPercent.toFixed(2),
-            pegy: pegy.toFixed(3),
-            fcf: fcfYield.toFixed(2),
-            profile: strategyProfile,
-            insight: cashInsight,
-            signalClass: signalClass
+            divYield: divYieldPercent.toFixed(2) + '%',
+            pegy: pegy.toFixed(2),
+            fcfYield: fcfYield.toFixed(2) + '%',
+            strategyProfile: strategyProfile,
+            cashFlowInsight: cashInsight
         });
     });
 
-    results.sort((a, b) => {
-        let pegyDiff = parseFloat(a.pegy) - parseFloat(b.pegy);
-        if (Math.abs(pegyDiff) < 0.001) {
-            return parseFloat(b.fcf) - parseFloat(a.fcf);
-        }
-        return pegyDiff;
-    });
+    // Sort manual workbook dataset inputs ascending by raw PEGY values
+    results.sort((a, b) => parseFloat(a.pegy) - parseFloat(b.pegy));
 
     calculatedTop20 = results.slice(0, 20);
-    renderTable(calculatedTop20);
+    renderMatrixTable(calculatedTop20);
 }
 
-// --- 5. INTERFACE RENDER PANEL ---
-function renderTable(data) {
-    const tbody = document.getElementById("table-body");
-    if (!tbody) return;
-    tbody.innerHTML = "";
-
-    if (data.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='9' style='text-align:center; color:var(--danger-red); font-weight:bold;'>Zero assets cleared metrics boundary checks.</td></tr>";
-        return;
-    }
-
-    data.forEach((row, index) => {
-        let tr = document.createElement("tr");
-        tr.innerHTML = "<td><strong>#" + (index + 1) + " - " + row.ticker + "</strong> <small style='color:var(--text-muted);'>[" + row.cat + "]</small></td>" +
-                       "<td>$" + row.price + "</td>" +
-                       "<td>" + row.pe + "</td>" +
-                       "<td>" + row.growth + "%</td>" +
-                       "<td>" + row.yield + "%</td>" +
-                       "<td><strong>" + row.pegy + "</strong></td>" +
-                       "<td>" + row.fcf + "%</td>" +
-                       "<td><span class='subtitle'>" + row.profile + "</span></td>" +
-                       "<td class='" + row.signalClass + "'>" + row.insight + "</td>";
-        tbody.appendChild(tr);
-    });
-}
-
-// --- 6. EXCEL / CSV DIRECT DOWNLOAD UTILITY ---
+/**
+ * --- 5. EXCEL / CSV DIRECT DOWNLOAD UTILITY ---
+ */
 function exportResultsToCSV() {
     if (calculatedTop20.length === 0) {
         alert("No calculation metrics available to export.");
@@ -296,22 +199,22 @@ function exportResultsToCSV() {
     }
 
     let csvRows = [
-        ["Rank", "Ticker", "Category", "Price", "Adjusted P/E", "Blended Growth", "Dividend Yield", "PEGY Ratio", "FCF Yield", "Strategy Profile", "Cash Insight"]
+        ["Rank", "Ticker", "Price", "Adjusted P/E", "Blended Growth", "Dividend Yield", "PEGY Ratio", "FCF Yield", "Strategy Profile", "Cash Insight"]
     ];
 
     calculatedTop20.forEach((row, index) => {
+        const displayTicker = Array.isArray(row.ticker) ? row.ticker[0] : row.ticker;
         csvRows.push([
             index + 1,
-            row.ticker,
-            row.cat,
+            displayTicker,
             "$" + row.price,
             row.pe,
-            row.growth + "%",
-            row.yield + "%",
+            row.growth.toString().includes('%') ? row.growth : row.growth + "%",
+            row.divYield || row.yield,
             row.pegy,
-            row.fcf + "%",
-            row.profile,
-            row.insight
+            row.fcfYield || row.fcf,
+            row.strategyProfile || row.profile,
+            row.cashFlowInsight || row.insight
         ]);
     });
 
@@ -328,7 +231,9 @@ function exportResultsToCSV() {
     document.body.removeChild(downloadAnchor);
 }
 
-// --- 7. SOLUTION 1 WORKSPACE PARSER ---
+/**
+ * --- 6. SOLUTION 1 WORKSPACE PARSER ---
+ */
 function processUserCSV() {
     const rawText = document.getElementById("csv-input").value.trim();
     if (!rawText) return alert("Ingestion canvas is empty. Add spreadsheet data first.");
@@ -342,29 +247,25 @@ function processUserCSV() {
         
         let cols = row.split(",");
         if (cols.length >= 4) {
-            let ticker = cols[0].trim().toUpperCase();
-            let price = parseFloat(cols[1]);
-            let pe = parseFloat(cols[2]);
-            let yieldVal = parseFloat(cols[3]);
-            let category = cols[4] ? cols[4].trim().toUpperCase() : "US";
-
-            if (ticker && !isNaN(price) && !isNaN(pe) && !isNaN(yieldVal)) {
-                parsedDataset.push({ ticker: ticker, cat: category, price: price, pe: pe, yield: yieldVal });
-            }
+        let ticker = cols[0].trim().toUpperCase();
+        let price = parseFloat(cols[1]);
+        let pe = parseFloat(cols[2]);
+        let yieldVal = parseFloat(cols[3]);
+        let category = cols[4] ? cols[4].trim().toUpperCase() : "US";
+        if (ticker && !isNaN(price) && !isNaN(pe) && !isNaN(yieldVal)) {
+        parsedDataset.push({ ticker: ticker, cat: category, price: price, pe: pe, yield: yieldVal });
         }
-    });
-
-    if (parsedDataset.length > 0) {
+        }
+        });
+        if (parsedDataset.length > 0) {
         currentDataset = parsedDataset;
-        
         const statusBox = document.getElementById("fed-status");
         if (statusBox) {
-            statusBox.className = "status-badge success";
-            statusBox.innerText = "✓ Solution 1 Active: Manual Workbook Feed Processed Safely (" + parsedDataset.length + " Assets Loaded).";
+        statusBox.className = "status-badge success";
+        statusBox.innerText = "✓ Solution 1 Active: Manual Workbook Feed Processed Safely (" + parsedDataset.length + " Assets Loaded).";
         }
-        
-        calculateMetrics();
-    } else {
+        calculateManualMetrics();
+        } else {
         alert("Parsing configuration mismatch. Verify column structure matches: Ticker, Price, P/E, Yield.");
-    }
-}
+        }
+        }
