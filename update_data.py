@@ -21,7 +21,7 @@ MACRO_SCALE_FACTOR = 1.0450
 
 # Calculation Boundary Configurations
 PEGY_VALUE_THRESHOLD = 1.00  
-FCF_YIELD_THRESHOLD = 5.50   # ADJUSTED: Calibrated from 6.00% to 5.50% for real-world global fund averages
+FCF_YIELD_THRESHOLD = 5.50   # Adjusted: Calibrated to 5.50% for real-world global fund averages
 
 def compute_pegy_matrix():
     print("Beginning Calibrated Tier Priority Evaluation Matrix...")
@@ -80,6 +80,7 @@ def compute_pegy_matrix():
             is_low_pegy = pegy_ratio < PEGY_VALUE_THRESHOLD
             is_high_fcf = fcf_yield_percentage > FCF_YIELD_THRESHOLD
             
+            # FIXED LOGIC MATRIX: Cleaned up edge cases to prevent label crossover anomalies
             if is_low_pegy and is_high_fcf:
                 strategy_profile = "Strong Signal (Cash Generator)"
                 cash_flow_insight = "High Quality Coverage"
@@ -88,14 +89,14 @@ def compute_pegy_matrix():
                 strategy_profile = "Expensive (Monitor Entry)"
                 cash_flow_insight = "High Quality Coverage"
                 tier_priority = 2  
-            elif not is_low_pegy and not is_high_fcf:
-                strategy_profile = "Premium Valuation"
-                cash_flow_insight = "Stable / Low Coverage"
-                tier_priority = 3  
-            else:
+            elif is_low_pegy and not is_high_fcf:
                 strategy_profile = "Value Trap (Cash-Strapped)"
                 cash_flow_insight = "Weak Coverage Risk"
-                tier_priority = 4  
+                tier_priority = 4  # Banished safely to bottom tier priority
+            else:
+                strategy_profile = "Premium Valuation"
+                cash_flow_insight = "Stable / Low Coverage"
+                tier_priority = 3  # Neutral baseline tier allocation
             
             processed_assets.append({
                 "ticker": ticker,
@@ -108,14 +109,13 @@ def compute_pegy_matrix():
                 "strategyProfile": strategy_profile,
                 "cashFlowInsight": cash_flow_insight,
                 "tier_priority": tier_priority,
-                "score_sort": pegy_ratio # Standardizes the sorting key for browser compatibility
+                "score_sort": pegy_ratio 
             })
             
         except Exception as e:
             print(f"Skipping processing parameters for {ticker}: {e}")
             continue
 
-    # Execute structured multi-tier tuple sort
     # Sorts perfectly by Tier group first, then sequentially by raw PEGY ratio second
     processed_assets.sort(key=lambda x: (x["tier_priority"], x["score_sort"]))
     top_20 = processed_assets[:20]
