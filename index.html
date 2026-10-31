@@ -36,26 +36,32 @@
                 <h2>Top 20 Filtered Investment Assets</h2>
             </div>
             <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Asset Profile</th>
-                            <th>Market Price</th>
-                            <th>Adjusted P/E</th>
-                            <th>Blended Growth</th>
-                            <th>Dividend Yield</th>
-                            <th>PEGY Ratio</th>
-                            <th>FCF Yield</th>
-                            <th>Strategy Profile</th>
-                            <th>Cash Flow Insight</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body">
-                        <tr>
-                            <td colspan="9" style="text-align:center; color:var(--text-muted);">Awaiting telemetry stream sync sequence...</td>
-                        </tr>
-                    </tbody>
-                </table>
+             <!-- Main Investment Matrix Table Frame -->
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th>Asset Profile</th>
+                        <th>Market Price</th>
+                        <th>Adjusted P/E</th>
+                        <th>Blended Growth</th>
+                        <th>Dividend Yield</th>
+                        <th>PEGY Ratio</th>
+                        <th>FCF Yield</th>
+                        <th>Strategy Profile</th>
+                        <th>Cash Flow Insight</th>
+                    </tr>
+                </thead>
+                
+                <!-- FIX: The JavaScript targets this exact ID to inject your asset rows -->
+                <tbody id="matrix-table-body">
+                    <tr id="matrix-awaiting-telemetry">
+                        <td colspan="9" style="text-align: center; padding: 20px; color: #6b7280;">
+                            Awaiting telemetry stream sync sequence...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
             </div>
         </section>
     </main>
