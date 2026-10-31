@@ -112,7 +112,7 @@ function renderMatrixTable(assets) {
         htmlContent += `
             <tr class="hover:bg-gray-50 border-b border-gray-100 transition-colors">
                 <td class="px-4 py-3 font-bold text-gray-900">#\${index + 1} - \${displayTicker}</td>
-                <td class="px-4 py-3">$\${price}</td>
+                <td class="px-4 py-3">\$\${price}</td>
                 <td class="px-4 py-3">\${pe}</td>
                 <td class="px-4 py-3">\${growth}</td>
                 <td class="px-4 py-3 text-green-600 font-medium">\${divYield}</td>
@@ -207,7 +207,7 @@ function exportResultsToCSV() {
         csvRows.push([
             index + 1,
             displayTicker,
-            "$" + row.price,
+            "\$" + row.price,
             row.pe,
             row.growth.toString().includes('%') ? row.growth : row.growth + "%",
             row.divYield || row.yield,
