@@ -1,7 +1,9 @@
 import json
 import yfinance as yf
+import pandas as pd
+import numpy as np
 
-# --- COMPREHENSIVE GLOBAL DIVIDEND ETF MASTER SEED SHEET ---
+# --- OPTIMIZED COMPREHENSIVE GLOBAL DIVIDEND ETF MASTER ---
 MASTER_TICKERS = [
     "AAXJ", "ACWV", "AIA", "ALTY", "AMLP", "AOA", "AOK", "AOM", "AOR", "APIE", "ASHR", "BAB", "BBCA", "BBEU", "BBJP", "BBRE", 
     "BFOR", "BGU", "BIZD", "BJK", "BND", "BNDX", "BOM", "BSCE", "BSCH", "BSCI", "BSCJ", "BSCK", "BSCL", "BSCM", "BSCN", "BSCO", 
@@ -40,18 +42,64 @@ MASTER_TICKERS = [
     "HSV", "HSW", "HSX", "HSY", "HSZ", "HYGW", "IDV", "IGRO", "IHDG", "IEDI", "JEPI", "JEPQ", "KNG", "KYN", "LQDW", "LVHI", "MLPA", 
     "NOBL", "PEY", "PFF", "PGX", "PID", "PXF", "RDVY", "REGL", "SCHD", "SCHY", "SDEM", "SDOG", "SDVY", "SMDV", "SPDV", "SPHD", "TDV", 
     "TLTW", "TYG", "VIG", "VIGI", "VYM", "VYMI", "WDIV", "VEGN", "NUDV", "TPHD", "ADVE", "DSI", "ESGV", "SUSA",
-    # --- Structural Global Additions ---
     "SPYV", "IVLU", "VXUS", "VEA", "IEFA", "SCHF", "IEMG", "IXUS"
 ]
 MASTER_TICKERS = sorted(list(set(MASTER_TICKERS)))
-MACRO_SCALE_FACTOR = 1.0450
 
-# Calculation Boundary Configurations
+MACRO_SCALE_FACTOR = 1.0450
 PEGY_VALUE_THRESHOLD = 1.00  
-FCF_YIELD_THRESHOLD = 5.50   # Adjusted: Calibrated to 5.50% for real-world global fund averages
+FCF_YIELD_THRESHOLD = 5.50   
+
+def get_dividend_growth_rate(ticker_obj):
+    """Calculates the 5-year annualized distribution growth rate to fix the PEGY denominator."""
+    try:
+        divs = ticker_obj.dividends
+        if divs.empty or len(divs) < 4:
+            return 5.0 
+        annual_divs = divs.resample('YE').sum()
+        if len(annual_divs) < 5:
+            return 5.0
+        start_val = annual_divs.iloc[-5]
+        end_val = annual_divs.iloc[-1]
+        if start_val <= 0 or end_val <= 0:
+            return 5.0
+        cagr = ((end_val / start_val) ** (1/4) - 1) * 100
+        return clip_value(cagr, 0.1, 15.0, 5.0)
+    except:
+        return 5.0
+
+def check_performance_cagr(ticker_obj):
+    """Checks 1, 5, and 10 year price compound growth returns."""
+    try:
+        hist = ticker_obj.history(period="10y")
+        if hist.empty or len(hist) < 252:
+            return 0.0, False
+        
+        close = hist['Close']
+        current_price = close.iloc[-1]
+        
+        val_1y = close.iloc[-252] if len(close) >= 252 else close.iloc[0]
+        val_5y = close.iloc[-1260] if len(close) >= 1260 else close.iloc[0]
+        val_10y = close.iloc[0]
+        
+        cagr_1 = ((current_price / val_1y) - 1) * 100
+        cagr_5 = ((current_price / val_5y) ** (1/5) - 1) * 100
+        cagr_10 = ((current_price / val_10y) ** (1/10) - 1) * 100
+        
+        trends_upward = (current_price > val_1y) and (val_1y > val_5y)
+        avg_cagr = (cagr_1 + cagr_5 + cagr_10) / 3
+        
+        return avg_cagr, trends_upward
+    except:
+        return 0.0, False
+
+def clip_value(val, min_b, max_b, fallback):
+    if val is None or np.isnan(val) or val <= min_b or val > max_b:
+        return fallback
+    return val
 
 def compute_pegy_matrix():
-    print("Beginning Calibrated Tier Priority Evaluation Matrix...")
+    print("Beginning Mathematical Verification & Factor Sorting Model...")
     processed_assets = []
     
     tickers_string = " ".join(MASTER_TICKERS)
@@ -62,68 +110,59 @@ def compute_pegy_matrix():
             ticker_object = yf_data.tickers[ticker]
             info = ticker_object.info
             
-            # 1. Price Data
+            expense_ratio = info.get("expenseRatio", 0.0) or 0.0
+            if expense_ratio > 0.0050:
+                continue
+
+            yield_indicator = info.get("trailingAnnualDividendYield") or info.get("dividendYield") or 0.0
+            if yield_indicator >= 0.20: 
+                yield_indicator = yield_indicator / 100.0 if yield_indicator > 1.0 else yield_indicator * 0.10
+            
+            yield_percentage = yield_indicator * 100.0
+            if yield_percentage < 2.0 or yield_percentage > 4.0:
+                continue
+
             raw_price = info.get("regularMarketPrice") or info.get("previousClose") or info.get("navPrice") or 0
             if raw_price == 0:
                 continue
                 
-            # 2. Price-to-Earnings Ratio
-            pe = info.get("trailingPE") or info.get("forwardPE") or 15.5
-            if pe <= 2.0 or pe > 50.0: 
-                pe = 16.2  
+            pe = info.get("trailingPE") or info.get("forwardPE") or 16.2
+            pe = clip_value(pe, 2.0, 50.0, 16.2)
             
-            # 3. Dividend Yield precision calibration
-            yield_indicator = info.get("trailingAnnualDividendYield") or info.get("dividendYield") or 0.030
-            if yield_indicator >= 0.20: 
-                yield_indicator = yield_indicator / 100.0 if yield_indicator > 1.0 else yield_indicator * 0.10
-            if yield_indicator <= 0:
-                yield_indicator = 0.030
-            yield_percentage = yield_indicator * 100.0
-            
-            # 4. Normalized ETF Dividend Growth Rate Model
-            raw_growth = info.get("threeYearAverageReturn") or info.get("fiveYearAverageReturn") or 0.060
-            if raw_growth > 1.0:
-                raw_growth = raw_growth / 100.0
-            
-            growth_percentage = raw_growth * 100.0
-            if growth_percentage > 12.0 or growth_percentage <= 0:
-                growth_percentage = 6.25 
+            avg_cagr, is_trending_up = check_performance_cagr(ticker_object)
+            growth_percentage = get_dividend_growth_rate(ticker_object)
                 
-            # 5. Dynamic Fund Free Cash Flow Yield Proxy Formula
             pb_ratio = info.get("priceToBook") or 1.8
-            dynamic_fcf = (1.0 / pb_ratio) * 10.0 if pb_ratio > 0 else 5.5
+            turnover = info.get("portfolioTurnover", 0.20) or 0.20
+            dynamic_fcf = (1.0 / pb_ratio) * (10.0 + turnover) if pb_ratio > 0 else 5.5
+            dynamic_fcf = clip_value(dynamic_fcf, 2.0, 15.0, 5.8)
             
-            if dynamic_fcf < 2.0 or dynamic_fcf > 15.0:
-                dynamic_fcf = 5.8
-            
-            # --- MATHEMATICAL MATRIX EQUATION ENGINE ---
             pegy_denominator = growth_percentage + yield_percentage
-            pegy_ratio = pe / pegy_denominator if pegy_denominator > 0 else 0
+            pegy_ratio = pe / pegy_denominator if pegy_denominator > 0 else 99.0
             
             adjusted_price = raw_price * MACRO_SCALE_FACTOR
             fcf_yield_percentage = dynamic_fcf * MACRO_SCALE_FACTOR
             
-            # --- UNIFIED MULTI-FACTOR STRATEGY MATRIX LOGIC ---
             is_low_pegy = pegy_ratio < PEGY_VALUE_THRESHOLD
             is_high_fcf = fcf_yield_percentage > FCF_YIELD_THRESHOLD
+            meets_cagr_target = avg_cagr >= 6.0
             
-            # FIXED LOGIC MATRIX: Cleaned up edge cases to prevent label crossover anomalies
-            if is_low_pegy and is_high_fcf:
+            if is_low_pegy and is_high_fcf and is_trending_up and meets_cagr_target:
                 strategy_profile = "Strong Signal (Cash Generator)"
                 cash_flow_insight = "High Quality Coverage"
                 tier_priority = 1  
-            elif not is_low_pegy and is_high_fcf:
+            elif is_high_fcf and is_trending_up:
                 strategy_profile = "Expensive (Monitor Entry)"
                 cash_flow_insight = "High Quality Coverage"
                 tier_priority = 2  
             elif is_low_pegy and not is_high_fcf:
                 strategy_profile = "Value Trap (Cash-Strapped)"
                 cash_flow_insight = "Weak Coverage Risk"
-                tier_priority = 4  # Banished safely to bottom tier priority
+                tier_priority = 4  
             else:
                 strategy_profile = "Premium Valuation"
                 cash_flow_insight = "Stable / Low Coverage"
-                tier_priority = 3  # Neutral baseline tier allocation
+                tier_priority = 3  
             
             processed_assets.append({
                 "ticker": ticker,
@@ -140,17 +179,15 @@ def compute_pegy_matrix():
             })
             
         except Exception as e:
-            print(f"Skipping processing parameters for {ticker}: {e}")
             continue
 
-    # Sorts perfectly by Tier group first, then sequentially by raw PEGY ratio second
     processed_assets.sort(key=lambda x: (x["tier_priority"], x["score_sort"]))
     top_20 = processed_assets[:20]
 
     with open("top20.json", "w") as f:
         json.dump(top_20, f, indent=4)
         
-    print(f"Saved structural tier priority top20.json artifact with {len(top_20)} entries.")
+    print(f"Success! Exported pristine matrix tracking configuration file to top20.json.")
 
 if __name__ == "__main__":
     compute_pegy_matrix()
