@@ -7,6 +7,47 @@ let macroScaleFactor = 1.0450;
 let currentDataset = [];
 let calculatedTop20 = []; 
 
+// --- 1. INITIALIZATION LIFECYCLE ---
+document.addEventListener("DOMContentLoaded", () => {
+    initThemeEngine(); // FIX: Safely boots the color theme swapper before rendering data rows
+    initializeUI();
+    fetchAutomatedDataStream();
+});
+
+/**
+ * Modern SaaS Theme Swapping Orchestration Module
+ * Connects directly to custom CSS custom properties variables without editing grid rendering logic.
+ */
+function initThemeEngine() {
+    const themeSelect = document.getElementById("theme-select");
+    if (!themeSelect) return;
+
+    // Pull from cross-session storage cache or default immediately back to system core configs
+    const savedTheme = localStorage.getItem("screener-theme") || "system";
+    themeSelect.value = savedTheme;
+    applyTheme(savedTheme);
+
+    themeSelect.addEventListener("change", (e) => {
+        const chosenTheme = e.target.value;
+        localStorage.setItem("screener-theme", chosenTheme);
+        applyTheme(chosenTheme);
+    });
+
+    // Explicitly listen to real-time live background operating system mode alterations
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+        if (themeSelect.value === "system") applyTheme("system");
+    });
+}
+
+function applyTheme(theme) {
+    if (theme === "system") {
+        const isSystemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.setAttribute("data-theme", isSystemDark ? "dark" : "light");
+    } else {
+        document.documentElement.setAttribute("data-theme", theme);
+    }
+}
+
 // --- 2. INITIALIZATION LIFECYCLE ---
 document.addEventListener("DOMContentLoaded", () => {
     initializeUI();
