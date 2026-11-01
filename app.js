@@ -35,6 +35,36 @@ function initializeUI() {
         exportBtn.addEventListener("click", exportResultsToCSV);
         resultsHeader.appendChild(exportBtn);
     }
+    function initThemeEngine() {
+    const themeSelect = document.getElementById("theme-select");
+    if (!themeSelect) return;
+
+    // Retrieve previous local cache selections or fall straight back to system configurations
+    const savedTheme = localStorage.getItem("screener-theme") || "system";
+    themeSelect.value = savedTheme;
+    applyTheme(savedTheme);
+
+    themeSelect.addEventListener("change", (e) => {
+        const chosenTheme = e.target.value;
+        localStorage.setItem("screener-theme", chosenTheme);
+        applyTheme(chosenTheme);
+    });
+
+    // Watch for live native operating system theme adjustments
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+        if (themeSelect.value === "system") applyTheme("system");
+    });
+}
+
+function applyTheme(theme) {
+    if (theme === "system") {
+        const isSystemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.setAttribute("data-theme", isSystemDark ? "dark" : "light");
+    } else {
+        document.documentElement.setAttribute("data-theme", theme);
+    }
+}
+
 }
 
 /**
