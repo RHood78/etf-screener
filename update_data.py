@@ -23,7 +23,7 @@ MASTER_TICKERS = [
     "FNDC", "FNDE", "FNDF", "FNDX", "FNX", "FPX", "FSG", "FSTA", "FTCS", "FTCSI", "FTRI", "FTXD", "FTXE", "FTXG", "FTXH", "FTXL", "FTXN", 
     "FTXO", "FTXR", "FTXTC", "FUN", "FUTY", "FVA", "FVC", "FVD", "FVDD", "FVL", "FWDB", "FXA", "FXB", "FXC", "FXCH", "FXD", "FXE", "FXF", 
     "FXG", "FXH", "FXI", "FXL", "FXN", "FXO", "FXR", "FXS", "FXU", "FXZ", "FYC", "FYD", "FYG", "FYLD", "FYT", "FYX", "GAF", "GAIN", "GCE", 
-    "GCOW", "GDAY", "GDO", "GDX", "GDXJ", "GEM", "GEUR", "GGOv", "GHYG", "GID", "GII", "GIM", "GIVE", "GJP", "GLDI", "GLEO", "GLIN", "GLOF", 
+    "GCOW", "GDAY", "GDO", "GDX", "GDXJ", "GEM", "GEUR", "GGOV", "GHYG", "GID", "GII", "GIM", "GIVE", "GJP", "GLDI", "GLEO", "GLIN", "GLOF", 
     "GLOV", "GLRE", "GLVN", "GML", "GMM", "GMF", "GMR", "GNAF", "GNAT", "GNE", "GNR", "GNRA", "GNRE", "GNT", "GOAT", "GOEX", "GOGF", "GOVT", 
     "GPM", "GPX", "GQRE", "GRES", "GRID", "GSEW", "GSG", "GSID", "GSIE", "GSLC", "GSSC", "GSST", "GSY", "GULF", "GUNR", "GVAL", "GVI", 
     "GVIP", "GVT", "GWO", "GWX", "GYEN", "GYLD", "HAX", "HDAW", "HDG", "HDGE", "HDMV", "HDV", "HECO", "HEDJ", "HEEM", "HEFA", "HEGD", 
