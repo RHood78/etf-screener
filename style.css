@@ -1,238 +1,218 @@
-/* --- THEME VARIATION TOKENS --- */
+/* ==========================================================================
+   QUANTUM DIVIDEND ETF DASHBOARD CORE DESIGN STYLESHEET
+   Inspired by PEGY Finder SaaS Architecture - Supports Light, Dark & System
+   ========================================================================== */
+
+/* --- 1. THEME MATRIX SYSTEM TOKENS --- */
 :root, [data-theme="light"] {
-    --bg-main: #f8fafc;
-    --bg-card: #ffffff;
-    --border-color: #e2e8f0;
-    --text-primary: #0f172a;
-    --text-muted: #64748b;
-    --accent-blue: #3b82f6;
+    --bg-main: #f8fafc;          /* Off-white canvas */
+    --bg-card: #ffffff;          /* Pure crisp white cards */
+    --border-color: #e2e8f0;     /* Clean low-profile slate separator */
     
-    /* Strategy Badge Mappings */
-    --badge-strong-bg: #f0fdf4;
-    --badge-strong-text: #16a34a;
-    --badge-trap-bg: #fef2f2;
-    --badge-trap-text: #dc2626;
-    --badge-entry-bg: #fffbeb;
-    --badge-entry-text: #d97706;
+    /* Typography Palette */
+    --text-primary: #0f172a;     /* Deep navy obsidian */
+    --text-muted: #64748b;        /* Soft neutral slate text */
+    
+    /* Interactive Accents */
+    --accent-primary: #4f46e5;   /* Premium Indigo Core Button/Nav */
+    --accent-hover: #4338ca;     /* Deep focus Indigo hover */
+    --bg-hover-row: #f1f5f9;     /* Subtle row scan hover state */
+
+    /* Multi-Factor Strategy Badge Palettes */
+    --badge-strong-bg: #e6fcf5;   /* Soft mint green tint */
+    --badge-strong-text: #0ca678; /* Clean emerald text */
+    --badge-trap-bg: #fff5f5;     /* Soft crimson warning tint */
+    --badge-trap-text: #f03e3e;   /* Sharp maroon alert text */
+    --badge-entry-bg: #fff9db;    /* Warm amber entry tint */
+    --badge-entry-text: #f59f00;  /* Rust accent text */
+    --badge-premium-bg: #edf2ff;  /* Soft cool slate/blue tint */
+    --badge-premium-text: #4c6ef5;/* Sharp classic blue text */
 }
 
 [data-theme="dark"] {
-    --bg-main: #0b0f19;
-    --bg-card: #151f32;
-    --border-color: #1e293b;
-    --text-primary: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent-blue: #60a5fa;
+    --bg-main: #0b0f19;          /* Deep dark slate space */
+    --bg-card: #151f32;          /* Rich obsidian asset block containers */
+    --border-color: #1e293b;     /* High-contrast dark edge border */
     
-    /* Strategy Badge Mappings */
-    --badge-strong-bg: #052e16;
-    --badge-strong-text: #4ade80;
-    --badge-trap-bg: #451a03;
-    --badge-trap-text: #f87171;
-    --badge-entry-bg: #451a03;
-    --badge-entry-text: #fbbf24;
+    /* Typography Palette */
+    --text-primary: #f8fafc;     /* Bright off-white readable labels */
+    --text-muted: #94a3b8;        /* Medium grey subheadings */
+    
+    /* Interactive Accents */
+    --accent-primary: #6366f1;   /* Electrified Indigo Core */
+    --accent-hover: #4f46e5;     /* Saturated Indigo active click */
+    --bg-hover-row: #1e293b;     /* High-contrast dark row scan state */
+
+    /* Multi-Factor Strategy Badge Palettes */
+    --badge-strong-bg: #062f22;   /* Deep forest anchor tint */
+    --badge-strong-text: #38bdf8; /* Highly visible neon emerald text */
+    --badge-trap-bg: #450a0a;     /* Rich charred blood warning tint */
+    --badge-trap-text: #f87171;   /* Vibrant neon pink warning text */
+    --badge-entry-bg: #451a03;     /* Burned rust amber tint */
+    --badge-entry-text: #fbbf24;  /* Vibrant sharp gold text */
+    --badge-premium-bg: #1e1b4b;  /* Midnight deep blue/indigo tint */
+    --badge-premium-text: #818cf8; /* High-readability periwinkle text */
 }
 
-/* Base Body Framework Layout Override */
+/* --- 2. GLOBAL RESET & RESET LAYER CORES --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     background-color: var(--bg-main);
     color: var(--text-primary);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    transition: background-color 0.25s ease, color 0.25s ease;
-}
-
-/* Card or Table Frame Adjustments */
-.investment-matrix-card {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-}
-
-:root {
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --accent-cyan: #38bdf8;
-    --accent-green: #4ade80;
-    --accent-yellow: #facc15;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --border-color: #334155;
-    --danger-red: #ef4444;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-primary);
-    color: var(--text-main);
-    margin: 0;
-    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     line-height: 1.5;
+    padding: 2rem;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.header-container, main {
-    max-width: 1300px;
+/* --- 3. LAYOUT APP SHELL STRUCTURE --- */
+.dashboard-container {
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 20px;
 }
 
-header {
-    background-color: var(--bg-secondary);
+/* Header Text Container Hooks */
+.dashboard-header {
+    margin-bottom: 2rem;
     border-bottom: 1px solid var(--border-color);
-    padding: 10px 0;
+    padding-bottom: 1rem;
 }
 
 h1 {
-    margin: 0;
-    font-size: 1.8rem;
-    color: var(--accent-cyan);
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
 }
 
-.subtitle {
-    margin: 5px 0 0 0;
+.subtitle-header {
     color: var(--text-muted);
     font-size: 0.95rem;
+    margin-top: 0.25rem;
 }
 
-.macro-banner {
+/* --- 4. PANEL WRAPPERS & UTILITIES --- */
+.screener-card-frame {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Interactive Navigation Selectors Panel */
+.theme-switcher-panel {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background-color: #111827;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.theme-dropdown-control {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
     border: 1px solid var(--border-color);
-    padding: 12px 20px;
+    padding: 0.4rem 1.5rem 0.4rem 0.75rem;
     border-radius: 6px;
-    margin-bottom: 20px;
-}
-
-.status-badge {
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.status-badge.loading { color: var(--accent-yellow); }
-.status-badge.success { color: var(--accent-green); }
-.status-badge.fallback { color: var(--danger-red); }
-
-.factor-display {
-    font-family: monospace;
-    font-size: 1rem;
-    color: var(--accent-cyan);
-}
-
-.control-panel {
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    padding: 20px;
-    border-radius: 6px;
-    margin-bottom: 25px;
-}
-
-.control-panel h2 {
-    margin-top: 0;
-    font-size: 1.2rem;
-    color: var(--text-main);
-}
-
-.import-area {
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.hidden { display: none; }
-
-textarea {
-    width: 100%;
-    height: 120px;
-    background-color: #0f172a;
-    border: 1px solid var(--border-color);
-    color: var(--accent-green);
-    font-family: monospace;
-    padding: 10px;
-    box-sizing: border-box;
-    border-radius: 4px;
-    resize: vertical;
-}
-
-button {
-    padding: 10px 20px;
-    border-radius: 4px;
-    font-weight: 600;
+    font-size: 0.875rem;
+    font-weight: 500;
     cursor: pointer;
-    border: none;
-    transition: background 0.2s ease;
+    outline: none;
 }
 
+/* Action Buttons Formats */
 .btn-primary {
-    background-color: var(--accent-cyan);
-    color: #0f172a;
-    align-self: flex-start;
-}
-
-.btn-primary:hover { background-color: #7dd3fc; }
-
-.btn-secondary {
-    background-color: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
-}
-
-.btn-secondary:hover {
-    background-color: #334155;
-    color: var(--text-main);
-}
-
-.results-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.results-header h2 { margin: 0; font-size: 1.4rem; }
-
-.table-wrapper {
-    overflow-x: auto;
-    border: 1px solid var(--border-color);
+    background-color: var(--accent-primary);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border: none;
     border-radius: 6px;
-    background-color: var(--bg-secondary);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+}
+
+/* --- 5. COMPREHENSIVE DATA GRID TABLE MATRIX --- */
+.table-scroll-container {
+    overflow-x: auto;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
-    font-size: 0.9rem;
-}
-
-th, td {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border-color);
+    font-size: 0.925rem;
 }
 
 th {
-    background-color: #111827;
+    background-color: var(--bg-main);
     color: var(--text-muted);
     font-weight: 600;
-    text-transform: uppercase;
     font-size: 0.75rem;
+    text-transform: uppercase;
     letter-spacing: 0.05em;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+tr:last-child td {
+    border-bottom: none;
 }
 
 tr:hover td {
-    background-color: #334155;
+    background-color: var(--bg-hover-row);
+    transition: background-color 0.1s ease;
 }
 
-.signal-strong { color: var(--accent-green); font-weight: bold; }
-.signal-trap { color: var(--danger-red); font-weight: bold; }
-.signal-normal { color: var(--text-main); }
+/* Alignment Classes */
+.font-bold {
+    font-weight: 700;
+}
 
-footer {
-    text-align: center;
-    padding: 40px 0;
-    color: var(--text-muted);
-    font-size: 0.8rem;
-    border-top: 1px solid var(--border-color);
-    margin-top: 40px;
+.text-green-600 {
+    color: var(--badge-strong-text) !important;
+}
+
+/* --- 6. PEGY FINDER HIGH-CONTRAST CHIP BADGES --- */
+.badge-strategy, .badge-cash {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 6px;
+    letter-spacing: -0.01em;
+}
+
+/* Conditional Matrix Class Injection Styles */
+/* Handled automatically via variable mapping strings inside your JS generator code */
+td:has(.badge-strategy), td:has(.badge-cash) {
+    white-space: normal;
+}
+
+/* Badge Layout Structural Lookups */
+tr:has(td:contains("Strong Signal")) .badge-strategy {
+    background-color: var(--badge-strong-bg);
+    color: var(--badge-strong-text);
 }
