@@ -3,17 +3,17 @@ import yfinance as yf
 
 # --- COMPREHENSIVE GLOBAL DIVIDEND ETF MASTER SEED SHEET ---
 MASTER_TICKERS = [
-    "AAXJ", "ACWV", "AIA", "ALTY", "AMLP", "AOA", "AOK", "AOM", "AOR", "APIE", "ASHR", "BAB", "BBCA", "BBEU", "BBJP", "BBRE", "BDJ", 
-    "BFOR", "BGU", "BIZD", "BJK", "BME", "BND", "BNDX", "BOM", "BSCE", "BSCH", "BSCI", "BSCJ", "BSCK", "BSCL", "BSCM", "BSCN", "BSCO", 
+    "AAXJ", "ACWV", "AIA", "ALTY", "AMLP", "AOA", "AOK", "AOM", "AOR", "APIE", "ASHR", "BAB", "BBCA", "BBEU", "BBJP", "BBRE", 
+    "BFOR", "BGU", "BIZD", "BJK", "BND", "BNDX", "BOM", "BSCE", "BSCH", "BSCI", "BSCJ", "BSCK", "BSCL", "BSCM", "BSCN", "BSCO", 
     "BSCP", "BSCQ", "BYLD", "CAPE", "CDC", "CDL", "CEFL", "CEY", "CFA", "CFGE", "CGDV", "CHIE", "CHIK", "CHIM", "CHIQ", "CHIR", "CHIS", 
-    "CHIU", "CHIX", "CHJE", "CHNA", "CIEO", "CIPP", "CIVI", "CN", "CNYA", "COBO", "CORN", "COW", "CQQQ", "CRBN", "CSB", "CSCR", "CSD", 
-    "CSM", "CVY", "CWEB", "CXSE", "CYB", "DAX", "DBAW", "DBEF", "DBEM", "DBEU", "DBEZ", "DBJA", "DBJP", "DDF", "DEEF", "DEM", "DES", 
+    "CHIU", "CHIX", "CHJE", "CHNA", "CIEO", "CIPP", "CN", "CNYA", "COBO", "COW", "CQQQ", "CRBN", "CSB", "CSCR", "CSD", 
+    "CSM", "CVY", "CWEB", "CXSE", "CYB", "DAX", "DBAW", "DBEF", "DBEM", "DBEU", "DBEZ", "DBJA", "DBJP", "DEEF", "DEM", "DES", 
     "DEW", "DFE", "DFEV", "DFIV", "DFJ", "DFND", "DFNL", "DFNV", "DFRA", "DFSE", "DFSV", "DFUS", "DFUV", "DGBP", "DGRE", "DGRID", "DGRO", 
     "DGRS", "DGRW", "DGS", "DHDG", "DHS", "DHVW", "DIA", "DIAL", "DIG", "DIM", "DIV", "DIVA", "DIVB", "DIVC", "DIVI", "DIVO", "DJD", "DJP", 
     "DLN", "DLS", "DNL", "DOL", "DON", "DOO", "DREEE", "DRIP", "DRN", "DRW", "DTH", "DTD", "DURA", "DVY", "DVYA", "DVYE", "DWM", "DXJ", 
     "DXJC", "DXJS", "DYLS", "EAGG", "ECLN", "ECON", "EDEN", "EDIV", "EDV", "EDXC", "EEB", "EEMA", "EEMS", "EERM", "EFA", "EFAS", "EFAV", 
     "EFNL", "EFV", "EGPT", "EIDO", "EIRL", "EIS", "EMBD", "EMCB", "EMDV", "EMGF", "EMHY", "EMIF", "EMLC", "EMLP", "EMNS", "EMNT", "EMQQ", 
-    "EMTL", "EMXC", "ENFR", "EOS", "EPHE", "EPI", "EPOL", "EPU", "EQAL", "EQWL", "ERUS", "ESD", "ESG", "ESGD", "ESGE", "ESGG", "ESGN", 
+    "EMTL", "EMXC", "ENFR", "EPHE", "EPI", "EPOL", "EPU", "EQAL", "EQWL", "ERUS", "ESD", "ESG", "ESGD", "ESGE", "ESGG", "ESGN", 
     "ESGR", "ESGS", "ESGU", "ETHN", "ETHO", "EUMV", "EURL", "EUSA", "EUSC", "EWA", "EWC", "EWD", "EWG", "EWH", "EWI", "EWJ", "EWK", "EWL", 
     "EWM", "EWN", "EWO", "EWP", "EWQ", "EWS", "EWT", "EWU", "EWV", "EWW", "EWY", "EWZ", "EXI", "EYLD", "FAD", "FALN", "FBND", "FBT", "FCEF", 
     "FCFI", "FCI", "FCT", "FDD", "FDL", "FDRR", "FDT", "FDTS", "FDV", "FDVV", "FDX", "FEM", "FEMS", "FGD", "FIDI", "FIHD", "FILD", "FINX", 
@@ -21,9 +21,9 @@ MASTER_TICKERS = [
     "FLJA", "FLJH", "FLJP", "FLKR", "FLLH", "FLMB", "FLMX", "FLN", "FLNL", "FLOT", "FLPE", "FLQA", "FLRG", "FLRU", "FLSA", "FLSB", "FLSG", 
     "FLSP", "FLSW", "FLTA", "FLTR", "FLTW", "FLUD", "FLUS", "FLVA", "FLZA", "FMAT", "FMB", "FMF", "FMNX", "FMXV", "FNB", "FNDA", "FNDB", 
     "FNDC", "FNDE", "FNDF", "FNDX", "FNX", "FPX", "FSG", "FSTA", "FTCS", "FTCSI", "FTRI", "FTXD", "FTXE", "FTXG", "FTXH", "FTXL", "FTXN", 
-    "FTXO", "FTXR", "FTXTC", "FUN", "FUTY", "FVA", "FVC", "FVD", "FVDD", "FVL", "FWDB", "FXA", "FXB", "FXC", "FXCH", "FXD", "FXE", "FXF", 
-    "FXG", "FXH", "FXI", "FXL", "FXN", "FXO", "FXR", "FXS", "FXU", "FXZ", "FYC", "FYD", "FYG", "FYLD", "FYT", "FYX", "GAF", "GAIN", "GCE", 
-    "GCOW", "GDAY", "GDO", "GDX", "GDXJ", "GEM", "GEUR", "GGOV", "GHYG", "GID", "GII", "GIM", "GIVE", "GJP", "GLDI", "GLEO", "GLIN", "GLOF", 
+    "FTXO", "FTXR", "FTXTC", "FUTY", "FVA", "FVC", "FVD", "FVDD", "FVL", "FWDB", "FXA", "FXB", "FXC", "FXCH", "FXD", "FXE", "FXF", 
+    "FXG", "FXH", "FXI", "FXL", "FXN", "FXO", "FXR", "FXS", "FXU", "FXZ", "FYC", "FYD", "FYG", "FYLD", "FYT", "FYX", "GAF", "GCE", 
+    "GCOW", "GDAY", "GDX", "GDXJ", "GEM", "GEUR", "GGOV", "GHYG", "GID", "GII", "GIM", "GIVE", "GJP", "GLDI", "GLEO", "GLIN", "GLOF", 
     "GLOV", "GLRE", "GLVN", "GML", "GMM", "GMF", "GMR", "GNAF", "GNAT", "GNE", "GNR", "GNRA", "GNRE", "GNT", "GOAT", "GOEX", "GOGF", "GOVT", 
     "GPM", "GPX", "GQRE", "GRES", "GRID", "GSEW", "GSG", "GSID", "GSIE", "GSLC", "GSSC", "GSST", "GSY", "GULF", "GUNR", "GVAL", "GVI", 
     "GVIP", "GVT", "GWO", "GWX", "GYEN", "GYLD", "HAX", "HDAW", "HDG", "HDGE", "HDMV", "HDV", "HECO", "HEDJ", "HEEM", "HEFA", "HEGD", 
@@ -37,12 +37,12 @@ MASTER_TICKERS = [
     "HQQ", "HQR", "HQS", "HQT", "HQU", "HQV", "HQW", "HQX", "HQY", "HQZ", "HRA", "HRB", "HRC", "HRD", "HRE", "HRF", "HRG", "HRH", "HRI", 
     "HRJ", "HRK", "HRL", "HRM", "HRN", "HRO", "HRP", "HRQ", "HRR", "HRS", "HRT", "HRU", "HRV", "HRW", "HRX", "HRY", "HRZ", "HSA", "HSB", 
     "HSC", "HSD", "HSE", "HSF", "HSG", "HSH", "HSI", "HSJ", "HSK", "HSL", "HSM", "HSN", "HSO", "HSP", "HSQ", "HSR", "HSS", "HST", "HSU", 
-    "HSV", "HSW", "HSX", "HSY", "HSZ", "HYGW", "IDV", "IGRO", "IHDG", "IEDI", "JEPI", "JEPQ", "KNG", "KYN", "LQDW", "LVHI", "MAIN", 
-    "MLPA", "NFJ", "NOBL", "PEY", "PFF", "PGX", "PID", "PSEC", "PXF", "RDVY", "REGL", "RFI", "SCHD", "SCHY", "SDEM", "SDOG", "SDVY", 
-    "SMDV", "SPDV", "SPHD", "STK", "TDV", "TLTW", "TYG", "UTG", "VIG", "VIGI", "VYM", "VYMI", "WDIV", 
-    "VEGN", "NUDV", "TPHD", "ADVE", "DSI", "ESGV", "SUSA"
+    "HSV", "HSW", "HSX", "HSY", "HSZ", "HYGW", "IDV", "IGRO", "IHDG", "IEDI", "JEPI", "JEPQ", "KNG", "KYN", "LQDW", "LVHI", "MLPA", 
+    "NOBL", "PEY", "PFF", "PGX", "PID", "PXF", "RDVY", "REGL", "SCHD", "SCHY", "SDEM", "SDOG", "SDVY", "SMDV", "SPDV", "SPHD", "TDV", 
+    "TLTW", "TYG", "VIG", "VIGI", "VYM", "VYMI", "WDIV", "VEGN", "NUDV", "TPHD", "ADVE", "DSI", "ESGV", "SUSA",
+    # --- Structural Global Additions ---
+    "SPYV", "IVLU", "VXUS", "VEA", "IEFA", "SCHF", "IEMG", "IXUS"
 ]
-
 MASTER_TICKERS = sorted(list(set(MASTER_TICKERS)))
 MACRO_SCALE_FACTOR = 1.0450
 
