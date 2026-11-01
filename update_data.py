@@ -39,7 +39,8 @@ MASTER_TICKERS = [
     "HSC", "HSD", "HSE", "HSF", "HSG", "HSH", "HSI", "HSJ", "HSK", "HSL", "HSM", "HSN", "HSO", "HSP", "HSQ", "HSR", "HSS", "HST", "HSU", 
     "HSV", "HSW", "HSX", "HSY", "HSZ", "HYGW", "IDV", "IGRO", "IHDG", "IEDI", "JEPI", "JEPQ", "KNG", "KYN", "LQDW", "LVHI", "MAIN", 
     "MLPA", "NFJ", "NOBL", "PEY", "PFF", "PGX", "PID", "PSEC", "PXF", "RDVY", "REGL", "RFI", "SCHD", "SCHY", "SDEM", "SDOG", "SDVY", 
-    "SMDV", "SPDV", "SPHD", "STK", "TDV", "TLTW", "TYG", "UTG", "VIG", "VIGI", "VYM", "VYMI", "WDIV"
+    "SMDV", "SPDV", "SPHD", "STK", "TDV", "TLTW", "TYG", "UTG", "VIG", "VIGI", "VYM", "VYMI", "WDIV", 
+    "VEGN", "NUDV", "TPHD", "ADVE", "DSI", "ESGV", "SUSA"
 ]
 
 MASTER_TICKERS = sorted(list(set(MASTER_TICKERS)))
