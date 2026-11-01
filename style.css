@@ -1,58 +1,94 @@
 /* ==========================================================================
-   QUANTUM DIVIDEND ETF DASHBOARD CORE DESIGN STYLESHEET
-   Inspired by PEGY Finder SaaS Architecture - Supports Light, Dark & System
+   QUANTUM DIVIDEND ETF DASHBOARD DESIGN - COMPACT FINANCIAL GREEN MOTIF
    ========================================================================== */
 
-/* --- 1. THEME MATRIX SYSTEM TOKENS --- */
 :root, [data-theme="light"] {
-    --bg-main: #f8fafc;          /* Off-white canvas */
-    --bg-card: #ffffff;          /* Pure crisp white cards */
-    --border-color: #e2e8f0;     /* Clean low-profile slate separator */
+    --bg-main: #f2f5f3;          /* Very light muted sage background */
+    --bg-card: #ffffff;          /* Crisp clean white table backdrops */
+    --border-color: #cbd5e1;     /* High-visibility clean borders */
     
     /* Typography Palette */
-    --text-primary: #0f172a;     /* Deep navy obsidian */
-    --text-muted: #64748b;        /* Soft neutral slate text */
+    --text-primary: #0a1f14;     /* Deep midnight forest green text */
+    --text-muted: #4d665e;        /* Clean sage gray sub-labels */
     
     /* Interactive Accents */
-    --accent-primary: #4f46e5;   /* Premium Indigo Core Button/Nav */
-    --accent-hover: #4338ca;     /* Deep focus Indigo hover */
-    --bg-hover-row: #f1f5f9;     /* Subtle row scan hover state */
+    --accent-primary: #059669;   /* Emerald Green dropdown headers */
+    --bg-hover-row: #f0fdf4;     /* Light mint row scan accent highlight */
 
     /* Multi-Factor Strategy Badge Palettes */
-    --badge-strong-bg: #e6fcf5;   /* Soft mint green tint */
-    --badge-strong-text: #0ca678; /* Clean emerald text */
-    --badge-trap-bg: #fff5f5;     /* Soft crimson warning tint */
-    --badge-trap-text: #f03e3e;   /* Sharp maroon alert text */
-    --badge-entry-bg: #fff9db;    /* Warm amber entry tint */
-    --badge-entry-text: #f59f00;  /* Rust accent text */
-    --badge-premium-bg: #edf2ff;  /* Soft cool slate/blue tint */
-    --badge-premium-text: #4c6ef5;/* Sharp classic blue text */
+    --badge-strong-bg: #d1fae5;   /* Mint green cash backing */
+    --badge-strong-text: #065f46; /* Deep forest tracking label */
+    --badge-trap-bg: #fef2f2;     /* Light red trap risk backing */
+    --badge-trap-text: #991b1b;   /* Alert maroon text */
+    --badge-entry-bg: #fef3c7;    /* Deep warm amber attention indicator */
+    --badge-entry-text: #92400e;  /* Rust accent text */
+    --badge-premium-bg: #f0fdf4;  /* Fair-value soft teal backing */
+    --badge-premium-text: #166534;/* Clear kelly-green text */
 }
 
 [data-theme="dark"] {
-    --bg-main: #0b0f19;          /* Deep dark slate space */
-    --bg-card: #151f32;          /* Rich obsidian asset block containers */
-    --border-color: #1e293b;     /* High-contrast dark edge border */
+    --bg-main: #040a07;          /* Pure midnight obsidian forest base */
+    --bg-card: #0c1712;          /* Clean charcoal-teal panel backgrounds */
+    --border-color: #1b3327;     /* High-contrast active green border dividers */
     
     /* Typography Palette */
-    --text-primary: #f8fafc;     /* Bright off-white readable labels */
-    --text-muted: #94a3b8;        /* Medium grey subheadings */
+    --text-primary: #eafaf1;     /* Highly readable white-mint typography */
+    --text-muted: #6e8c80;        /* Soft gray-green table labels */
     
     /* Interactive Accents */
-    --accent-primary: #6366f1;   /* Electrified Indigo Core */
-    --accent-hover: #4f46e5;     /* Saturated Indigo active click */
-    --bg-hover-row: #1e293b;     /* High-contrast dark row scan state */
+    --accent-primary: #10b981;   /* Neon mint interactive borders */
+    --bg-hover-row: #11261d;     /* Deep jungle row scan highlight line */
 
     /* Multi-Factor Strategy Badge Palettes */
-    --badge-strong-bg: #062f22;   /* Deep forest anchor tint */
-    --badge-strong-text: #38bdf8; /* Highly visible neon emerald text */
-    --badge-trap-bg: #450a0a;     /* Rich charred blood warning tint */
-    --badge-trap-text: #f87171;   /* Vibrant neon pink warning text */
-    --badge-entry-bg: #451a03;     /* Burned rust amber tint */
-    --badge-entry-text: #fbbf24;  /* Vibrant sharp gold text */
-    --badge-premium-bg: #1e1b4b;  /* Midnight deep blue/indigo tint */
-    --badge-premium-text: #818cf8; /* High-readability periwinkle text */
+    --badge-strong-bg: #064e3b;   /* Midnight emerald text box backing */
+    --badge-strong-text: #34d399; /* Electric high-readability mint text */
+    --badge-trap-bg: #450a0a;     /* Charred warning dark red tint */
+    --badge-trap-text: #f87171;   /* High-visibility pink warning alert */
+    --badge-entry-bg: #451a03;     /* Warm copper attention warning box */
+    --badge-entry-text: #fbbf24;  /* Radiant yellow attention label */
+    --badge-premium-bg: #022c22;  /* Deep dark teal value tracking backing */
+    --badge-premium-text: #a7f3d0; /* Soft seafoam readable text */
 }
+
+/* Base resets and alignment templates */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+    padding: 2rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.dashboard-container { max-width: 1400px; margin: 0 auto; }
+.theme-switcher-panel { display: flex; align-items: center; gap: 0.5rem; }
+.theme-dropdown-control {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 0.4rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+}
+.table-scroll-container { overflow-x: auto; width: 100%; border-radius: 10px; border: 1px solid var(--border-color); }
+table { width: 100%; border-collapse: collapse; text-align: left; }
+th { background-color: var(--bg-main); color: var(--text-muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); }
+td { padding: 1rem; border-bottom: 1px solid var(--border-color); color: var(--text-primary); white-space: nowrap; }
+tr:hover td { background-color: var(--bg-hover-row); }
+.font-bold { font-weight: 700; }
+.badge-strategy, .badge-cash { display: inline-block; padding: 0.25rem 0.6rem; font-size: 0.75rem; font-weight: 700; border-radius: 6px; }
+
+/* Dynamic Context-Aware Badge Shading */
+tr:has(td:contains("Strong Signal")) .badge-strategy { background-color: var(--badge-strong-bg); color: var(--badge-strong-text); }
+tr:has(td:contains("Value Trap")) .badge-strategy { background-color: var(--badge-trap-bg); color: var(--badge-trap-text); }
+tr:has(td:contains("Expensive")) .badge-strategy { background-color: var(--badge-entry-bg); color: var(--badge-entry-text); }
+tr:has(td:contains("Premium Valuation")) .badge-strategy { background-color: var(--badge-premium-bg); color: var(--badge-premium-text); }
+
+tr:has(td:contains("High Quality")) .badge-cash { background-color: var(--badge-strong-bg); color: var(--badge-strong-text); }
+tr:has(td:contains("Weak Coverage")) .badge-cash { background-color: var(--badge-trap-bg); color: var(--badge-trap-text); }
+tr:has(td:contains("Stable / Low")) .badge-cash { background-color: var(--badge-premium-bg); color: var(--badge-premium-text); }
+tr:has(td:contains("Stable Coverage")) .badge-cash { background-color: var(--badge-premium-bg); color: var(--badge-premium-text); }
+
 
 /* --- 2. GLOBAL RESET & RESET LAYER CORES --- */
 * {
