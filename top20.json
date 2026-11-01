@@ -251,12 +251,12 @@
         "price": "34.57",
         "pe": "8.98",
         "growth": "11.84%",
-        "divYield": "2.54%",
-        "pegy": "0.62",
-        "fcfYield": "12.75%",
+        "divYield": "2.00%",
+        "pegy": "0.65",
+        "fcfYield": "5.81%",
         "strategyProfile": "Strong Signal (Cash Generator)",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 1,
-        "score_sort": 0.6242886157636164
+        "score_sort": 0.6487467993233064
     }
 ]
