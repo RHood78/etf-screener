@@ -1,3 +1,53 @@
+/* --- THEME VARIATION TOKENS --- */
+:root, [data-theme="light"] {
+    --bg-main: #f8fafc;
+    --bg-card: #ffffff;
+    --border-color: #e2e8f0;
+    --text-primary: #0f172a;
+    --text-muted: #64748b;
+    --accent-blue: #3b82f6;
+    
+    /* Strategy Badge Mappings */
+    --badge-strong-bg: #f0fdf4;
+    --badge-strong-text: #16a34a;
+    --badge-trap-bg: #fef2f2;
+    --badge-trap-text: #dc2626;
+    --badge-entry-bg: #fffbeb;
+    --badge-entry-text: #d97706;
+}
+
+[data-theme="dark"] {
+    --bg-main: #0b0f19;
+    --bg-card: #151f32;
+    --border-color: #1e293b;
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent-blue: #60a5fa;
+    
+    /* Strategy Badge Mappings */
+    --badge-strong-bg: #052e16;
+    --badge-strong-text: #4ade80;
+    --badge-trap-bg: #451a03;
+    --badge-trap-text: #f87171;
+    --badge-entry-bg: #451a03;
+    --badge-entry-text: #fbbf24;
+}
+
+/* Base Body Framework Layout Override */
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Card or Table Frame Adjustments */
+.investment-matrix-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
 :root {
     --bg-primary: #0f172a;
     --bg-secondary: #1e293b;
