@@ -1,5 +1,5 @@
 /**
- * Quantum Dividend ETF Asset Screener - Pure Datalayer Viewer
+ * Quantum Dividend ETF Asset Screener - Core Application Script
  * Consumes the daily cloud-processed Top 20 array directly from the repository cache.
  */
 
@@ -65,13 +65,14 @@ async function fetchAutomatedDataStream() {
  * --- 3. DOM RENDERING SEQUENCE ---
  */
 function renderMatrixTable(assets) {
+    // FIXED: Maps directly to your live 'matrix-table-body' table container ID
     const targetContainer = document.getElementById('matrix-table-body');
     if (!targetContainer) return;
     
     let htmlContent = '';
     
     assets.forEach((asset, index) => {
-        const displayTicker = Array.isArray(asset.ticker) ? asset.ticker[0] : asset.ticker;
+        const displayTicker = Array.isArray(asset.ticker) ? asset.ticker : asset.ticker;
         
         htmlContent += `
             <tr class="hover:bg-gray-50 border-b border-gray-100 transition-colors">
