@@ -13,19 +13,6 @@
         "score_sort": 0.1715100794202013
     },
     {
-        "ticker": "UTG",
-        "price": "36.62",
-        "pe": "2.54",
-        "growth": "6.00%",
-        "divYield": "6.72%",
-        "pegy": "0.20",
-        "fcfYield": "13.12%",
-        "strategyProfile": "Strong Signal (Cash Generator)",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 1,
-        "score_sort": 0.1996270883899263
-    },
-    {
         "ticker": "PFF",
         "price": "29.75",
         "pe": "3.53",
@@ -52,19 +39,6 @@
         "score_sort": 0.28994040426795553
     },
     {
-        "ticker": "GAIN",
-        "price": "15.84",
-        "pe": "3.60",
-        "growth": "6.00%",
-        "divYield": "6.29%",
-        "pegy": "0.29",
-        "fcfYield": "11.20%",
-        "strategyProfile": "Strong Signal (Cash Generator)",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 1,
-        "score_sort": 0.2930738135326682
-    },
-    {
         "ticker": "TYG",
         "price": "42.78",
         "pe": "5.69",
@@ -76,19 +50,6 @@
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 1,
         "score_sort": 0.30249195362974507
-    },
-    {
-        "ticker": "NFJ",
-        "price": "14.87",
-        "pe": "3.97",
-        "growth": "6.00%",
-        "divYield": "6.31%",
-        "pegy": "0.32",
-        "fcfYield": "12.04%",
-        "strategyProfile": "Strong Signal (Cash Generator)",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 1,
-        "score_sort": 0.32277361202465354
     },
     {
         "ticker": "GNT",
@@ -104,19 +65,6 @@
         "score_sort": 0.35163024193548387
     },
     {
-        "ticker": "GDO",
-        "price": "10.00",
-        "pe": "7.91",
-        "growth": "6.00%",
-        "divYield": "15.30%",
-        "pegy": "0.37",
-        "fcfYield": "5.81%",
-        "strategyProfile": "Strong Signal (Cash Generator)",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 1,
-        "score_sort": 0.37131880281690144
-    },
-    {
         "ticker": "KYN",
         "price": "15.48",
         "pe": "5.11",
@@ -128,32 +76,6 @@
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 1,
         "score_sort": 0.3922006774987518
-    },
-    {
-        "ticker": "BDJ",
-        "price": "10.03",
-        "pe": "5.78",
-        "growth": "6.00%",
-        "divYield": "7.67%",
-        "pegy": "0.42",
-        "fcfYield": "11.11%",
-        "strategyProfile": "Strong Signal (Cash Generator)",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 1,
-        "score_sort": 0.4231241118201389
-    },
-    {
-        "ticker": "BME",
-        "price": "48.98",
-        "pe": "5.82",
-        "growth": "6.00%",
-        "divYield": "6.73%",
-        "pegy": "0.46",
-        "fcfYield": "9.86%",
-        "strategyProfile": "Strong Signal (Cash Generator)",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 1,
-        "score_sort": 0.456851879436034
     },
     {
         "ticker": "GLDI",
@@ -208,32 +130,6 @@
         "score_sort": 0.5791761657464236
     },
     {
-        "ticker": "EOS",
-        "price": "21.17",
-        "pe": "8.62",
-        "growth": "6.00%",
-        "divYield": "8.81%",
-        "pegy": "0.58",
-        "fcfYield": "12.44%",
-        "strategyProfile": "Strong Signal (Cash Generator)",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 1,
-        "score_sort": 0.5823064497772602
-    },
-    {
-        "ticker": "RFI",
-        "price": "10.99",
-        "pe": "8.99",
-        "growth": "6.00%",
-        "divYield": "9.16%",
-        "pegy": "0.59",
-        "fcfYield": "11.74%",
-        "strategyProfile": "Strong Signal (Cash Generator)",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 1,
-        "score_sort": 0.5930918701269451
-    },
-    {
         "ticker": "HYGW",
         "price": "29.39",
         "pe": "9.71",
@@ -258,5 +154,109 @@
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 1,
         "score_sort": 0.6487467993233064
+    },
+    {
+        "ticker": "GHYG",
+        "price": "45.50",
+        "pe": "10.66",
+        "growth": "8.38%",
+        "divYield": "6.44%",
+        "pegy": "0.72",
+        "fcfYield": "5.81%",
+        "strategyProfile": "Strong Signal (Cash Generator)",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 1,
+        "score_sort": 0.7193748920156361
+    },
+    {
+        "ticker": "DVYE",
+        "price": "34.86",
+        "pe": "8.25",
+        "growth": "6.25%",
+        "divYield": "5.10%",
+        "pegy": "0.73",
+        "fcfYield": "5.81%",
+        "strategyProfile": "Strong Signal (Cash Generator)",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 1,
+        "score_sort": 0.7267529515418503
+    },
+    {
+        "ticker": "BIZD",
+        "price": "12.95",
+        "pe": "12.68",
+        "growth": "5.36%",
+        "divYield": "11.86%",
+        "pegy": "0.74",
+        "fcfYield": "5.81%",
+        "strategyProfile": "Strong Signal (Cash Generator)",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 1,
+        "score_sort": 0.73628853925435
+    },
+    {
+        "ticker": "CWEB",
+        "price": "16.38",
+        "pe": "10.94",
+        "growth": "6.25%",
+        "divYield": "8.20%",
+        "pegy": "0.76",
+        "fcfYield": "5.81%",
+        "strategyProfile": "Strong Signal (Cash Generator)",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 1,
+        "score_sort": 0.7571823529411765
+    },
+    {
+        "ticker": "EIDO",
+        "price": "10.41",
+        "pe": "7.47",
+        "growth": "6.25%",
+        "divYield": "3.48%",
+        "pegy": "0.77",
+        "fcfYield": "5.81%",
+        "strategyProfile": "Strong Signal (Cash Generator)",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 1,
+        "score_sort": 0.7675669784172662
+    },
+    {
+        "ticker": "EWZ",
+        "price": "33.92",
+        "pe": "9.38",
+        "growth": "9.11%",
+        "divYield": "2.72%",
+        "pegy": "0.79",
+        "fcfYield": "11.78%",
+        "strategyProfile": "Strong Signal (Cash Generator)",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 1,
+        "score_sort": 0.7928989077995434
+    },
+    {
+        "ticker": "SDEM",
+        "price": "33.04",
+        "pe": "9.05",
+        "growth": "6.25%",
+        "divYield": "4.96%",
+        "pegy": "0.81",
+        "fcfYield": "5.81%",
+        "strategyProfile": "Strong Signal (Cash Generator)",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 1,
+        "score_sort": 0.8070707404103478
+    },
+    {
+        "ticker": "FBND",
+        "price": "46.15",
+        "pe": "8.75",
+        "growth": "5.92%",
+        "divYield": "4.88%",
+        "pegy": "0.81",
+        "fcfYield": "5.81%",
+        "strategyProfile": "Strong Signal (Cash Generator)",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 1,
+        "score_sort": 0.8097900985557067
     }
 ]
