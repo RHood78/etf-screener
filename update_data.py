@@ -6,11 +6,40 @@ from datetime import datetime
 
 # --- MIXED MASTER SEED SHEET (Supports both Individual Stocks & ETFs) ---
 MASTER_TICKERS = [
-    # --- Top Liquid US/Global ETFs ---
-    "SCHD", "VIG", "VYM", "DGRO", "NOBL", "SPHD", "VXUS", "VNQ",
-    # --- Top Premium Blue-Chip Dividend Stocks ---
+    "AAXJ", "ACWV", "ADVE", "AIA", "ALTY", "AMLP", "AOA", "AOK", "AOM", "AOR", "APIE", "ASHR", "BAB", "BBCA", "BBEU", "BBJP", 
+    "BBRE", "BFOR", "BGU", "BIZD", "BSCQ", "BYLD", "CAPE", "CDC", "CDL", "CFA", "CGDV", "CNYA", "CQQQ", "CRBN", "CSB", "CSD", 
+    "CSM", "CVY", "CWEB", "CXSE", "DAX", "DBAW", "DBEF", "DBEM", "DBEU", "DBEZ", "DBJP", "DEEF", "DEM", "DES", "DEW", "DFE", 
+    "DFEV", "DFIV", "DFJ", "DFNL", "DFSE", "DFSV", "DFUS", "DFUV", "DGRE", "DGRO", "DGRS", "DGRW", "DGS", "DHDG", "DHS", "DIA", 
+    "DIAL", "DIG", "DIM", "DIV", "DIVB", "DIVI", "DIVO", "DJD", "DJP", "DLN", "DLS", "DNL", "DOL", "DON", "DOO", "DRIP", 
+    "DRN", "DRW", "DSI", "DTH", "DTD", "DURA", "DVY", "DVYA", "DVYE", "DWM", "DXJ", "EAGG", "ECON", "EDEN", "EDIV", "EDV", 
+    "EDXC", "EEMA", "EEMS", "EFA", "EFAS", "EFAV", "EFNL", "EFV", "EIDO", "EIRL", "EIS", "EMBD", "EMCB", "EMDV", "EMGF", 
+    "EMHY", "EMIF", "EMLC", "EMLP", "EMNT", "EMQQ", "EMTL", "EMXC", "ENFR", "EPHE", "EPI", "EPOL", "EPU", "EQAL", "EQWL", 
+    "ESG", "ESGD", "ESGE", "ESGG", "ESGR", "ESGU", "ESGV", "ETHO", "EURL", "EUSA", "EWA", "EWC", "EWD", "EWG", "EWH", 
+    "EWI", "EWJ", "EWK", "EWL", "EWM", "EWN", "EWO", "EWP", "EWQ", "EWS", "EWT", "EWU", "EWV", "EWW", "EWY", "EWZ", 
+    "EXI", "EYLD", "FAD", "FALN", "FBND", "FBT", "FCEF", "FDL", "FDRR", "FDT", "FDTS", "FDV", "FDVV", "FDX", "FEM", 
+    "FEMS", "FGD", "FIDI", "FLAX", "FLBL", "FLBR", "FLCA", "FLCH", "FLES", "FLGB", "FLGR", "FLGT", "FLIA", "FLIN", 
+    "FLJH", "FLJP", "FLKR", "FLMB", "FLMX", "FLN", "FLOT", "FLPE", "FLRG", "FLSA", "FLSG", "FLSP", "FLSW", "FLTR", 
+    "FLTW", "FLUD", "FLZA", "FMAT", "FMB", "FMF", "FMNX", "FMXV", "FNB", "FNDA", "FNDB", "FNDC", "FNDE", "FNDF", 
+    "FNDX", "FNX", "FPX", "FSTA", "FTCS", "FTCSI", "FTRI", "FTXG", "FTXH", "FTXL", "FTXN", "FTXO", "FTXR", "FTXTC", 
+    "FUTY", "FVC", "FVD", "FVDD", "FXA", "FXB", "FXC", "FXD", "FXE", "FXF", "FXG", "FXH", "FXI", "FXL", "FXN", 
+    "FXO", "FXR", "FXS", "FXU", "FXZ", "FYC", "FYD", "FYLD", "FYT", "FYX", "GCOW", "GDX", "GDXJ", "GEM", "GEUR", 
+    "GGOV", "GHYG", "GII", "GIM", "GIVE", "GLDI", "GLIN", "GLOF", "GLRE", "GMM", "GMF", "GNAF", "GNE", "GNR", 
+    "GNRA", "GNT", "GOEX", "GOGF", "GOVT", "GQRE", "GRES", "GRID", "GSEW", "GSG", "GSID", "GSIE", "GSLC", "GSSC", 
+    "GSST", "GSY", "GUNR", "GVAL", "GVI", "GVIP", "GVT", "GWX", "GYEN", "GYLD", "HDG", "HDGE", "HDMV", "HDV", 
+    "HECO", "HEDJ", "HEEM", "HEFA", "HEGD", "HEGI", "HEGJ", "HEGL", "HEHQ", "HEHU", "HEHW", "HEHX", "HEHZ", 
+    "HERO", "HFXI", "HKB", "HND", "HNN", "HNO", "HNP", "HNS", "HNU", "HNW", "HOPE", "HOS", "HOTD", "HOTN", 
+    "HOTP", "HOTV", "HOTW", "HOU", "HOV", "HOW", "HOX", "HOY", "HPB", "HPE", "HPF", "HPH", "HPI", "HPK", 
+    "HPN", "HPP", "HPQ", "HPR", "HPS", "HPT", "HPV", "HPW", "HPX", "HQB", "HQC", "HQD", "HQE", "HQH", 
+    "HQI", "HQJ", "HQK", "HQL", "HQN", "HQO", "HQV", "HQW", "HQX", "HQY", "HRA", "HRC", "HRF", "HRG", 
+    "HRI", "HRM", "HRN", "HRP", "HRQ", "HRW", "HRX", "HSA", "HSC", "HSD", "HSH", "HSI", "HSL", "HSO", 
+    "HSR", "HST", "HSV", "HSW", "HYGW", "IDV", "IEFA", "IEMG", "IGRO", "IHDG", "IEDI", "IVLU", "IXUS", 
+    "JEPI", "JEPQ", "KNG", "KYN", "LQDW", "LVHI", "MLPA", "NOBL", "NUDV", "PEY", "PFF", "PGX", "PID", 
+    "PXF", "RDVY", "REGL", "SCHD", "SCHF", "SCHY", "SDEM", "SDOG", "SDVY", "SMDV", "SPDV", "SPHD", 
+    "SPYV", "SUSA", "TDV", "TYG", "VEA", "VEGN", "VIG", "VIGI", "VXUS", "VYM", "VYMI", "WDIV",
+    # === Added High-Quality Individual Dividend Stocks ===
     "AAPL", "MSFT", "KO", "PEP", "JNJ", "PG", "XOM", "CVX", "MMM", "O"
 ]
+
 MASTER_TICKERS = sorted(list(set(MASTER_TICKERS)))
 
 MACRO_SCALE_FACTOR = 1.0450
