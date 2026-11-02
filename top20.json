@@ -130,19 +130,6 @@
         "score_sort": 1.1353952380952381
     },
     {
-        "ticker": "EMIF",
-        "price": "27.21",
-        "pe": "10.44",
-        "growth": "5.00%",
-        "divYield": "4.19%",
-        "pegy": "1.14",
-        "fcfYield": "5.92%",
-        "strategyProfile": "Expensive (Monitor Entry) [ETF]",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 2,
-        "score_sort": 1.136161479869423
-    },
-    {
         "ticker": "HDMV",
         "price": "39.32",
         "pe": "15.30",
@@ -258,5 +245,18 @@
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 2,
         "score_sort": 1.2574863604643949
+    },
+    {
+        "ticker": "DGS",
+        "price": "61.22",
+        "pe": "11.05",
+        "growth": "5.00%",
+        "divYield": "3.77%",
+        "pegy": "1.26",
+        "fcfYield": "5.92%",
+        "strategyProfile": "Expensive (Monitor Entry) [ETF]",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 2,
+        "score_sort": 1.2596556442417333
     }
 ]
