@@ -5,37 +5,36 @@ import numpy as np
 from datetime import datetime
 
 # --- MIXED MASTER SEED SHEET (Supports both Individual Stocks & ETFs) ---
-# --- FINAL PRUNED HYBRID GLOBAL MASTER SEED (397 Active Stocks + ETFs) ---
 MASTER_TICKERS = [
     "AAXJ", "AAPL", "ACWV", "ADVE", "AIA", "ALTY", "AMLP", "AOA", "AOK", "AOM", "AOR", "APIE", "ASHR", "BAB", "BBCA", "BBEU", 
     "BBJP", "BBRE", "BFOR", "BIZD", "BSCQ", "BYLD", "CAPE", "CDC", "CDL", "CFA", "CGDV", "CNYA", "CQQQ", "CRBN", "CSB", "CSD", 
     "CSM", "CVY", "CWEB", "CXSE", "CVX", "DAX", "DBAW", "DBEF", "DBEM", "DBEU", "DBEZ", "DBJP", "DEEF", "DEM", "DES", "DEW", 
     "DFE", "DFEV", "DFIV", "DFJ", "DFNL", "DFSE", "DFSV", "DFUS", "DFUV", "DGRE", "DGRO", "DGRS", "DGRW", "DGS", "DHDG", "DHS", 
     "DIA", "DIAL", "DIG", "DIM", "DIV", "DIVB", "DIVI", "DIVO", "DJD", "DJP", "DLN", "DLS", "DNL", "DOL", "DON", "DOO", 
-    "DRIP", "DRN", "DRW", "DSI", "DTH", "DTD", "DURA", "DVY", "DVYA", "DVYE", "DWM", "DXJ", "EAGG", "ECON", "EDEN", "EDIV", 
+    "DRIP", "DRN", "DSI", "DTH", "DTD", "DURA", "DVY", "DVYA", "DVYE", "DWM", "DXJ", "EAGG", "ECON", "EDEN", "EDIV", 
     "EDV", "EDXC", "EEMA", "EEMS", "EFA", "EFAS", "EFAV", "EFNL", "EFV", "EIDO", "EIRL", "EIS", "EMBD", "EMCB", "EMDV", "EMGF", 
-    "EMHY", "EMIF", "EMLC", "EMLP", "EMNT", "EMQQ", "EMTL", "EMXC", "ENFR", "EPHE", "EPI", "EPOL", "EPU", "EQAL", "EQWL", 
-    "ESG", "ESGD", "ESGE", "ESGG", "ESGR", "ESGU", "ESGV", "ETHO", "EURL", "EUSA", "EWA", "EWC", "EWD", "EWG", "EWH", 
+    "EMHY", "EMLC", "EMLP", "EMNT", "EMQQ", "EMTL", "EMXC", "ENFR", "EPHE", "EPI", "EPOL", "EPU", "EQAL", "EQWL", 
+    "ESG", "ESGD", "ESGE", "ESGG", "ESGU", "ESGV", "ETHO", "EURL", "EUSA", "EWA", "EWC", "EWD", "EWG", "EWH", 
     "EWI", "EWJ", "EWK", "EWL", "EWM", "EWN", "EWO", "EWP", "EWQ", "EWS", "EWT", "EWU", "EWV", "EWW", "EWY", "EWZ", 
     "EXI", "EYLD", "FAD", "FALN", "FBND", "FBT", "FCEF", "FDL", "FDRR", "FDT", "FDTS", "FDV", "FDVV", "FDX", "FEM", 
     "FEMS", "FGD", "FIDI", "FLAX", "FLBL", "FLBR", "FLCA", "FLCH", "FLES", "FLGB", "FLGR", "FLGT", "FLIA", "FLIN", 
-    "FLJH", "FLJP", "FLKR", "FLMB", "FLMX", "FLN", "FLOT", "FLPE", "FLRG", "FLSA", "FLSP", "FLSW", "FLTR", "FLTW", 
-    "FLUD", "FMAT", "FMB", "FMF", "FMNX", "FMXV", "FNB", "FNDA", "FNDB", "FNDC", "FNDE", "FNDF", "FNDX", "FNX", 
-    "FPX", "FSTA", "FTCS", "FTRI", "FTXG", "FTXH", "FTXL", "FTXN", "FTXO", "FTXR", "FTXTC", "FUTY", "FVC", "FVD", 
-    "FXA", "FXB", "FXC", "FXD", "FXE", "FXF", "FXG", "FXH", "FXI", "FXL", "FXN", "FXO", "FXR", "FXS", "FXU", 
-    "FXZ", "FYC", "FYLD", "FYT", "FYX", "GCOW", "GDX", "GDXJ", "GEM", "GEUR", "GGOV", "GHYG", "GII", "GIM", 
-    "GLDI", "GLIN", "GLOF", "GLRE", "GMM", "GMF", "GNAF", "GNE", "GNR", "GNRA", "GNT", "GOAT", "GOEX", "GOVT", 
-    "GQRE", "GRES", "GRID", "GSEW", "GSG", "GSID", "GSIE", "GSLC", "GSSC", "GSST", "GSY", "GUNR", "GVAL", "GVI", 
-    "GVIP", "GVT", "GWX", "GYEN", "GYLD", "HDG", "HDGE", "HDMV", "HDV", "HECO", "HEDJ", "HEEM", "HEFA", "HEGD", 
-    "HEGI", "HEGJ", "HEHQ", "HEHZ", "HERO", "HFXI", "HKB", "HND", "HNN", "HNO", "HNS", "HNU", "HNW", "HOPE", 
-    "HOS", "HOTN", "HOTW", "HOU", "HOV", "HOW", "HOX", "HOY", "HPE", "HPF", "HPI", "HPK", "HPP", "HPQ", 
-    "HPS", "HPT", "HPV", "HPW", "HPX", "HQB", "HQC", "HQD", "HQH", "HQI", "HQJ", "HQK", "HQL", "HQN", 
-    "HQV", "HQW", "HQY", "HRC", "HRF", "HRG", "HRI", "HRN", "HRP", "HSA", "HSC", "HSD", "HSH", "HSI", 
-    "HSO", "HST", "HSW", "HYGW", "IDV", "IEFA", "IEMG", "IGRO", "IHDG", "IEDI", "IVLU", "IXUS", "JEPI", 
-    "JEPQ", "JNJ", "KNG", "KO", "KYN", "LQDW", "LVHI", "MLPA", "MMM", "MSFT", "NOBL", "NUDV", "O", "PEP", 
-    "PEY", "PFF", "PG", "PGX", "PID", "PXF", "RDVY", "REGL", "SCHD", "SCHF", "SCHY", "SDEM", "SDOG", 
-    "SDVY", "SMDV", "SPDV", "SPHD", "SPYV", "SUSA", "TDV", "TYG", "VEA", "VEGN", "VIG", "VIGI", "VXUS", 
-    "VYM", "VYMI", "WDIV", "XOM"
+    "FLJH", "FLJP", "FLKR", "FLMB", "FLMX", "FLN", "FLOT", "FLRG", "FLSA", "FLSP", "FLSW", "FLTR", "FLTW", 
+    "FLUD", "FMAT", "FMB", "FMF", "FNB", "FNDA", "FNDB", "FNDC", "FNDE", "FNDF", "FNDX", "FNX", "FPX", 
+    "FSTA", "FTCS", "FTRI", "FTXG", "FTXH", "FTXL", "FTXN", "FTXO", "FTXR", "FUTY", "FVC", "FVD", "FXA", 
+    "FXB", "FXC", "FXD", "FXE", "FXF", "FXG", "FXH", "FXI", "FXL", "FXN", "FXO", "FXR", "FXS", "FXU", 
+    "FXZ", "FYC", "FYLD", "FYT", "FYX", "GCOW", "GDX", "GDXJ", "GEM", "GGOV", "GHYG", "GII", "GLDI", 
+    "GLIN", "GLOF", "GLRE", "GMM", "GMF", "GNE", "GNR", "GNT", "GOEX", "GOVT", "GQRE", "GRID", "GSEW", 
+    "GSG", "GSID", "GSIE", "GSLC", "GSSC", "GSST", "GSY", "GUNR", "GVAL", "GVI", "GVIP", "GWX", 
+    "GYEN", "HDG", "HDGE", "HDMV", "HDV", "HECO", "HEDJ", "HEEM", "HEFA", "HEGD", "HERO", "HFXI", 
+    "HND", "HNN", "HNO", "HNU", "HOPE", "HOS", "HOTW", "HOU", "HOV", "HOW", "HPE", "HPF", 
+    "HPH", "HPI", "HPK", "HPN", "HPP", "HPQ", "HPS", "HPT", "HPV", "HPW", "HPX", "HQB", 
+    "HQD", "HQH", "HQI", "HQK", "HQL", "HQN", "HQW", "HQY", "HRF", "HRG", "HRI", "HRN", 
+    "HRP", "HRW", "HRX", "HSA", "HSD", "HSH", "HSI", "HSO", "HST", "HSW", "HYGW", "IDV", 
+    "IEFA", "IEMG", "IGRO", "IHDG", "IEDI", "IVLU", "IXUS", "JEPI", "JEPQ", "JNJ", "KNG", 
+    "KO", "KYN", "LQDW", "LVHI", "MLPA", "MMM", "MSFT", "NOBL", "NUDV", "O", "PEP", "PEY", 
+    "PFF", "PG", "PGX", "PID", "PXF", "RDVY", "REGL", "SCHD", "SCHF", "SCHY", "SDEM", 
+    "SDOG", "SDVY", "SMDV", "SPDV", "SPHD", "SPYV", "SUSA", "TDV", "TYG", "VEA", "VEGN", 
+    "VIG", "VIGI", "VXUS", "VYM", "VYMI", "WDIV", "XOM"
 ]
 
 MASTER_TICKERS = sorted(list(set(MASTER_TICKERS)))
