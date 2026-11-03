@@ -1,8 +1,8 @@
 [
     {
         "ticker": "FIDI",
-        "price": "30.26",
-        "pe": "13.76",
+        "price": "30.29",
+        "pe": "13.78",
         "growth": "13.73%",
         "divYield": "4.41%",
         "pegy": "0.76",
@@ -10,12 +10,12 @@
         "strategyProfile": "Strong Signal (Cash Generator) [ETF]",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 1,
-        "score_sort": 0.758762954735087
+        "score_sort": 0.7595490048420701
     },
     {
         "ticker": "FDT",
-        "price": "92.53",
-        "pe": "10.44",
+        "price": "92.88",
+        "pe": "10.48",
         "growth": "10.70%",
         "divYield": "2.92%",
         "pegy": "0.77",
@@ -23,12 +23,12 @@
         "strategyProfile": "Strong Signal (Cash Generator) [ETF]",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 1,
-        "score_sort": 0.76617810672071
+        "score_sort": 0.7690333497014722
     },
     {
         "ticker": "SDEM",
-        "price": "33.04",
-        "pe": "9.05",
+        "price": "32.96",
+        "pe": "9.03",
         "growth": "5.00%",
         "divYield": "4.96%",
         "pegy": "0.91",
@@ -36,24 +36,24 @@
         "strategyProfile": "Strong Signal (Cash Generator) [ETF]",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 1,
-        "score_sort": 0.9083597389558231
+        "score_sort": 0.906124799196787
     },
     {
         "ticker": "FYT",
-        "price": "73.18",
-        "pe": "12.95",
+        "price": "74.49",
+        "pe": "13.18",
         "growth": "11.97%",
         "divYield": "1.93%",
-        "pegy": "0.93",
+        "pegy": "0.95",
         "fcfYield": "5.92%",
         "strategyProfile": "Strong Signal (Cash Generator) [ETF]",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 1,
-        "score_sort": 0.9318156531096821
+        "score_sort": 0.9484134664179372
     },
     {
         "ticker": "GSST",
-        "price": "52.78",
+        "price": "52.59",
         "pe": "16.20",
         "growth": "12.27%",
         "divYield": "4.27%",
@@ -66,7 +66,7 @@
     },
     {
         "ticker": "FLOT",
-        "price": "53.31",
+        "price": "53.13",
         "pe": "16.20",
         "growth": "11.08%",
         "divYield": "4.34%",
@@ -79,8 +79,8 @@
     },
     {
         "ticker": "EYLD",
-        "price": "47.35",
-        "pe": "10.03",
+        "price": "47.08",
+        "pe": "9.97",
         "growth": "5.00%",
         "divYield": "4.45%",
         "pegy": "1.06",
@@ -88,11 +88,11 @@
         "strategyProfile": "Expensive (Monitor Entry) [ETF]",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 2,
-        "score_sort": 1.0613974603174603
+        "score_sort": 1.0553068783068784
     },
     {
         "ticker": "GVI",
-        "price": "109.12",
+        "price": "108.78",
         "pe": "16.20",
         "growth": "11.32%",
         "divYield": "3.75%",
@@ -105,34 +105,47 @@
     },
     {
         "ticker": "FLN",
-        "price": "24.62",
-        "pe": "9.71",
+        "price": "24.68",
+        "pe": "9.73",
         "growth": "5.00%",
         "divYield": "3.71%",
-        "pegy": "1.11",
+        "pegy": "1.12",
         "fcfYield": "5.92%",
         "strategyProfile": "Expensive (Monitor Entry) [ETF]",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 2,
-        "score_sort": 1.1146111366245695
+        "score_sort": 1.1175488518943744
     },
     {
         "ticker": "FDTS",
-        "price": "70.04",
+        "price": "70.00",
         "pe": "8.58",
         "growth": "5.00%",
         "divYield": "2.56%",
+        "pegy": "1.13",
+        "fcfYield": "5.92%",
+        "strategyProfile": "Expensive (Monitor Entry) [ETF]",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 2,
+        "score_sort": 1.1348716931216931
+    },
+    {
+        "ticker": "FLKR",
+        "price": "52.24",
+        "pe": "8.47",
+        "growth": "5.00%",
+        "divYield": "2.44%",
         "pegy": "1.14",
         "fcfYield": "5.92%",
         "strategyProfile": "Expensive (Monitor Entry) [ETF]",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 2,
-        "score_sort": 1.1353952380952381
+        "score_sort": 1.1386045698924732
     },
     {
         "ticker": "HDMV",
-        "price": "39.32",
-        "pe": "15.30",
+        "price": "39.55",
+        "pe": "15.39",
         "growth": "8.53%",
         "divYield": "4.82%",
         "pegy": "1.15",
@@ -140,37 +153,11 @@
         "strategyProfile": "Expensive (Monitor Entry) [ETF]",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 2,
-        "score_sort": 1.146096513379615
-    },
-    {
-        "ticker": "FLKR",
-        "price": "52.69",
-        "pe": "8.54",
-        "growth": "5.00%",
-        "divYield": "2.44%",
-        "pegy": "1.15",
-        "fcfYield": "5.92%",
-        "strategyProfile": "Expensive (Monitor Entry) [ETF]",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 2,
-        "score_sort": 1.1483985215053765
-    },
-    {
-        "ticker": "EDIV",
-        "price": "42.16",
-        "pe": "11.92",
-        "growth": "5.98%",
-        "divYield": "4.33%",
-        "pegy": "1.16",
-        "fcfYield": "5.92%",
-        "strategyProfile": "Expensive (Monitor Entry) [ETF]",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 2,
-        "score_sort": 1.1561995181770794
+        "score_sort": 1.1527205917188923
     },
     {
         "ticker": "FLTR",
-        "price": "26.72",
+        "price": "26.63",
         "pe": "16.20",
         "growth": "9.50%",
         "divYield": "4.49%",
@@ -182,48 +169,74 @@
         "score_sort": 1.1577061824643056
     },
     {
-        "ticker": "EPU",
-        "price": "83.79",
-        "pe": "8.07",
-        "growth": "5.00%",
-        "divYield": "1.92%",
-        "pegy": "1.17",
+        "ticker": "EDIV",
+        "price": "42.22",
+        "pe": "11.93",
+        "growth": "5.98%",
+        "divYield": "4.33%",
+        "pegy": "1.16",
         "fcfYield": "5.92%",
         "strategyProfile": "Expensive (Monitor Entry) [ETF]",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 2,
-        "score_sort": 1.1668825144508672
+        "score_sort": 1.157919315986491
+    },
+    {
+        "ticker": "EPU",
+        "price": "84.92",
+        "pe": "8.18",
+        "growth": "5.00%",
+        "divYield": "1.92%",
+        "pegy": "1.18",
+        "fcfYield": "5.92%",
+        "strategyProfile": "Expensive (Monitor Entry) [ETF]",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 2,
+        "score_sort": 1.1826001445086705
     },
     {
         "ticker": "DEM",
-        "price": "55.18",
-        "pe": "10.66",
+        "price": "55.08",
+        "pe": "10.64",
         "growth": "5.00%",
         "divYield": "3.99%",
-        "pegy": "1.19",
+        "pegy": "1.18",
         "fcfYield": "5.92%",
         "strategyProfile": "Expensive (Monitor Entry) [ETF]",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 2,
-        "score_sort": 1.1860627363737486
+        "score_sort": 1.1840410456062291
+    },
+    {
+        "ticker": "HPQ",
+        "price": "29.71",
+        "pe": "10.85",
+        "growth": "5.00%",
+        "divYield": "4.13%",
+        "pegy": "1.19",
+        "fcfYield": "13.82%",
+        "strategyProfile": "Expensive (Monitor Entry) [Stock]",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 2,
+        "score_sort": 1.1883409019551456
     },
     {
         "ticker": "EWZ",
-        "price": "33.92",
-        "pe": "9.38",
+        "price": "33.61",
+        "pe": "9.30",
         "growth": "5.00%",
-        "divYield": "2.72%",
-        "pegy": "1.22",
-        "fcfYield": "12.01%",
+        "divYield": "2.78%",
+        "pegy": "1.20",
+        "fcfYield": "12.12%",
         "strategyProfile": "Expensive (Monitor Entry) [ETF]",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 2,
-        "score_sort": 1.2152252590770285
+        "score_sort": 1.1951688105714027
     },
     {
         "ticker": "EFAS",
-        "price": "23.30",
-        "pe": "11.99",
+        "price": "23.37",
+        "pe": "12.02",
         "growth": "5.00%",
         "divYield": "4.86%",
         "pegy": "1.22",
@@ -231,25 +244,12 @@
         "strategyProfile": "Expensive (Monitor Entry) [ETF]",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 2,
-        "score_sort": 1.2160798174442191
-    },
-    {
-        "ticker": "HPQ",
-        "price": "30.08",
-        "pe": "10.98",
-        "growth": "5.00%",
-        "divYield": "3.74%",
-        "pegy": "1.26",
-        "fcfYield": "13.65%",
-        "strategyProfile": "Expensive (Monitor Entry) [Stock]",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 2,
-        "score_sort": 1.2574863604643949
+        "score_sort": 1.2193518255578095
     },
     {
         "ticker": "DGS",
-        "price": "61.22",
-        "pe": "11.05",
+        "price": "61.32",
+        "pe": "11.07",
         "growth": "5.00%",
         "divYield": "3.77%",
         "pegy": "1.26",
@@ -257,6 +257,6 @@
         "strategyProfile": "Expensive (Monitor Entry) [ETF]",
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 2,
-        "score_sort": 1.2596556442417333
+        "score_sort": 1.261805929304447
     }
 ]
