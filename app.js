@@ -1,38 +1,22 @@
-/**
- * Quantum Dividend ETF Asset Screener - Core Application Script
- * Updated to support dynamic Compound vs. Harvest Phase switching
- */
-
-// Global state to store the fetched datasets locally
 let cachedMatrixData = { compound: [], harvest: [] };
 let activePhase = "compound";
 
-// --- 1. INITIALIZATION LIFECYCLE ---
 document.addEventListener("DOMContentLoaded", () => {
     initThemeEngine(); 
     initPhaseEngine();
     fetchAutomatedDataStream();
 });
 
-/**
- * Theme Engine Orchestration Module
- */
 function initThemeEngine() {
     const themeSelect = document.getElementById("theme-select");
     if (!themeSelect) return;
-
     const savedTheme = localStorage.getItem("screener-theme") || "system";
     themeSelect.value = savedTheme;
     applyTheme(savedTheme);
-
     themeSelect.addEventListener("change", (e) => {
         const chosenTheme = e.target.value;
         localStorage.setItem("screener-theme", chosenTheme);
         applyTheme(chosenTheme);
-    });
-
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
-        if (themeSelect.value === "system") applyTheme("system");
     });
 }
 
@@ -45,9 +29,6 @@ function applyTheme(theme) {
     }
 }
 
-/**
- * --- 2. PHASE ENGINE SWAP CONTROLLER ---
- */
 function initPhaseEngine() {
     const btnCompound = document.getElementById("btn-compound");
     const btnHarvest = document.getElementById("btn-harvest");
@@ -55,68 +36,44 @@ function initPhaseEngine() {
     if (!btnCompound || !btnHarvest) return;
 
     btnCompound.addEventListener("click", () => {
-        if (activePhase === "compound") return;
         activePhase = "compound";
-        
-        // Toggle visual UI button states
         btnCompound.classList.add("active-phase-btn");
         btnHarvest.classList.remove("active-phase-btn");
-        
-        // Render the filtered subset instantly
         renderMatrixTable(cachedMatrixData.compound);
     });
 
     btnHarvest.addEventListener("click", () => {
-        if (activePhase === "harvest") return;
         activePhase = "harvest";
-        
-        // Toggle visual UI button states
         btnHarvest.classList.add("active-phase-btn");
         btnCompound.classList.remove("active-phase-btn");
-        
-        // Render the filtered subset instantly
         renderMatrixTable(cachedMatrixData.harvest);
     });
 }
 
-/**
- * --- 3. DUAL-STREAM JSON DATALAYER CONSUMER ---
- */
 async function fetchAutomatedDataStream() {
-    console.log("Initializing dual-phase matrix stream sync...");
     try {
         const response = await fetch(`./top20.json?nocache=${new Date().getTime()}`);
+        if (!response.ok) throw new Error("Data stream baseline unreachable.");
         
-        if (!response.ok) {
-            throw new Error(`Data store asset unreachable (Status: ${response.status})`);
-        }
-        
-        // Save the structure containing both 'compound' and 'harvest' arrays
         cachedMatrixData = await response.json();
-        
-        // Initial render based on default phase choice
         renderMatrixTable(cachedMatrixData[activePhase]);
-        
     } catch (error) {
-        console.error("⚠️ Local Matrix Read Failure:", error.message);
+        console.error("Matrix stream sync sequence failure:", error.message);
     }
 }
 
-/**
- * --- 4. DOM RENDERING SEQUENCE ---
- */
 function renderMatrixTable(assets) {
     const targetContainer = document.getElementById('matrix-table-body');
-    if (!targetContainer || !assets) return;
+    if (!targetContainer || !assets || assets.length === 0) {
+        targetContainer.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:24px; color:#9ca3af;">No assets currently meet the matching matrix limits for this phase.</td></tr>`;
+        return;
+    }
     
     let htmlContent = '';
-    
     assets.forEach((asset, index) => {
-        const displayTicker = Array.isArray(asset.ticker) ? asset.ticker : asset.ticker;
-        
         htmlContent += `
-            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 border-b border-gray-100 dark:border-gray-700 transition-colors">
-                <td class="px-4 py-3 font-bold text-gray-900 dark:text-gray-100">#${index + 1} - ${displayTicker}</td>
+            <tr class="hover:bg-gray-50 border-b border-gray-100 transition-colors">
+                <td class="px-4 py-3 font-bold text-gray-900">#${index + 1} - ${asset.ticker}</td>
                 <td class="px-4 py-3">$${asset.price}</td>
                 <td class="px-4 py-3">${asset.pe}</td>
                 <td class="px-4 py-3">${asset.growth}</td>
@@ -128,7 +85,5 @@ function renderMatrixTable(assets) {
             </tr>
         `;
     });
-    
     targetContainer.innerHTML = htmlContent;
-    console.log(`Matrix table updated complete for phase: ${activePhase}`);
 }
