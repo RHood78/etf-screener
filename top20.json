@@ -1,5 +1,18 @@
 [
     {
+        "ticker": "FDT",
+        "price": "90.87",
+        "pe": "9.76",
+        "growth": "10.70%",
+        "divYield": "3.11%",
+        "pegy": "0.71",
+        "fcfYield": "5.92%",
+        "strategyProfile": "Strong Signal (Cash Generator) [ETF]",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 1,
+        "score_sort": 0.7065589825154575
+    },
+    {
         "ticker": "FIDI",
         "price": "29.71",
         "pe": "13.03",
@@ -50,6 +63,19 @@
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 2,
         "score_sort": 0.8909098536609379
+    },
+    {
+        "ticker": "GSST",
+        "price": "52.66",
+        "pe": "16.20",
+        "growth": "12.27%",
+        "divYield": "4.19%",
+        "pegy": "0.98",
+        "fcfYield": "5.92%",
+        "strategyProfile": "Expensive (Monitor Entry) [ETF]",
+        "cashFlowInsight": "High Quality Coverage",
+        "tier_priority": 2,
+        "score_sort": 0.9844272946889774
     },
     {
         "ticker": "DEM",
@@ -232,31 +258,5 @@
         "cashFlowInsight": "High Quality Coverage",
         "tier_priority": 2,
         "score_sort": 1.2240097345132745
-    },
-    {
-        "ticker": "GSST",
-        "price": "52.66",
-        "pe": "16.20",
-        "growth": "8.60%",
-        "divYield": "4.19%",
-        "pegy": "1.27",
-        "fcfYield": "5.92%",
-        "strategyProfile": "Expensive (Monitor Entry) [ETF]",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 2,
-        "score_sort": 1.2665799235230946
-    },
-    {
-        "ticker": "FLGR",
-        "price": "33.87",
-        "pe": "17.69",
-        "growth": "10.38%",
-        "divYield": "3.38%",
-        "pegy": "1.29",
-        "fcfYield": "5.92%",
-        "strategyProfile": "Expensive (Monitor Entry) [ETF]",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 2,
-        "score_sort": 1.2857786118581531
     }
 ]
