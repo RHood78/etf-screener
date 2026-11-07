@@ -1,73 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="system">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum Dividend Asset Screener</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- Tailwind CSS Script CDN -->
+    <script src="https://tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'selector',
+        }
+    </script>
+    <style>
+        /* Custom state utility for the phase buttons */
+        .active-phase-btn {
+            background-color: #ffffff;
+            color: #111827;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        html[data-theme="dark"] .active-phase-btn {
+            background-color: #1f2937;
+            color: #f9fafb;
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <div class="screener-card-frame" style="display: flex; justify-content: space-between; align-items: center; wrap: wrap; gap: 1rem;">
-            <div>
-                <h1 id="matrix-title">Quantum Dividend Stock & ETF Screener</h1>
-                <p class="subtitle-header">Multi-Factor Dual-Path Parsing Mathematical Evaluation Matrix Pipeline</p>
-            </div>
-    
-            <!-- Dynamic Theme Swapping Dashboard Controller -->
-            <div class="theme-switcher-panel">
-                <label for="theme-select" style="color: var(--text-muted); font-size: 0.875rem; font-weight: 600;">Theme:</label>
-                <select id="theme-select" class="theme-dropdown-control">
-                    <option value="light">☀️ Light Mode</option>
-                    <option value="dark">🌙 Dark Mode</option>
-                    <option value="system">💻 System Default</option>
-                </select>
-            </div>
-        </div>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen transition-colors duration-200">
 
-    </header>
-    <main>
-        <div class="macro-banner">
-            <span id="fed-status" class="status-badge normal">Quantum Matrix Feed Active...</span>
-            <span id="macro-factor-display" class="factor-display">Macro Scale Factor: 1.0450</span>
-        </div>
-        <section class="results-panel">
-            <div class="results-header">
-                <h2>Top 20 Filtered Investment Assets</h2>
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Header Section -->
+        <header class="mb-8">
+            <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-2">
+                # Quantum Dividend Stock & ETF Screener
+            </h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                Multi-Factor Dual-Path Parsing Mathematical Evaluation Matrix Pipeline
+            </p>
+        </header>
+
+        <!-- Dynamic Control Dashboard Header Panel -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-800">
+            
+            <!-- Left Side: Phase Switcher Tabs -->
+            <div class="flex items-center bg-gray-200/70 dark:bg-gray-800/70 p-1 rounded-xl self-start font-sans">
+                <button id="btn-compound" class="px-5 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 active-phase-btn flex items-center gap-2">
+                    🌱 Compound Phase (1.5% - 5.0%)
+                </button>
+                <button id="btn-harvest" class="px-5 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 flex items-center gap-2">
+                    🌾 Harvest Phase (5.1% - 8.0%)
+                </button>
             </div>
-            <div class="table-wrapper">
-             <!-- Main Investment Matrix Table Frame -->
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead>
-                    <tr>
-                        <th>Asset Profile</th>
-                        <th>Market Price</th>
-                        <th>Adjusted P/E</th>
-                        <th>Blended Growth</th>
-                        <th>Dividend Yield</th>
-                        <th>PEGY Ratio</th>
-                        <th>FCF Yield</th>
-                        <th>Strategy Profile</th>
-                        <th>Cash Flow Insight</th>
-                    </tr>
-                </thead>
+
+            <!-- Right Side: Status Telemetry & Theme Select -->
+            <div class="flex flex-wrap items-center gap-4 md:gap-6">
+                <div class="text-xs font-mono bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-400 px-3 py-1.5 rounded-md border border-green-200 dark:border-green-900/50">
+                    Quantum Matrix Feed Active... Macro Scale Factor: 1.0450
+                </div>
                 
-                <!-- FIX: The JavaScript targets this exact ID to inject your asset rows -->
-                <tbody id="matrix-table-body">
-                    <tr id="matrix-awaiting-telemetry">
-                        <td colspan="9" style="text-align: center; padding: 20px; color: #6b7280;">
-                            Awaiting telemetry stream sync sequence...
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
+                <div class="flex items-center gap-2">
+                    <label for="theme-select" class="text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">Theme:</label>
+                    <select id="theme-select" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 dark:text-gray-200">
+                        <option value="light">☀ Light Mode</option>
+                        <option value="dark">🌙 Dark Mode</option>
+                        <option value="system">💻 System Default</option>
+                    </select>
+                </div>
             </div>
-        </section>
-    </main>
-    <footer>
-        <p>Quantum Screener Core Engine — Powered by Yahoo Finance Open Datastreams</p>
-    </footer>
+            
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700/50 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700/50">
+                <h2 class="text-lg font-bold text-gray-900 dark:text-white">
+                    Top 20 Filtered Investment Assets
+                </h2>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[1000px]">
+                    <thead>
+                        <tr class="bg-gray-50/70 dark:bg-gray-900/40 border-b border-gray-100 dark:border-gray-700 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            <th class="px-6 py-4">Asset Profile</th>
+                            <th class="px-6 py-4">Market Price</th>
+                            <th class="px-6 py-4">Adjusted P/E</th>
+                            <th class="px-6 py-4">Blended Growth</th>
+                            <th class="px-6 py-4">Dividend Yield</th>
+                            <th class="px-6 py-4">PEGY Ratio</th>
+                            <th class="px-6 py-4">FCF Yield</th>
+                            <th class="px-6 py-4">Strategy Profile</th>
+                            <th class="px-6 py-4">Cash Flow Insight</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matrix-table-body" class="divide-y divide-gray-100 dark:divide-gray-700/50 text-sm">
+                        <tr>
+                            <td colspan="9" class="px-6 py-12 text-center text-gray-400 dark:text-gray-500 font-medium font-mono animate-pulse">
+                                Awaiting telemetry stream sync sequence...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-xs text-gray-400 dark:text-gray-500 font-mono">
+            Quantum Screener Core Engine — Powered by Yahoo Finance Open Datastreams
+        </footer>
+    </div>
+
+    <!-- Core Pipeline Scripts link goes here -->
     <script src="app.js"></script>
 </body>
 </html>
