@@ -19,7 +19,7 @@ MASTER_TICKERS = [
     "EMQQ", "EMTL", "EMXC", "EPHE", "EPI", "EPOL", "EPU", "ESGD", "ESGE", "ESGG", 
     "EURL", "EWA", "EWC", "EWD", "EWG", "EWH", "EWI", "EWJ", "EWK", "EWL", 
     "EWM", "EWN", "EWO", "EWP", "EWQ", "EWS", "EWT", "EWU", "EWV", "EWW", 
-    "EWY", "EWZ", "EYLD", "FEM", "FEMS", "FGD", "FIDI", "FLAX", "FLBR", "FLCH", 
+    "EWY", "EWZ", "EYLD", "FDT", "FEM", "FEMS", "FGD", "FIDI", "FLAX", "FLBR", "FLCH", 
     "FLGB", "FLGR", "FLGT", "FLIA", "FLIN", "FLJH", "FLJP", "FLKR", "FLMX", "FLN", 
     "FLRG", "FLSA", "FLSW", "FLTW", "FNDA", "FNDB", "FNDC", "FNDE", "FNDF", "FXA", 
     "FXB", "FXC", "FXE", "FXF", "FXI", "GCOW", "GEM", "GMM", "GMF", "GNE", 
