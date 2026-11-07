@@ -1,4 +1,28 @@
 {
-    "compound": [],
-    "harvest": []
+    "compound": [
+        {
+            "ticker": "KO",
+            "price": 62.5,
+            "pe": 22.1,
+            "growth": "5.0%",
+            "divYield": "3.1%",
+            "pegy": 1.4,
+            "fcfYield": "4.5%",
+            "strategyProfile": "Equity Cash Engine",
+            "cashFlowInsight": "Stable FCF Cover"
+        }
+    ],
+    "harvest": [
+        {
+            "ticker": "SCHD",
+            "price": 76.2,
+            "pe": 15.3,
+            "growth": "4.2%",
+            "divYield": "5.3%",
+            "pegy": 1.1,
+            "fcfYield": "5.1%",
+            "strategyProfile": "Income ETF Core",
+            "cashFlowInsight": "Stable FCF Cover"
+        }
+    ]
 }
