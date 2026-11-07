@@ -65,7 +65,7 @@ async function fetchAutomatedDataStream() {
 function renderMatrixTable(assets) {
     const targetContainer = document.getElementById('matrix-table-body');
     if (!targetContainer || !assets || assets.length === 0) {
-        targetContainer.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:24px; color:#9ca3af;">No assets currently meet the matching matrix limits for this phase.</td></tr>`;
+        targetContainer.innerHTML = `<tr><td colspan="9" class="px-4 py-3 text-center text-gray-400">No assets currently meet the matching matrix limits for this phase.</td></tr>`;
         return;
     }
     
