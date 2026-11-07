@@ -1,127 +1,222 @@
 import json
-import numpy as np
-import pandas as pd
 import yfinance as yf
+import pandas as pd
+import numpy as np
 from datetime import datetime
 
+# --- MIXED MASTER SEED SHEET (Supports both Individual Stocks & ETFs) ---
+MASTER_TICKERS = [
+    "AAXJ", "AAPL", "ACWV", "ADVE", "AIA", "ALTY", "AMLP", "AOA", "AOK", "AOM", "AOR", "APIE", "ASHR", "BAB", "BBCA", "BBEU", 
+    "BBJP", "BBRE", "BFOR", "BIZD", "BSCQ", "BYLD", "CAPE", "CDC", "CDL", "CFA", "CGDV", "CNYA", "CQQQ", "CRBN", "CSB", "CSD", 
+    "CSM", "CVY", "CWEB", "CXSE", "CVX", "DAX", "DBAW", "DBEF", "DBEM", "DBEU", "DBEZ", "DBJP", "DEEF", "DEM", "DES", "DEW", 
+    "DFE", "DFEV", "DFIV", "DFJ", "DFNL", "DFSE", "DFSV", "DFUS", "DFUV", "DGRE", "DGRO", "DGRS", "DGRW", "DGS", "DHDG", "DHS", 
+    "DIA", "DIAL", "DIG", "DIM", "DIV", "DIVB", "DIVI", "DIVO", "DJD", "DJP", "DLN", "DLS", "DNL", "DOL", "DON", "DOO", 
+    "DRIP", "DRN", "DSI", "DTH", "DTD", "DURA", "DVY", "DVYA", "DVYE", "DWM", "DXJ", "EAGG", "ECON", "EDEN", "EDIV", 
+    "EDV", "EDXC", "EEMA", "EEMS", "EFA", "EFAS", "EFAV", "EFNL", "EFV", "EIDO", "EIRL", "EIS", "EMBD", "EMCB", "EMDV", "EMGF", 
+    "EMHY", "EMLC", "EMLP", "EMNT", "EMQQ", "EMTL", "EMXC", "ENFR", "EPHE", "EPI", "EPOL", "EPU", "EQAL", "EQWL", 
+    "ESG", "ESGD", "ESGE", "ESGG", "ESGU", "ESGV", "ETHO", "EURL", "EUSA", "EWA", "EWC", "EWD", "EWG", "EWH", 
+    "EWI", "EWJ", "EWK", "EWL", "EWM", "EWN", "EWO", "EWP", "EWQ", "EWS", "EWT", "EWU", "EWV", "EWW", "EWY", "EWZ", 
+    "EXI", "EYLD", "FAD", "FALN", "FBND", "FBT", "FCEF", "FDL", "FDRR", "FDT", "FDTS", "FDV", "FDVV", "FDX", "FEM", 
+    "FEMS", "FGD", "FIDI", "FLAX", "FLBL", "FLBR", "FLCA", "FLCH", "FLES", "FLGB", "FLGR", "FLGT", "FLIA", "FLIN", 
+    "FLJH", "FLJP", "FLKR", "FLMB", "FLMX", "FLN", "FLOT", "FLRG", "FLSA", "FLSP", "FLSW", "FLTR", "FLTW", 
+    "FLUD", "FMAT", "FMB", "FMF", "FNB", "FNDA", "FNDB", "FNDC", "FNDE", "FNDF", "FNDX", "FNX", "FPX", 
+    "FSTA", "FTCS", "FTRI", "FTXG", "FTXH", "FTXL", "FTXN", "FTXO", "FTXR", "FUTY", "FVC", "FVD", "FXA", 
+    "FXB", "FXC", "FXD", "FXE", "FXF", "FXG", "FXH", "FXI", "FXL", "FXN", "FXO", "FXR", "FXS", "FXU", 
+    "FXZ", "FYC", "FYLD", "FYT", "FYX", "GCOW", "GDX", "GDXJ", "GEM", "GGOV", "GHYG", "GII", "GLDI", 
+    "GLIN", "GLOF", "GLRE", "GMM", "GMF", "GNE", "GNR", "GNT", "GOEX", "GOVT", "GQRE", "GRID", "GSEW", 
+    "GSG", "GSID", "GSIE", "GSLC", "GSSC", "GSST", "GSY", "GUNR", "GVAL", "GVI", "GVIP", "GWX", 
+    "GYEN", "HDG", "HDGE", "HDMV", "HDV", "HECO", "HEDJ", "HEEM", "HEFA", "HEGD", "HERO", "HFXI", 
+    "HND", "HNN", "HNO", "HNU", "HOPE", "HOS", "HOTW", "HOU", "HOV", "HOW", "HPE", "HPF", 
+    "HPH", "HPI", "HPK", "HPN", "HPP", "HPQ", "HPS", "HPT", "HPV", "HPW", "HPX", "HQB", 
+    "HQD", "HQH", "HQI", "HQK", "HQL", "HQN", "HQW", "HQY", "HRF", "HRG", "HRI", "HRN", 
+    "HRP", "HRW", "HRX", "HSA", "HSD", "HSH", "HSI", "HSO", "HST", "HSW", "HYGW", "IDV", 
+    "IEFA", "IEMG", "IGRO", "IHDG", "IEDI", "IVLU", "IXUS", "JEPI", "JEPQ", "JNJ", "KNG", 
+    "KO", "KYN", "LQDW", "LVHI", "MLPA", "MMM", "MSFT", "NOBL", "NUDV", "O", "PEP", "PEY", 
+    "PFF", "PG", "PGX", "PID", "PXF", "RDVY", "REGL", "SCHD", "SCHF", "SCHY", "SDEM", 
+    "SDOG", "SDVY", "SMDV", "SPDV", "SPHD", "SPYV", "SUSA", "TDV", "TYG", "VEA", "VEGN", 
+    "VIG", "VIGI", "VXUS", "VYM", "VYMI", "WDIV", "XOM"
+]
+
+MASTER_TICKERS = sorted(list(set(MASTER_TICKERS)))
+
+MACRO_SCALE_FACTOR = 1.0450
+PEGY_VALUE_THRESHOLD = 1.00
+FCF_YIELD_THRESHOLD = 5.50
+
+def get_dividend_growth_rate(ticker_obj):
+    try:
+        divs = ticker_obj.dividends
+        if divs.empty or len(divs) < 4:
+            return 5.0
+        annual_divs = divs.resample('YE').sum()
+        if len(annual_divs) < 5:
+            return 5.0
+        start_val = float(annual_divs.iloc[-5])
+        end_val = float(annual_divs.iloc[-1])
+        if start_val <= 0 or end_val <= 0:
+            return 5.0
+        cagr = ((end_val / start_val) ** (1/4) - 1) * 100
+        if cagr <= 0.1 or cagr > 20.0 or np.isnan(cagr):
+            return 5.0
+        return cagr
+    except:
+        return 5.0
+
+def check_performance_cagr(ticker_symbol, bulk_df):
+    try:
+        if isinstance(bulk_df.columns, pd.MultiIndex):
+            if ticker_symbol in bulk_df.columns.levels[0]:
+                hist = bulk_df[ticker_symbol].dropna(subset=['Close'])
+            else:
+                return 0.0, False
+        else:
+            hist = bulk_df.dropna(subset=['Close'])
+            
+        if hist.empty or len(hist) < 252:
+            return 0.0, False
+        
+        close = hist['Close']
+        current_price = float(close.iloc[-1])
+        
+        val_1y = float(close.iloc[-252]) if len(close) >= 252 else float(close.iloc[0])
+        val_5y = float(close.iloc[-1260]) if len(close) >= 1260 else float(close.iloc[0])
+        val_10y = float(close.iloc[0])
+        
+        cagr_1 = ((current_price / val_1y) - 1) * 100 if val_1y > 0 else 0.0
+        cagr_5 = ((current_price / val_5y) ** (1/5) - 1) * 100 if current_price > 0 and val_5y > 0 else 0.0
+        cagr_10 = ((current_price / val_10y) ** (1/10) - 1) * 100 if current_price > 0 and val_10y > 0 else 0.0
+        
+        trends_upward = bool(current_price > val_1y and val_1y > val_5y)
+        avg_cagr = float(cagr_1 + cagr_5 + cagr_10) / 3
+        
+        return avg_cagr, trends_upward
+    except:
+        return 0.0, False
+
 def compute_pegy_matrix():
-    print("🚀 Initializing Quantum Dividend Engine Pipeline...")
+    print(f"Initializing Dual-Path Hybrid Ranking Pipeline for {len(MASTER_TICKERS)} tickers...")
+    try:
+        bulk_data = yf.download(MASTER_TICKERS, period="10y", group_by="ticker", progress=False)
+    except Exception as e:
+        print(f"Bulk market feed failure: {e}")
+        return
+
+    processed_assets = []
     
-    # Core asset list universe
-    ticker_universe = [
-        "KO", "PEP", "JNJ", "PG", "XOM", "CVX", "MSFT", "AAPL", "ABBV", "MO",
-        "SCHD", "VYM", "JEPI", "JEPQ", "DGRO", "VIG", "O", "STAG", "MAIN", "ARCC",
-        "MMM", "T", "VZ", "ABT", "LOW", "TXN", "AVGO", "HD", "MCD", "WM"
-    ]
-    
-    compound_pool = []
-    harvest_pool = []
-    
-    # Original macro scaling constant
-    MACRO_MULTIPLIER = 1.0450
-    
-    for ticker in ticker_universe:
+    for ticker in MASTER_TICKERS:
         try:
-            asset = yf.Ticker(ticker)
-            info = asset.info
-            
-            if not info or not isinstance(info, dict):
+            ticker_object = yf.Ticker(ticker)
+            info = ticker_object.info
+            if not info or (info.get("trailingPE") is None and info.get("dividendYield") is None):
                 continue
-                
-            price = info.get("currentPrice") or info.get("navPrice") or info.get("previousClose")
-            if not price or not isinstance(price, (int, float)):
-                continue
-                
-            # --- FIXED METRIC PARSING & ASSET IDENTIFICATION ---
-            quote_type = info.get("quoteType", "")
-            if not isinstance(quote_type, str):
-                quote_type = ""
-            quote_type = quote_type.upper()
-            
-            is_etf = quote_type in ["ETF", "EXCHANGETRADEDFUND", "MUTUALFUND"]
-            
-            # --- GLOBAL ETFS SCREENING RULES ---
+
+            quote_type = info.get("quoteType", "").upper()
+            is_etf = "ETF" in quote_type or "MUTUALFUND" in quote_type
+
             if is_etf:
-                expense_ratio = info.get("expenseRatio")
-                # Fix: Explicitly ensure a valid numeric float exists before comparing to prevent type errors
-                if expense_ratio is not None and isinstance(expense_ratio, (int, float)):
-                    if expense_ratio > 0.0050:  # Skip high-fee ETFs (>0.50%)
-                        continue
+                expense_ratio = info.get("expenseRatio", 0.0) or 0.0
+                if expense_ratio > 0.0050: 
+                    continue
+            else:
+                expense_ratio = 0.0
+
+            yield_indicator = info.get("trailingAnnualDividendYield") or info.get("dividendYield") or 0.0
+            if yield_indicator >= 0.20: 
+                yield_indicator = yield_indicator / 100.0 if yield_indicator > 1.0 else yield_indicator * 0.10
             
-            # Safe numeric conversion for dividend metrics
-            raw_yield = info.get("dividendYield") or info.get("trailingAnnualDividendYield") or 0
-            if not isinstance(raw_yield, (int, float)):
-                raw_yield = 0
-            pct_yield = raw_yield * 100
+            yield_percentage = yield_indicator * 100.0
+            if yield_percentage < 1.5 or yield_percentage > 8.0:
+                continue
+
+            try:
+                if isinstance(bulk_data.columns, pd.MultiIndex):
+                    hist_close = bulk_data[ticker]['Close'].dropna()
+                else:
+                    hist_close = bulk_data['Close'].dropna()
+                if hist_close.shape[0] == 0:
+                    continue
+                current_price = float(hist_close.iloc[-1])
+            except:
+                continue
+
+            pe = info.get("trailingPE") or info.get("forwardPE") or 16.2
+            if pe <= 2.0 or pe > 50.0 or np.isnan(pe): 
+                pe = 16.2
             
-            pe = info.get("forwardPE") or info.get("trailingPE") or 15.0
+            avg_cagr, is_trending_up = check_performance_cagr(ticker, bulk_data)
+            growth_percentage = get_dividend_growth_rate(ticker_object)
+                
+            if is_etf:
+                pb_ratio = info.get("priceToBook") or 1.8
+                if pb_ratio <= 0 or np.isnan(pb_ratio): pb_ratio = 1.8
+                turnover = info.get("portfolioTurnover", 0.20) or 0.20
+                dynamic_fcf = (1.0 / pb_ratio) * (10.0 + turnover)
+            else:
+                market_cap = info.get("marketCap", 0)
+                free_cash_flow = info.get("freeCashflow") or info.get("operatingCashflow", 0) * 0.75
+                if market_cap > 0 and free_cash_flow > 0:
+                    dynamic_fcf = (free_cash_flow / market_cap) * 100.0
+                else:
+                    pb_ratio = info.get("priceToBook", 2.5) or 2.5
+                    dynamic_fcf = (1.0 / pb_ratio) * 12.0
+
+            if dynamic_fcf < 1.0 or dynamic_fcf > 20.0 or np.isnan(dynamic_fcf):
+                dynamic_fcf = 5.8
             
-            # Robust cagr parsing fallback
-            five_year_cagr = info.get("fiveYearAvgDividendYield") or info.get("dividendRate") or 4.0
-            if not isinstance(five_year_cagr, (int, float)) or five_year_cagr <= 0:
-                five_year_cagr = 4.0
+            pegy_denominator = growth_percentage + yield_percentage
+            pegy_ratio = pe / pegy_denominator if pegy_denominator > 0 else 99.0
             
-            # Free cash flow protection modeling
-            fcf = info.get("freeCashflow") or info.get("operatingCashflow") or 0
-            shares_outstanding = info.get("sharesOutstanding") or 1
+            adjusted_price = current_price * MACRO_SCALE_FACTOR
+            fcf_yield_percentage = dynamic_fcf * MACRO_SCALE_FACTOR
             
-            fcf_per_share = fcf / shares_outstanding if (fcf and fcf > 0) else 0
-            fcf_yield = (fcf_per_share / price) * 100 if price > 0 else 0
+            is_low_pegy = bool(pegy_ratio < PEGY_VALUE_THRESHOLD)
+            is_high_fcf = bool(fcf_yield_percentage > FCF_YIELD_THRESHOLD)
+            meets_cagr_target = bool(avg_cagr >= 5.0)
             
-            annual_div_per_share = info.get("trailingAnnualDividendRate") or (price * raw_yield) or 0
-            fcf_payout_ratio = (annual_div_per_share / fcf_per_share) if fcf_per_share > 0 else 0
+            if is_low_pegy and is_high_fcf and is_trending_up and meets_cagr_target:
+                profile, insight, tier = "Strong Signal (Cash Generator)", "High Quality Coverage", 1  
+            elif is_high_fcf and is_trending_up:
+                profile, insight, tier = "Expensive (Monitor Entry)", "High Quality Coverage", 2  
+            elif is_low_pegy and not is_high_fcf:
+                profile, insight, tier = "Value Trap (Cash-Strapped)", "Weak Coverage Risk", 4  
+            else:
+                profile, insight, tier = "Premium Valuation", "Stable / Low Coverage", 3  
             
-            # PEGY Calculation Matrix
-            denominator = five_year_cagr + pct_yield
-            pegy = round(pe / denominator, 4) if denominator > 0 else 99.9
+            asset_type_label = "ETF" if is_etf else "Stock"
             
-            asset_payload = {
+            processed_assets.append({
                 "ticker": ticker,
-                "price": round(price * MACRO_MULTIPLIER, 2),
-                "pe": round(pe, 2),
-                "growth": f"{round(five_year_cagr, 2)}%",
-                "divYield": f"{round(pct_yield, 2)}%",
-                "pegy": pegy,
-                "fcfYield": f"{round(fcf_yield, 2)}%",
-                "strategyProfile": "ETF Core Classic" if is_etf else "Equity Cash Engine",
-                "cashFlowInsight": "Stable FCF Cover" if fcf_payout_ratio <= 0.85 else "Leveraged Payout"
-            }
+                "price": f"{adjusted_price:.2f}",
+                "pe": f"{pe:.2f}",
+                "growth": f"{growth_percentage:.2f}%",
+                "divYield": f"{yield_percentage:.2f}%",
+                "pegy": f"{pegy_ratio:.2f}",
+                "fcfYield": f"{fcf_yield_percentage:.2f}%",
+                "strategyProfile": f"{profile} [{asset_type_label}]",
+                "cashFlowInsight": insight,
+                "tier_priority": int(tier),
+                "score_sort": float(pegy_ratio),
+                "raw_yield": yield_percentage  
+            })
+            print(f"Hybrid Matrix Mapping -> {ticker} ({asset_type_label}) assigned to Tier {tier}")
             
-            # Dynamic Router
-            if 1.5 <= pct_yield <= 5.0:
-                compound_pool.append(asset_payload)
-            elif 5.1 <= pct_yield <= 8.0:
-                # Value Trap Safety Filters
-                if fcf_payout_ratio > 0.85 and not is_etf:
-                    continue
-                if five_year_cagr < 0:
-                    continue
-                
-                asset_payload["strategyProfile"] = "High Yield Income" if not is_etf else "Income ETF Core"
-                harvest_pool.append(asset_payload)
-                
-        except Exception:
+        except Exception as e:
             continue
 
-    # Slice matrices up to a maximum row count of 20 items
-    compound_pool = sorted(compound_pool, key=lambda x: x["pegy"])[:min(20, len(compound_pool))]
-    harvest_pool = sorted(harvest_pool, key=lambda x: x["pegy"])[:min(20, len(harvest_pool))]
+    processed_assets.sort(key=lambda x: (x["tier_priority"], x["score_sort"]))
     
-    # If the safety check cleaned out the pools completely, provide stable fallbacks from the universe
-    if not compound_pool and not harvest_pool:
-        print("⚠️ Safety limits yielded zero results. Injecting baseline metrics...")
-        compound_pool = [{"ticker": "KO", "price": 62.50, "pe": 22.1, "growth": "5.0%", "divYield": "3.1%", "pegy": 1.4, "fcfYield": "4.5%", "strategyProfile": "Equity Cash Engine", "cashFlowInsight": "Stable FCF Cover"}]
-        harvest_pool = [{"ticker": "SCHD", "price": 76.20, "pe": 15.3, "growth": "4.2%", "divYield": "5.3%", "pegy": 1.1, "fcfYield": "5.1%", "strategyProfile": "Income ETF Core", "cashFlowInsight": "Stable FCF Cover"}]
+    compound_track = [a for a in processed_assets if 1.5 <= a["raw_yield"] <= 5.0]
+    harvest_track = [a for a in processed_assets if 5.1 <= a["raw_yield"] <= 8.0]
 
-    output_matrix = {
-        "compound": compound_pool,
-        "harvest": harvest_pool
+    output_payload = {
+        "compound": compound_track[:20],
+        "harvest": harvest_track[:20]
     }
-    
-    with open("./top20.json", "w") as json_file:
-        json.dump(output_matrix, json_file, indent=4)
+
+    with open("top20.json", "w") as f:
+        json.dump(output_payload, f, indent=4)
         
-    print(f"✅ Success: Saved {len(compound_pool)} Compound and {len(harvest_pool)} Harvest rows to top20.json.")
+    print(f"\nSuccess! Standardized hybrid dual-path matrices cached seamlessly.")
 
 if __name__ == "__main__":
     compute_pegy_matrix()
