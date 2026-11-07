@@ -32,13 +32,21 @@ def compute_pegy_matrix():
             if not price or not isinstance(price, (int, float)):
                 continue
                 
-            quote_type = str(info.get("quoteType", "")).upper()
+            # --- FIXED METRIC PARSING & ASSET IDENTIFICATION ---
+            quote_type = info.get("quoteType", "")
+            if not isinstance(quote_type, str):
+                quote_type = ""
+            quote_type = quote_type.upper()
+            
             is_etf = quote_type in ["ETF", "EXCHANGETRADEDFUND", "MUTUALFUND"]
             
+            # --- GLOBAL ETFS SCREENING RULES ---
             if is_etf:
-                expense_ratio = info.get("expenseRatio", 0) or 0
-                if expense_ratio > 0.0050:  # Skip high-fee ETFs (>0.50%)
-                    continue
+                expense_ratio = info.get("expenseRatio")
+                # Fix: Explicitly ensure a valid numeric float exists before comparing to prevent type errors
+                if expense_ratio is not None and isinstance(expense_ratio, (int, float)):
+                    if expense_ratio > 0.0050:  # Skip high-fee ETFs (>0.50%)
+                        continue
             
             # Safe numeric conversion for dividend metrics
             raw_yield = info.get("dividendYield") or info.get("trailingAnnualDividendYield") or 0
@@ -102,7 +110,6 @@ def compute_pegy_matrix():
     # If the safety check cleaned out the pools completely, provide stable fallbacks from the universe
     if not compound_pool and not harvest_pool:
         print("⚠️ Safety limits yielded zero results. Injecting baseline metrics...")
-        # Fallback dictionary block to ensure client never breaks on blank payloads
         compound_pool = [{"ticker": "KO", "price": 62.50, "pe": 22.1, "growth": "5.0%", "divYield": "3.1%", "pegy": 1.4, "fcfYield": "4.5%", "strategyProfile": "Equity Cash Engine", "cashFlowInsight": "Stable FCF Cover"}]
         harvest_pool = [{"ticker": "SCHD", "price": 76.20, "pe": 15.3, "growth": "4.2%", "divYield": "5.3%", "pegy": 1.1, "fcfYield": "5.1%", "strategyProfile": "Income ETF Core", "cashFlowInsight": "Stable FCF Cover"}]
 
@@ -114,7 +121,7 @@ def compute_pegy_matrix():
     with open("./top20.json", "w") as json_file:
         json.dump(output_matrix, json_file, indent=4)
         
-    print(f"✅ Success: Saved {len(compound_pool)} Compound and {len(harvest_pool)} Harvest rows.")
+    print(f"✅ Success: Saved {len(compound_pool)} Compound and {len(harvest_pool)} Harvest rows to top20.json.")
 
 if __name__ == "__main__":
     compute_pegy_matrix()
