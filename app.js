@@ -1,11 +1,16 @@
 /**
  * Quantum Dividend ETF Asset Screener - Core Application Script
- * Consumes the daily cloud-processed Top 20 array directly from the repository cache.
+ * Updated to support dynamic Compound vs. Harvest Phase switching
  */
+
+// Global state to store the fetched datasets locally
+let cachedMatrixData = { compound: [], harvest: [] };
+let activePhase = "compound";
 
 // --- 1. INITIALIZATION LIFECYCLE ---
 document.addEventListener("DOMContentLoaded", () => {
     initThemeEngine(); 
+    initPhaseEngine();
     fetchAutomatedDataStream();
 });
 
@@ -41,20 +46,56 @@ function applyTheme(theme) {
 }
 
 /**
- * --- 2. FAST LOCAL JSON DATALAYER CONSUMER ---
+ * --- 2. PHASE ENGINE SWAP CONTROLLER ---
+ */
+function initPhaseEngine() {
+    const btnCompound = document.getElementById("btn-compound");
+    const btnHarvest = document.getElementById("btn-harvest");
+    
+    if (!btnCompound || !btnHarvest) return;
+
+    btnCompound.addEventListener("click", () => {
+        if (activePhase === "compound") return;
+        activePhase = "compound";
+        
+        // Toggle visual UI button states
+        btnCompound.classList.add("active-phase-btn");
+        btnHarvest.classList.remove("active-phase-btn");
+        
+        // Render the filtered subset instantly
+        renderMatrixTable(cachedMatrixData.compound);
+    });
+
+    btnHarvest.addEventListener("click", () => {
+        if (activePhase === "harvest") return;
+        activePhase = "harvest";
+        
+        // Toggle visual UI button states
+        btnHarvest.classList.add("active-phase-btn");
+        btnCompound.classList.remove("active-phase-btn");
+        
+        // Render the filtered subset instantly
+        renderMatrixTable(cachedMatrixData.harvest);
+    });
+}
+
+/**
+ * --- 3. DUAL-STREAM JSON DATALAYER CONSUMER ---
  */
 async function fetchAutomatedDataStream() {
-    console.log("Initializing local cloud-processed matrix stream sync...");
+    console.log("Initializing dual-phase matrix stream sync...");
     try {
-        // Cache buster forces browser to always fetch fresh metrics without server edge throttling
         const response = await fetch(`./top20.json?nocache=${new Date().getTime()}`);
         
         if (!response.ok) {
             throw new Error(`Data store asset unreachable (Status: ${response.status})`);
         }
         
-        const processedTop20Assets = await response.json();
-        renderMatrixTable(processedTop20Assets);
+        // Save the structure containing both 'compound' and 'harvest' arrays
+        cachedMatrixData = await response.json();
+        
+        // Initial render based on default phase choice
+        renderMatrixTable(cachedMatrixData[activePhase]);
         
     } catch (error) {
         console.error("⚠️ Local Matrix Read Failure:", error.message);
@@ -62,12 +103,11 @@ async function fetchAutomatedDataStream() {
 }
 
 /**
- * --- 3. DOM RENDERING SEQUENCE ---
+ * --- 4. DOM RENDERING SEQUENCE ---
  */
 function renderMatrixTable(assets) {
-    // FIXED: Maps directly to your live 'matrix-table-body' table container ID
     const targetContainer = document.getElementById('matrix-table-body');
-    if (!targetContainer) return;
+    if (!targetContainer || !assets) return;
     
     let htmlContent = '';
     
@@ -75,8 +115,8 @@ function renderMatrixTable(assets) {
         const displayTicker = Array.isArray(asset.ticker) ? asset.ticker : asset.ticker;
         
         htmlContent += `
-            <tr class="hover:bg-gray-50 border-b border-gray-100 transition-colors">
-                <td class="px-4 py-3 font-bold text-gray-900">#${index + 1} - ${displayTicker}</td>
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 border-b border-gray-100 dark:border-gray-700 transition-colors">
+                <td class="px-4 py-3 font-bold text-gray-900 dark:text-gray-100">#${index + 1} - ${displayTicker}</td>
                 <td class="px-4 py-3">$${asset.price}</td>
                 <td class="px-4 py-3">${asset.pe}</td>
                 <td class="px-4 py-3">${asset.growth}</td>
@@ -90,5 +130,5 @@ function renderMatrixTable(assets) {
     });
     
     targetContainer.innerHTML = htmlContent;
-    console.log("Matrix table rendered completely.");
+    console.log(`Matrix table updated complete for phase: ${activePhase}`);
 }
