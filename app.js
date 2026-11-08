@@ -3,8 +3,10 @@
  * Consumes the daily cloud-processed Top 20 array directly from the repository cache.
  */
 
-// Global state cache to hold live data payload for instant script filtering
-let cachedAssets = [];
+// Global state cache to hold the separate portfolio matrices
+let cachedGrowthAssets = [];
+let cachedHarvestAssets = [];
+let activePortfolio = "growth"; // Defaults to tracking growth segments first
 
 // --- 1. INITIALIZATION LIFECYCLE ---
 document.addEventListener("DOMContentLoaded", () => {
@@ -45,10 +47,10 @@ function applyTheme(theme) {
 }
 
 /**
- * --- 2. FAST LOCAL JSON DATALAYER CONSUMER ---
+ * --- 2. FAST DUAL-KEY DATA CONSUMER ---
  */
 async function fetchAutomatedDataStream() {
-    console.log("Initializing local cloud-processed matrix stream sync...");
+    console.log("Initializing split-key cloud matrix stream sync...");
     try {
         const response = await fetch(`./top20.json?nocache=${new Date().getTime()}`);
         
@@ -56,12 +58,18 @@ async function fetchAutomatedDataStream() {
             throw new Error(`Data store asset unreachable (Status: ${response.status})`);
         }
         
-        cachedAssets = await response.json();
-        renderMatrixTable(cachedAssets);
+        const masterPayload = await response.json();
+        
+        // Explicitly ingest individual portfolio tracking buckets
+        cachedGrowthAssets = masterPayload.growth || [];
+        cachedHarvestAssets = masterPayload.harvest || [];
+        
+        // Render initial default view
+        routeActivePortfolio();
         
     } catch (error) {
         console.error("⚠️ Local Matrix Read Failure:", error.message);
-        const targetContainer = document.getElementById('matrix-telemetry-body');
+        const targetContainer = document.getElementById('matrix-table-body');
         if (targetContainer) {
             targetContainer.innerHTML = `<tr><td colspan="9" style="text-align: center; color: red; padding: 20px;">Failed to sync live matrix stream data.</td></tr>`;
         }
@@ -69,62 +77,57 @@ async function fetchAutomatedDataStream() {
 }
 
 /**
- * --- 3. DYNAMIC STRATEGY FILTRATION MODULE ---
+ * --- 3. DYNAMIC STRATEGY FILTRATION ROUTER ---
  */
 function initFilterEngine() {
-    const btnAll = document.getElementById("filter-all");
     const btnGrowth = document.getElementById("filter-growth");
     const btnHarvest = document.getElementById("filter-harvest");
 
-    if (!btnAll || !btnGrowth || !btnHarvest) return;
-
-    const buttons = [btnAll, btnGrowth, btnHarvest];
-
-    function updateActiveButtonState(activeBtn) {
-        buttons.forEach(btn => btn.classList.remove("active"));
-        activeBtn.classList.add("active");
-    }
-
-    btnAll.addEventListener("click", () => {
-        updateActiveButtonState(btnAll);
-        renderMatrixTable(cachedAssets);
-    });
+    if (!btnGrowth || !btnHarvest) return;
 
     btnGrowth.addEventListener("click", () => {
-        updateActiveButtonState(btnGrowth);
-        const growthFiltered = cachedAssets.filter(asset => {
-            const yieldVal = parseFloat(asset.divYield.replace('%', ''));
-            return yieldVal >= 1.5 && yieldVal <= 5.0;
-        });
-        renderMatrixTable(growthFiltered);
+        btnHarvest.classList.remove("active");
+        btnGrowth.classList.add("active");
+        activePortfolio = "growth";
+        routeActivePortfolio();
     });
 
     btnHarvest.addEventListener("click", () => {
-        updateActiveButtonState(btnHarvest);
-        const harvestFiltered = cachedAssets.filter(asset => {
-            const yieldVal = parseFloat(asset.divYield.replace('%', ''));
-            return yieldVal >= 5.1 && yieldVal <= 8.0;
-        });
-        renderMatrixTable(harvestFiltered);
+        btnGrowth.classList.remove("active");
+        btnHarvest.classList.add("active");
+        activePortfolio = "harvest";
+        routeActivePortfolio();
     });
+}
+
+function routeActivePortfolio() {
+    const portfolioTitle = document.getElementById("matrix-portfolio-title");
+    
+    if (activePortfolio === "growth") {
+        if (portfolioTitle) portfolioTitle.innerText = "Top 20 Filtered Investment Assets (Growth)";
+        renderMatrixTable(cachedGrowthAssets);
+    } else {
+        if (portfolioTitle) portfolioTitle.innerText = "Top 20 Filtered Investment Assets (Harvest)";
+        renderMatrixTable(cachedHarvestAssets);
+    }
 }
 
 /**
  * --- 4. DOM RENDERING SEQUENCE ---
  */
 function renderMatrixTable(assets) {
-    const targetContainer = document.getElementById('matrix-telemetry-body');
+    const targetContainer = document.getElementById('matrix-table-body');
     if (!targetContainer) return;
     
     if (assets.length === 0) {
-        targetContainer.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 20px;">No investment assets match the active filtration window.</td></tr>`;
+        targetContainer.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 30px;">No investment assets found matching the active filtration criteria.</td></tr>`;
         return;
     }
     
     let htmlContent = '';
     
     assets.forEach((asset, index) => {
-        const displayTicker = Array.isArray(asset.ticker) ? asset.ticker[0] : asset.ticker;
+        const displayTicker = Array.isArray(asset.ticker) ? asset.ticker : asset.ticker;
         
         htmlContent += `
             <tr class="hover:bg-gray-50 border-b border-gray-100 transition-colors">
@@ -142,5 +145,5 @@ function renderMatrixTable(assets) {
     });
     
     targetContainer.innerHTML = htmlContent;
-    console.log("Matrix table rendered completely.");
+    console.log(`Matrix table successfully updated for theme profile: ${activePortfolio}`);
 }
