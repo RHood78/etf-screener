@@ -1,4 +1,7 @@
 import json
+import time
+import random
+import requests
 import yfinance as yf
 import pandas as pd
 import numpy as np
@@ -940,11 +943,44 @@ MASTER_TICKERS = [
     "SIFY",
     "SIGA",
 ]
+
 MASTER_TICKERS = sorted(list(set(MASTER_TICKERS)))
 
 MACRO_SCALE_FACTOR = 1.0450
 PEGY_VALUE_THRESHOLD = 1.00
 FCF_YIELD_THRESHOLD = 5.50
+
+# Establish a globally shared HTTP session to handle cloud connection pooling
+session = requests.Session()
+session.headers.update({
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+})
+
+def fetch_ticker_info_with_backoff(ticker, max_retries=5):
+    """
+    Safely extracts ticker info payload with randomized linear delays 
+    and adaptive backoff multipliers to survive active runner rate limits.
+    """
+    base_delay = 3
+    for attempt in range(max_retries):
+        try:
+            # Apply dynamic linear jitter to break up scraping footprints
+            time.sleep(random.uniform(0.6, 1.5))
+            
+            ticker_object = yf.Ticker(ticker, session=session)
+            # Fetch information block directly
+            info = ticker_object.info
+            return ticker_object, info
+            
+        except Exception as e:
+            error_msg = str(e).lower()
+            if "429" in error_msg or "rate limit" in error_msg or "too many requests" in error_msg:
+                wait_time = (base_delay ** (attempt + 1)) + random.uniform(1.0, 3.0)
+                print(f"⚠️ [Rate Limited] Triggered on {ticker}. Pausing execution for {wait_time:.2f}s (Attempt {attempt+1}/{max_retries})...")
+                time.sleep(wait_time)
+            else:
+                raise e
+    return None, None
 
 def get_dividend_growth_rate(ticker_obj):
     """Calculates the 5-year annualized physical cash dividend growth rate."""
@@ -1013,8 +1049,9 @@ def compute_pegy_matrix():
     
     for ticker in MASTER_TICKERS:
         try:
-            ticker_object = yf.Ticker(ticker)
-            info = ticker_object.info
+            # Query the resilient wrapper instead of calling yf.Ticker directly
+            ticker_object, info = fetch_ticker_info_with_backoff(ticker)
+            
             if not info or (info.get("trailingPE") is None and info.get("dividendYield") is None):
                 continue
 
@@ -1046,7 +1083,6 @@ def compute_pegy_matrix():
                 else:
                     hist_close = bulk_data['Close'].dropna()
                 
-                # Check emptiness safely avoiding pandas ambiguity errors
                 if hist_close.shape[0] == 0:
                     continue
                 current_price = float(hist_close.iloc[-1])
