@@ -1,67 +1,70 @@
-[
-    {
-        "ticker": "AAUS",
-        "price": "61.49",
-        "pe": "23.65",
-        "growth": "5.00%",
-        "divYield": "3.30%",
-        "pegy": "2.85",
-        "fcfYield": "5.92%",
-        "strategyProfile": "Expensive (Monitor Entry) [ETF]",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 2,
-        "score_sort": 2.849807951807229
-    },
-    {
-        "ticker": "AAPU",
-        "price": "48.13",
-        "pe": "38.84",
-        "growth": "5.00%",
-        "divYield": "1.56%",
-        "pegy": "5.92",
-        "fcfYield": "5.92%",
-        "strategyProfile": "Expensive (Monitor Entry) [ETF]",
-        "cashFlowInsight": "High Quality Coverage",
-        "tier_priority": 2,
-        "score_sort": 5.921130030487804
-    },
-    {
-        "ticker": "AAPD",
-        "price": "10.47",
-        "pe": "16.20",
-        "growth": "5.00%",
-        "divYield": "4.50%",
-        "pegy": "1.71",
-        "fcfYield": "5.92%",
-        "strategyProfile": "Premium Valuation [ETF]",
-        "cashFlowInsight": "Stable / Low Coverage",
-        "tier_priority": 3,
-        "score_sort": 1.7052631578947368
-    },
-    {
-        "ticker": "AALG",
-        "price": "10.17",
-        "pe": "16.20",
-        "growth": "5.00%",
-        "divYield": "3.07%",
-        "pegy": "2.01",
-        "fcfYield": "5.92%",
-        "strategyProfile": "Premium Valuation [ETF]",
-        "cashFlowInsight": "Stable / Low Coverage",
-        "tier_priority": 3,
-        "score_sort": 2.007434944237918
-    },
-    {
-        "ticker": "SGC",
-        "price": "14.04",
-        "pe": "24.44",
-        "growth": "5.00%",
-        "divYield": "4.21%",
-        "pegy": "2.65",
-        "fcfYield": "14.29%",
-        "strategyProfile": "Premium Valuation [Stock]",
-        "cashFlowInsight": "Stable / Low Coverage",
-        "tier_priority": 3,
-        "score_sort": 2.65400246103048
-    }
-]
+{
+    "growth": [
+        {
+            "ticker": "AAUS",
+            "price": "61.49",
+            "pe": "23.65",
+            "growth": "5.00%",
+            "divYield": "3.30%",
+            "pegy": "2.85",
+            "fcfYield": "5.92%",
+            "strategyProfile": "Expensive (Monitor Entry) [ETF]",
+            "cashFlowInsight": "High Quality Coverage",
+            "tier_priority": 2,
+            "score_sort": 2.849807951807229
+        },
+        {
+            "ticker": "AAPU",
+            "price": "48.13",
+            "pe": "38.84",
+            "growth": "5.00%",
+            "divYield": "1.56%",
+            "pegy": "5.92",
+            "fcfYield": "5.92%",
+            "strategyProfile": "Expensive (Monitor Entry) [ETF]",
+            "cashFlowInsight": "High Quality Coverage",
+            "tier_priority": 2,
+            "score_sort": 5.921130030487804
+        },
+        {
+            "ticker": "AAPD",
+            "price": "10.47",
+            "pe": "16.20",
+            "growth": "5.00%",
+            "divYield": "4.50%",
+            "pegy": "1.71",
+            "fcfYield": "5.92%",
+            "strategyProfile": "Premium Valuation [ETF]",
+            "cashFlowInsight": "Stable / Low Coverage",
+            "tier_priority": 3,
+            "score_sort": 1.7052631578947368
+        },
+        {
+            "ticker": "AALG",
+            "price": "10.17",
+            "pe": "16.20",
+            "growth": "5.00%",
+            "divYield": "3.07%",
+            "pegy": "2.01",
+            "fcfYield": "5.92%",
+            "strategyProfile": "Premium Valuation [ETF]",
+            "cashFlowInsight": "Stable / Low Coverage",
+            "tier_priority": 3,
+            "score_sort": 2.007434944237918
+        },
+        {
+            "ticker": "SGC",
+            "price": "14.04",
+            "pe": "24.44",
+            "growth": "5.00%",
+            "divYield": "4.21%",
+            "pegy": "2.65",
+            "fcfYield": "14.29%",
+            "strategyProfile": "Premium Valuation [Stock]",
+            "cashFlowInsight": "Stable / Low Coverage",
+            "tier_priority": 3,
+            "score_sort": 2.65400246103048
+        }
+    ],
+    "harvest": []
+}
