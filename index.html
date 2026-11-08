@@ -4,64 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum Dividend Asset Screener</title>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="screener-card-frame" style="display: flex; justify-content: space-between; align-items: center; wrap: wrap; gap: 1rem;">
-            <div>
-                <h1 id="matrix-title">Quantum Dividend Stock & ETF Screener</h1>
-                <p class="subtitle-header">Multi-Factor Dual-Path Parsing Mathematical Evaluation Matrix Pipeline</p>
-            </div>
-    
-            <!-- Dynamic Theme Swapping Dashboard Controller -->
-            <div class="theme-switcher-panel">
-                <label for="theme-select" style="color: var(--text-muted); font-size: 0.875rem; font-weight: 600;">Theme:</label>
-                <select id="theme-select" class="theme-dropdown-control">
-                    <option value="light">☀️ Light Mode</option>
-                    <option value="dark">🌙 Dark Mode</option>
-                    <option value="system">💻 System Default</option>
-                </select>
-            </div>
-        </div>
-
-    </header>
     <main>
-        <div class="macro-banner">
-            <span id="fed-status" class="status-badge normal">Quantum Matrix Feed Active...</span>
-            <span id="macro-factor-display" class="factor-display">Macro Scale Factor: 1.0450</span>
-        </div>
-        <section class="results-panel">
-            <div class="results-header">
-                <h2>Top 20 Filtered Investment Assets</h2>
-            </div>
-            <div class="table-wrapper">
-             <!-- Main Investment Matrix Table Frame -->
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead>
-                    <tr>
-                        <th>Asset Profile</th>
-                        <th>Market Price</th>
-                        <th>Adjusted P/E</th>
-                        <th>Blended Growth</th>
-                        <th>Dividend Yield</th>
-                        <th>PEGY Ratio</th>
-                        <th>FCF Yield</th>
-                        <th>Strategy Profile</th>
-                        <th>Cash Flow Insight</th>
-                    </tr>
-                </thead>
-                
-                <!-- FIX: The JavaScript targets this exact ID to inject your asset rows -->
-                <tbody id="matrix-table-body">
-                    <tr id="matrix-awaiting-telemetry">
-                        <td colspan="9" style="text-align: center; padding: 20px; color: #6b7280;">
-                            Awaiting telemetry stream sync sequence...
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <h1>Quantum Dividend Stock & ETF Screener</h1>
+        <p>Multi-Factor Dual-Path Parsing Mathematical Evaluation Matrix Pipeline</p>
 
+        <!-- Theme Configuration Layer -->
+        <div class="theme-controls">
+            <button id="theme-light">☀ Light Mode</button>
+            <button id="theme-dark">🌙 Dark Mode</button>
+            <button id="theme-system">💻 System Default</button>
+        </div>
+
+        <div class="telemetry-bar">
+            <span>Quantum Matrix Feed Active... Macro Scale Factor: 1.0450</span>
+        </div>
+
+        <!-- STRATEGY FILTRATION BUTTON INTERFACE -->
+        <div class="filter-controls" style="margin: 20px 0; display: flex; gap: 10px;">
+            <button id="filter-all" class="filter-btn active" style="padding: 8px 16px; cursor: pointer; font-weight: bold;">All Assets</button>
+            <button id="filter-growth" class="filter-btn" style="padding: 8px 16px; cursor: pointer;">Growth Yield (1.5% - 5.0%)</button>
+            <button id="filter-harvest" class="filter-btn" style="padding: 8px 16px; cursor: pointer;">Harvest Yield (5.1% - 8.0%)</button>
+        </div>
+
+        <section class="matrix-container">
+            <h2>Top 20 Filtered Investment Assets</h2>
+            <div class="table-responsive">
+                <table id="asset-matrix-table">
+                    <thead>
+                        <tr>
+                            <th>Asset Profile</th>
+                            <th>Market Price</th>
+                            <th>Adjusted P/E</th>
+                            <th>Blended Growth</th>
+                            <th>Dividend Yield</th>
+                            <th>PEGY Ratio</th>
+                            <th>FCF Yield</th>
+                            <th>Strategy Profile</th>
+                            <th>Cash Flow Insight</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matrix-telemetry-body">
+                        <!-- Data rows dynamically injected via app.js -->
+                        <tr>
+                            <td colspan="9" style="text-align: center; padding: 20px;">Awaiting telemetry stream sync sequence...</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
     </main>
