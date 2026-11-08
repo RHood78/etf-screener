@@ -3,10 +3,14 @@
  * Consumes the daily cloud-processed Top 20 array directly from the repository cache.
  */
 
+// Global state cache to hold live data payload for instant script filtering
+let cachedAssets = [];
+
 // --- 1. INITIALIZATION LIFECYCLE ---
 document.addEventListener("DOMContentLoaded", () => {
     initThemeEngine(); 
     fetchAutomatedDataStream();
+    initFilterEngine();
 });
 
 /**
@@ -46,33 +50,81 @@ function applyTheme(theme) {
 async function fetchAutomatedDataStream() {
     console.log("Initializing local cloud-processed matrix stream sync...");
     try {
-        // Cache buster forces browser to always fetch fresh metrics without server edge throttling
         const response = await fetch(`./top20.json?nocache=${new Date().getTime()}`);
         
         if (!response.ok) {
             throw new Error(`Data store asset unreachable (Status: ${response.status})`);
         }
         
-        const processedTop20Assets = await response.json();
-        renderMatrixTable(processedTop20Assets);
+        cachedAssets = await response.json();
+        renderMatrixTable(cachedAssets);
         
     } catch (error) {
         console.error("⚠️ Local Matrix Read Failure:", error.message);
+        const targetContainer = document.getElementById('matrix-telemetry-body');
+        if (targetContainer) {
+            targetContainer.innerHTML = `<tr><td colspan="9" style="text-align: center; color: red; padding: 20px;">Failed to sync live matrix stream data.</td></tr>`;
+        }
     }
 }
 
 /**
- * --- 3. DOM RENDERING SEQUENCE ---
+ * --- 3. DYNAMIC STRATEGY FILTRATION MODULE ---
+ */
+function initFilterEngine() {
+    const btnAll = document.getElementById("filter-all");
+    const btnGrowth = document.getElementById("filter-growth");
+    const btnHarvest = document.getElementById("filter-harvest");
+
+    if (!btnAll || !btnGrowth || !btnHarvest) return;
+
+    const buttons = [btnAll, btnGrowth, btnHarvest];
+
+    function updateActiveButtonState(activeBtn) {
+        buttons.forEach(btn => btn.classList.remove("active"));
+        activeBtn.classList.add("active");
+    }
+
+    btnAll.addEventListener("click", () => {
+        updateActiveButtonState(btnAll);
+        renderMatrixTable(cachedAssets);
+    });
+
+    btnGrowth.addEventListener("click", () => {
+        updateActiveButtonState(btnGrowth);
+        const growthFiltered = cachedAssets.filter(asset => {
+            const yieldVal = parseFloat(asset.divYield.replace('%', ''));
+            return yieldVal >= 1.5 && yieldVal <= 5.0;
+        });
+        renderMatrixTable(growthFiltered);
+    });
+
+    btnHarvest.addEventListener("click", () => {
+        updateActiveButtonState(btnHarvest);
+        const harvestFiltered = cachedAssets.filter(asset => {
+            const yieldVal = parseFloat(asset.divYield.replace('%', ''));
+            return yieldVal >= 5.1 && yieldVal <= 8.0;
+        });
+        renderMatrixTable(harvestFiltered);
+    });
+}
+
+/**
+ * --- 4. DOM RENDERING SEQUENCE ---
  */
 function renderMatrixTable(assets) {
-    // FIXED: Maps directly to your live 'matrix-table-body' table container ID
-    const targetContainer = document.getElementById('matrix-table-body');
+    const targetContainer = document.getElementById('matrix-telemetry-body');
     if (!targetContainer) return;
+    
+    if (assets.length === 0) {
+        targetContainer.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 20px;">No investment assets match the active filtration window.</td></tr>`;
+        return;
+    }
     
     let htmlContent = '';
     
     assets.forEach((asset, index) => {
-        const displayTicker = Array.isArray(asset.ticker) ? asset.ticker : asset.ticker;
+        const displayTicker = Array.isArray(asset.ticker) ? asset.ticker[0] : asset.ticker;
         
         htmlContent += `
             <tr class="hover:bg-gray-50 border-b border-gray-100 transition-colors">
