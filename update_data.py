@@ -8,7 +8,7 @@ import numpy as np
 from datetime import datetime
 
 # --- MIXED MASTER SEED SHEET (Supports both Individual Stocks & ETFs) ---
-# Temporarily shortened for token efficiency during configuration tests
+# Expand this list back to your full 933 tickers as needed
 MASTER_TICKERS = [
     "AAAP", "AACG", "AADR", "AAEQ", "AAL", "AALG", "AAME", "AAON", "AAPB", "AAPD",
     "AAPL", "AAPU", "AAUS", "SGA", "SGC", "SIEB", "SIFY", "SIGA",
@@ -101,7 +101,7 @@ def check_performance_cagr(ticker_symbol, bulk_df):
         return 0.0, False
 
 def compute_pegy_matrix():
-    print(f"Initializing Dual-Path Hybrid Ranking Pipeline for {len(MASTER_TICKERS)} tickers...")
+    print(f"Initializing Dual-Path Split-Key Ranking Pipeline for {len(MASTER_TICKERS)} tickers...")
     
     try:
         bulk_data = yf.download(MASTER_TICKERS, period="10y", group_by="ticker", progress=False)
@@ -109,7 +109,8 @@ def compute_pegy_matrix():
         print(f"Bulk market feed failure: {e}")
         return
 
-    processed_assets = []
+    growth_assets = []
+    harvest_assets = []
     
     for ticker in MASTER_TICKERS:
         try:
@@ -134,9 +135,10 @@ def compute_pegy_matrix():
             
             yield_percentage = yield_indicator * 100.0
             
-            # ADJUSTED CAP: Expanded maximum range gate from 5.0 to 8.0 
-            # to capture high-yield and covered-call Harvest investments.
-            if yield_percentage < 1.5 or yield_percentage > 8.0:
+            is_growth_yield = 1.5 <= yield_percentage <= 5.0
+            is_harvest_yield = 5.1 <= yield_percentage <= 8.0
+            
+            if not (is_growth_yield or is_harvest_yield):
                 continue
 
             try:
@@ -196,7 +198,7 @@ def compute_pegy_matrix():
             
             asset_type_label = "ETF" if is_etf else "Stock"
             
-            processed_assets.append({
+            asset_payload = {
                 "ticker": ticker,
                 "price": f"{adjusted_price:.2f}",
                 "pe": f"{pe:.2f}",
@@ -207,21 +209,32 @@ def compute_pegy_matrix():
                 "strategyProfile": f"{profile} [{asset_type_label}]",
                 "cashFlowInsight": insight,
                 "tier_priority": int(tier),
-                "score_sort": float(pegy_ratio) 
-            })
-            print(f"Hybrid Matrix Mapping -> {ticker} ({asset_type_label}) assigned to Tier {tier}")
+                "score_sort": float(pegy_ratio)
+            }
+            
+            if is_growth_yield:
+                growth_assets.append(asset_payload)
+                print(f"Hybrid Matrix Mapping -> {ticker} ({asset_type_label}) targeted to Growth [Tier {tier}]")
+            elif is_harvest_yield:
+                harvest_assets.append(asset_payload)
+                print(f"Hybrid Matrix Mapping -> {ticker} ({asset_type_label}) targeted to Harvest [Tier {tier}]")
             
         except Exception as e:
             print(f"Skipping {ticker} due to parsing anomaly: {e}")
             continue
 
-    processed_assets.sort(key=lambda x: (x["tier_priority"], x["score_sort"]))
-    top_20 = processed_assets[:20]
+    growth_assets.sort(key=lambda x: (x["tier_priority"], x["score_sort"]))
+    harvest_assets.sort(key=lambda x: (x["tier_priority"], x["score_sort"]))
+    
+    final_output_payload = {
+        "growth": growth_assets[:20],
+        "harvest": harvest_assets[:20]
+    }
 
     with open("top20.json", "w") as f:
-        json.dump(top_20, f, indent=4)
+        json.dump(final_output_payload, f, indent=4)
         
-    print(f"\nSuccess! Standardized hybrid matrix saved seamlessly to top20.json.")
+    print(f"\nSuccess! Standardized split-key matrix saved seamlessly to top20.json.")
 
 if __name__ == "__main__":
     compute_pegy_matrix()
