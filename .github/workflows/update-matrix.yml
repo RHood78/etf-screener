@@ -1,7 +1,7 @@
 name: Update Global Dividend Matrix Data
 on:
   schedule:
-    - cron: '24 7 * * 1-5' # Runs automatically Monday-Friday at 7:24 AM UTC (Off-peak to avoid rate limits)
+    - cron: '30 22 * * 5' # Runs automatically Friday at 10:30 PM UTC (after hours to avoid rate limits)
   workflow_dispatch: # Allows you to click the manual "Run workflow" button
 
 jobs:
