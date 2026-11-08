@@ -7,6 +7,11 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 
+# This is to tell yfinance to completely turn off its local disk caching. 
+# This forces it to process everything directly in your computer's temporary memory (RAM), 
+# which completely eliminates disk-locking bugs.
+yf.set_tz_cache_location(None)
+
 # --- MIXED MASTER SEED SHEET (Supports both Individual Stocks & ETFs) ---
 # Expand this list back to your full 933 tickers as needed
 MASTER_TICKERS = [
