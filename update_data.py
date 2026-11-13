@@ -1156,14 +1156,25 @@ def compute_pegy_matrix():
                 "tier_priority": int(tier),
                 "score_sort": float(pegy_ratio)
             })
-            logger.info(f"Hybrid Matrix Mapping -> {ticker} ({asset_type_label}) assigned to Tier {tier}")
-
+                        
+            if is_growth_yield:
+                growth_assets.append(asset_payload)
+                print(f"Hybrid Matrix Mapping -> {ticker} ({asset_type_label}) targeted to Growth [Tier {tier}]")
+            elif is_harvest_yield:
+                harvest_assets.append(asset_payload)
+                print(f"Hybrid Matrix Mapping -> {ticker} ({asset_type_label}) targeted to Harvest [Tier {tier}]")
+            
         except Exception as e:
             logger.error(f"Skipping {ticker} due to parsing anomaly: {e}")
             continue
 
-    processed_assets.sort(key=lambda x: (x["tier_priority"], x["score_sort"]))
-    top_20 = processed_assets[:20]
+    growth_assets.sort(key=lambda x: (x["tier_priority"], x["score_sort"]))
+    harvest_assets.sort(key=lambda x: (x["tier_priority"], x["score_sort"]))
+    
+    final_output_payload = {
+        "growth": growth_assets[:20],
+        "harvest": harvest_assets[:20]
+    }
 
     try:
         with open("top20.json", "w") as f:
