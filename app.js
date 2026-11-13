@@ -45,35 +45,39 @@ function applyTheme(theme) {
 }
 
 /**
- * --- 2. BUCKET TAB BUTTON ORCHESTRATION ---
- * Supports buttons via IDs (#btn-growth / #btn-harvest), data-bucket attributes, or button text.
+ * --- 2. STRATEGY NAVIGATION BUTTONS ---
+ * Wired directly to #filter-growth, #filter-harvest, and #matrix-portfolio-title
  */
 function initBucketButtons() {
-    const growthBtn = document.getElementById("btn-growth") || document.querySelector('[data-bucket="growth"]');
-    const harvestBtn = document.getElementById("btn-harvest") || document.querySelector('[data-bucket="harvest"]');
+    const growthBtn = document.getElementById("filter-growth");
+    const harvestBtn = document.getElementById("filter-harvest");
 
-    if (growthBtn && harvestBtn) {
-        growthBtn.addEventListener("click", () => switchBucket("growth", growthBtn, harvestBtn));
-        harvestBtn.addEventListener("click", () => switchBucket("harvest", harvestBtn, growthBtn));
-        return;
+    if (growthBtn) {
+        growthBtn.addEventListener("click", () => switchBucket("growth"));
     }
-
-    // Fallback: auto-detect any <button> containing "Growth" or "Harvest" text
-    document.querySelectorAll("button").forEach((btn) => {
-        const label = btn.textContent.trim().toLowerCase();
-        if (label.includes("growth")) {
-            btn.addEventListener("click", () => switchBucket("growth", btn, null));
-        } else if (label.includes("harvest")) {
-            btn.addEventListener("click", () => switchBucket("harvest", btn, null));
-        }
-    });
+    if (harvestBtn) {
+        harvestBtn.addEventListener("click", () => switchBucket("harvest"));
+    }
 }
 
-function switchBucket(bucketName, activeBtn, inactiveBtn) {
+function switchBucket(bucketName) {
     activeBucket = bucketName;
 
-    if (activeBtn) activeBtn.classList.add("active");
-    if (inactiveBtn) inactiveBtn.classList.remove("active");
+    const growthBtn = document.getElementById("filter-growth");
+    const harvestBtn = document.getElementById("filter-harvest");
+    const portfolioTitle = document.getElementById("matrix-portfolio-title");
+
+    // Toggle active button styling
+    if (growthBtn && harvestBtn) {
+        growthBtn.classList.toggle("active", bucketName === "growth");
+        harvestBtn.classList.toggle("active", bucketName === "harvest");
+    }
+
+    // Update section heading to match active portfolio
+    if (portfolioTitle) {
+        const label = bucketName === "growth" ? "Growth" : "Harvest";
+        portfolioTitle.textContent = `Top 20 Filtered Investment Assets (${label})`;
+    }
 
     renderMatrixTable(matrixDataStore[activeBucket] || []);
 }
@@ -92,7 +96,7 @@ async function fetchAutomatedDataStream() {
 
         const payload = await response.json();
 
-        // Support both the new { growth, harvest } object and legacy flat arrays
+        // Support both { growth: [...], harvest: [...] } and legacy flat arrays
         if (Array.isArray(payload)) {
             matrixDataStore.growth = payload;
             matrixDataStore.harvest = [];
@@ -112,35 +116,35 @@ async function fetchAutomatedDataStream() {
  * --- 4. DOM RENDERING SEQUENCE ---
  */
 function renderMatrixTable(assets) {
-    const targetContainer = document.getElementById('matrix-table-body');
+    const targetContainer = document.getElementById("matrix-table-body");
     if (!targetContainer) return;
 
     if (!assets || assets.length === 0) {
         targetContainer.innerHTML = `
             <tr>
-                <td colspan="9" class="px-4 py-6 text-center text-gray-500">
-                    No assets found for the ${activeBucket.toUpperCase()} strategy bucket.
+                <td colspan="9" style="text-align: center; padding: 30px;">
+                    No assets currently qualify for the ${activeBucket.toUpperCase()} portfolio.
                 </td>
             </tr>
         `;
         return;
     }
 
-    let htmlContent = '';
+    let htmlContent = "";
 
     assets.forEach((asset, index) => {
         const displayTicker = Array.isArray(asset.ticker) ? asset.ticker[0] : asset.ticker;
 
-        // Avoid double '%%' if Python already formatted divYield with a '%' sign
-        const rawYield = String(asset.divYield || '');
-        const divYield = rawYield ? (rawYield.endsWith('%') ? rawYield : `${rawYield}%`) : 'N/A';
+        // Prevent double '%%' since Python already appends '%'
+        const rawYield = String(asset.divYield || "");
+        const divYield = rawYield ? (rawYield.endsWith("%") ? rawYield : `${rawYield}%`) : "N/A";
 
-        const pe = asset.pe || 'N/A';
-        const growth = asset.growth || 'N/A';
-        const pegy = asset.pegy || 'N/A';
-        const fcfYield = asset.fcfYield || 'N/A';
-        const strategyProfile = asset.strategyProfile || 'N/A';
-        const cashFlowInsight = asset.cashFlowInsight || 'N/A';
+        const pe = asset.pe || "N/A";
+        const growth = asset.growth || "N/A";
+        const pegy = asset.pegy || "N/A";
+        const fcfYield = asset.fcfYield || "N/A";
+        const strategyProfile = asset.strategyProfile || "N/A";
+        const cashFlowInsight = asset.cashFlowInsight || "N/A";
 
         htmlContent += `
             <tr class="hover:bg-gray-50 border-b border-gray-100 transition-colors">
