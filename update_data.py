@@ -1,11 +1,9 @@
 import json
 import time
 import random
-import requests
 import yfinance as yf
 import pandas as pd
 import numpy as np
-from datetime import datetime
 import logging
 
 # --- MIXED MASTER SEED SHEET (Supports both Individual Stocks & ETFs) ---
@@ -942,22 +940,23 @@ MASTER_TICKERS = [
     "SGC",
     "SIEB",
     "SIFY",
-    "SIGA",
+    "SIGA"
 ]
 MASTER_TICKERS = sorted(list(set(MASTER_TICKERS)))
+
 MACRO_SCALE_FACTOR = 1.0450
 PEGY_VALUE_THRESHOLD = 1.00
 FCF_YIELD_THRESHOLD = 5.50
 
-# Global shared connection session to bypass GitHub Actions rate limits
-session = requests.Session()
-session.headers.update({
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-})
+# Yield boundaries for Growth vs. Harvest buckets (within your 1.5% - 5.0% filter)
+MIN_YIELD_THRESHOLD = 1.50
+GROWTH_HARVEST_SPLIT = 3.00  # < 3.0% goes to Growth; >= 3.0% goes to Harvest
+MAX_YIELD_THRESHOLD = 5.00
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
 
 def fetch_ticker_info_with_backoff(ticker, max_retries=5):
     """
@@ -968,20 +967,24 @@ def fetch_ticker_info_with_backoff(ticker, max_retries=5):
     for attempt in range(max_retries):
         try:
             time.sleep(random.uniform(0.6, 1.5))
-            ticker_object = yf.Ticker(ticker, session=session)
+            ticker_object = yf.Ticker(ticker)
             info = ticker_object.info
             return ticker_object, info
-        except requests.exceptions.RequestException as e:
+        except Exception as e:
             error_msg = str(e).lower()
             if "429" in error_msg or "rate limit" in error_msg or "too many requests" in error_msg:
                 wait_time = (base_delay ** (attempt + 1)) + random.uniform(1.0, 3.0)
-                logger.warning(f"⚠️ [Rate Limited] Triggered on {ticker}. Pausing execution for {wait_time:.2f}s (Attempt {attempt+1}/{max_retries})...")
+                logger.warning(
+                    f"⚠️ [Rate Limited] Triggered on {ticker}. Pausing execution for {wait_time:.2f}s "
+                    f"(Attempt {attempt+1}/{max_retries})..."
+                )
                 time.sleep(wait_time)
             else:
                 logger.error(f"Failed to fetch {ticker}: {e}")
                 raise e
     logger.error(f"Failed to fetch {ticker} after {max_retries} attempts.")
     return None, None
+
 
 def get_dividend_growth_rate(ticker_obj):
     """Calculates the 5-year annualized physical cash dividend growth rate."""
@@ -999,7 +1002,7 @@ def get_dividend_growth_rate(ticker_obj):
         if start_val <= 0 or end_val <= 0:
             logger.warning(f"Invalid dividend values for {ticker_obj.ticker}. Returning default CAGR.")
             return 5.0
-        cagr = ((end_val / start_val) ** (1/4) - 1) * 100
+        cagr = ((end_val / start_val) ** (1 / 4) - 1) * 100
         if cagr <= 0.1 or cagr > 20.0 or np.isnan(cagr):
             logger.warning(f"Invalid CAGR for {ticker_obj.ticker}. Returning default CAGR.")
             return 5.0
@@ -1007,6 +1010,7 @@ def get_dividend_growth_rate(ticker_obj):
     except Exception as e:
         logger.error(f"Error calculating dividend growth rate for {ticker_obj.ticker}: {e}")
         return 5.0
+
 
 def check_performance_cagr(ticker_symbol, bulk_df):
     """Calculates historical 1, 5, and 10 year price growth vectors to confirm upward trends."""
@@ -1032,8 +1036,8 @@ def check_performance_cagr(ticker_symbol, bulk_df):
         val_10y = float(close.iloc[0])
 
         cagr_1 = ((current_price / val_1y) - 1) * 100 if val_1y > 0 else 0.0
-        cagr_5 = ((current_price / val_5y) ** (1/5) - 1) * 100 if current_price > 0 and val_5y > 0 else 0.0
-        cagr_10 = ((current_price / val_10y) ** (1/10) - 1) * 100 if current_price > 0 and val_10y > 0 else 0.0
+        cagr_5 = ((current_price / val_5y) ** (1 / 5) - 1) * 100 if current_price > 0 and val_5y > 0 else 0.0
+        cagr_10 = ((current_price / val_10y) ** (1 / 10) - 1) * 100 if current_price > 0 and val_10y > 0 else 0.0
 
         trends_upward = bool(current_price > val_1y and val_1y > val_5y)
         avg_cagr = float(cagr_1 + cagr_5 + cagr_10) / 3
@@ -1043,6 +1047,7 @@ def check_performance_cagr(ticker_symbol, bulk_df):
         logger.error(f"Error checking performance CAGR for {ticker_symbol}: {e}")
         return 0.0, False
 
+
 def compute_pegy_matrix():
     logger.info("Initializing Dual-Path Hybrid Ranking Pipeline for %d tickers...", len(MASTER_TICKERS))
 
@@ -1051,7 +1056,9 @@ def compute_pegy_matrix():
     except Exception as e:
         logger.error(f"Bulk market feed failure: {e}")
         return
-    processed_assets = []
+
+    growth_assets = []
+    harvest_assets = []
 
     for ticker in MASTER_TICKERS:
         try:
@@ -1065,7 +1072,7 @@ def compute_pegy_matrix():
             is_etf = "ETF" in quote_type or "MUTUALFUND" in quote_type
 
             if is_etf:
-                expense_ratio = info.get("expenseRatio", 0.0) or 0.0
+                expense_ratio = info.get("expenseRatio") or 0.0
                 if expense_ratio > 0.0050:
                     logger.warning(f"High expense ratio for {ticker}. Skipping.")
                     continue
@@ -1073,28 +1080,33 @@ def compute_pegy_matrix():
                 if pb_ratio <= 0 or np.isnan(pb_ratio):
                     logger.warning(f"Invalid P/B ratio for {ticker}. Using default value.")
                     pb_ratio = 1.8
-                turnover = info.get("portfolioTurnover", 0.20) or 0.20
+                turnover = info.get("portfolioTurnover") or 0.20
                 dynamic_fcf = (1.0 / pb_ratio) * (10.0 + turnover)
             else:
-                expense_ratio = 0.0
-                market_cap = info.get("marketCap", 0)
-                free_cash_flow = info.get("freeCashflow") or info.get("operatingCashflow", 0) * 0.75
+                market_cap = info.get("marketCap") or 0
+                op_cashflow = info.get("operatingCashflow") or 0
+                free_cash_flow = info.get("freeCashflow") or (op_cashflow * 0.75)
+
                 if market_cap > 0 and free_cash_flow > 0:
                     dynamic_fcf = (free_cash_flow / market_cap) * 100.0
                 else:
-                    pb_ratio = info.get("priceToBook", 2.5) or 2.5
+                    pb_ratio = info.get("priceToBook") or 2.5
                     if pb_ratio <= 0 or np.isnan(pb_ratio):
                         logger.warning(f"Invalid P/B ratio for {ticker}. Using default value.")
                         pb_ratio = 2.5
                     dynamic_fcf = (1.0 / pb_ratio) * 12.0
 
-            yield_indicator = info.get("trailingAnnualDividendYield") or info.get("dividendYield") or 0.0
-            if yield_indicator >= 0.20:
-                yield_indicator = yield_indicator / 100.0 if yield_indicator > 1.0 else yield_indicator * 0.10
+            # Normalize dividend yield cleanly
+            if info.get("trailingAnnualDividendYield") is not None:
+                yield_percentage = float(info["trailingAnnualDividendYield"]) * 100.0
+            elif info.get("dividendYield") is not None:
+                raw_yield = float(info["dividendYield"])
+                yield_percentage = raw_yield * 100.0 if raw_yield < 0.20 else raw_yield
+            else:
+                yield_percentage = 0.0
 
-            yield_percentage = yield_indicator * 100.0
-            if yield_percentage < 1.5 or yield_percentage > 5.0:
-                logger.warning(f"Invalid yield percentage for {ticker}. Skipping.")
+            if yield_percentage < MIN_YIELD_THRESHOLD or yield_percentage > MAX_YIELD_THRESHOLD:
+                logger.warning(f"Yield {yield_percentage:.2f}% out of range for {ticker}. Skipping.")
                 continue
 
             try:
@@ -1133,17 +1145,17 @@ def compute_pegy_matrix():
             meets_cagr_target = bool(avg_cagr >= 5.0)
 
             if is_low_pegy and is_high_fcf and is_trending_up and meets_cagr_target:
-                profile, insight, tier = "Strong Signal (Cash Generator)", "High Quality Coverage", 1  
+                profile, insight, tier = "Strong Signal (Cash Generator)", "High Quality Coverage", 1
             elif is_high_fcf and is_trending_up:
-                profile, insight, tier = "Expensive (Monitor Entry)", "High Quality Coverage", 2  
+                profile, insight, tier = "Expensive (Monitor Entry)", "High Quality Coverage", 2
             elif is_low_pegy and not is_high_fcf:
-                profile, insight, tier = "Value Trap (Cash-Strapped)", "Weak Coverage Risk", 4  
+                profile, insight, tier = "Value Trap (Cash-Strapped)", "Weak Coverage Risk", 4
             else:
-                profile, insight, tier = "Premium Valuation", "Stable / Low Coverage", 3  
+                profile, insight, tier = "Premium Valuation", "Stable / Low Coverage", 3
 
             asset_type_label = "ETF" if is_etf else "Stock"
 
-            processed_assets.append({
+            asset_payload = {
                 "ticker": ticker,
                 "price": f"{adjusted_price:.2f}",
                 "pe": f"{pe:.2f}",
@@ -1155,22 +1167,26 @@ def compute_pegy_matrix():
                 "cashFlowInsight": insight,
                 "tier_priority": int(tier),
                 "score_sort": float(pegy_ratio)
-            })
-                        
+            }
+
+            # Route into Growth vs. Harvest buckets
+            is_growth_yield = MIN_YIELD_THRESHOLD <= yield_percentage < GROWTH_HARVEST_SPLIT
+            is_harvest_yield = GROWTH_HARVEST_SPLIT <= yield_percentage <= MAX_YIELD_THRESHOLD
+
             if is_growth_yield:
                 growth_assets.append(asset_payload)
-                print(f"Hybrid Matrix Mapping -> {ticker} ({asset_type_label}) targeted to Growth [Tier {tier}]")
+                logger.info(f"Hybrid Matrix Mapping -> {ticker} ({asset_type_label}) targeted to Growth [Tier {tier}]")
             elif is_harvest_yield:
                 harvest_assets.append(asset_payload)
-                print(f"Hybrid Matrix Mapping -> {ticker} ({asset_type_label}) targeted to Harvest [Tier {tier}]")
-            
+                logger.info(f"Hybrid Matrix Mapping -> {ticker} ({asset_type_label}) targeted to Harvest [Tier {tier}]")
+
         except Exception as e:
             logger.error(f"Skipping {ticker} due to parsing anomaly: {e}")
             continue
 
     growth_assets.sort(key=lambda x: (x["tier_priority"], x["score_sort"]))
     harvest_assets.sort(key=lambda x: (x["tier_priority"], x["score_sort"]))
-    
+
     final_output_payload = {
         "growth": growth_assets[:20],
         "harvest": harvest_assets[:20]
@@ -1178,11 +1194,15 @@ def compute_pegy_matrix():
 
     try:
         with open("top20.json", "w") as f:
-            json.dump(top_20, f, indent=4)
-        logger.info("Success! Standardized hybrid matrix saved seamlessly to top20.json.")
+            json.dump(final_output_payload, f, indent=4)
+        logger.info(
+            "Success! Saved %d Growth and %d Harvest assets to top20.json.",
+            len(final_output_payload["growth"]),
+            len(final_output_payload["harvest"])
+        )
     except IOError as e:
         logger.error(f"Failed to write to top20.json: {e}")
 
+
 if __name__ == "__main__":
     compute_pegy_matrix()
-    
