@@ -1,10 +1,18 @@
 /**
  * Quantum Dividend ETF Asset Screener - Core Application Script
- * Consumes the daily cloud-processed Top 20 array directly from the repository cache.
+ * Consumes the daily cloud-processed Growth & Harvest Top 20 buckets.
  */
+
+let matrixDataStore = {
+    growth: [],
+    harvest: []
+};
+let activeBucket = "growth";
+
 // --- 1. INITIALIZATION LIFECYCLE ---
 document.addEventListener("DOMContentLoaded", () => {
     initThemeEngine();
+    initBucketButtons();
     fetchAutomatedDataStream();
 });
 
@@ -37,20 +45,63 @@ function applyTheme(theme) {
 }
 
 /**
- * --- 2. FAST LOCAL JSON DATALAYER CONSUMER ---
+ * --- 2. BUCKET TAB BUTTON ORCHESTRATION ---
+ * Supports buttons via IDs (#btn-growth / #btn-harvest), data-bucket attributes, or button text.
+ */
+function initBucketButtons() {
+    const growthBtn = document.getElementById("btn-growth") || document.querySelector('[data-bucket="growth"]');
+    const harvestBtn = document.getElementById("btn-harvest") || document.querySelector('[data-bucket="harvest"]');
+
+    if (growthBtn && harvestBtn) {
+        growthBtn.addEventListener("click", () => switchBucket("growth", growthBtn, harvestBtn));
+        harvestBtn.addEventListener("click", () => switchBucket("harvest", harvestBtn, growthBtn));
+        return;
+    }
+
+    // Fallback: auto-detect any <button> containing "Growth" or "Harvest" text
+    document.querySelectorAll("button").forEach((btn) => {
+        const label = btn.textContent.trim().toLowerCase();
+        if (label.includes("growth")) {
+            btn.addEventListener("click", () => switchBucket("growth", btn, null));
+        } else if (label.includes("harvest")) {
+            btn.addEventListener("click", () => switchBucket("harvest", btn, null));
+        }
+    });
+}
+
+function switchBucket(bucketName, activeBtn, inactiveBtn) {
+    activeBucket = bucketName;
+
+    if (activeBtn) activeBtn.classList.add("active");
+    if (inactiveBtn) inactiveBtn.classList.remove("active");
+
+    renderMatrixTable(matrixDataStore[activeBucket] || []);
+}
+
+/**
+ * --- 3. FAST LOCAL JSON DATALAYER CONSUMER ---
  */
 async function fetchAutomatedDataStream() {
     console.log("Initializing local cloud-processed matrix stream sync...");
     try {
-        // Cache buster forces browser to always fetch fresh metrics without server edge throttling
         const response = await fetch(`./top20.json?nocache=${new Date().getTime()}`);
 
         if (!response.ok) {
             throw new Error(`Data store asset unreachable (Status: ${response.status})`);
         }
 
-        const processedTop20Assets = await response.json();
-        renderMatrixTable(processedTop20Assets);
+        const payload = await response.json();
+
+        // Support both the new { growth, harvest } object and legacy flat arrays
+        if (Array.isArray(payload)) {
+            matrixDataStore.growth = payload;
+            matrixDataStore.harvest = [];
+        } else {
+            matrixDataStore.growth = payload.growth || [];
+            matrixDataStore.harvest = payload.harvest || [];
+        }
+
+        renderMatrixTable(matrixDataStore[activeBucket]);
 
     } catch (error) {
         console.error("⚠️ Local Matrix Read Failure:", error.message);
@@ -58,20 +109,32 @@ async function fetchAutomatedDataStream() {
 }
 
 /**
- * --- 3. DOM RENDERING SEQUENCE ---
+ * --- 4. DOM RENDERING SEQUENCE ---
  */
 function renderMatrixTable(assets) {
-    // FIXED: Maps directly to your live 'matrix-table-body' table container ID
     const targetContainer = document.getElementById('matrix-table-body');
     if (!targetContainer) return;
+
+    if (!assets || assets.length === 0) {
+        targetContainer.innerHTML = `
+            <tr>
+                <td colspan="9" class="px-4 py-6 text-center text-gray-500">
+                    No assets found for the ${activeBucket.toUpperCase()} strategy bucket.
+                </td>
+            </tr>
+        `;
+        return;
+    }
 
     let htmlContent = '';
 
     assets.forEach((asset, index) => {
-        const displayTicker = Array.isArray(asset.ticker) ? asset.ticker : asset.ticker;
+        const displayTicker = Array.isArray(asset.ticker) ? asset.ticker[0] : asset.ticker;
 
-        // Validate and handle missing or invalid data
-        const divYield = asset.divYield ? `${asset.divYield}%` : 'N/A';
+        // Avoid double '%%' if Python already formatted divYield with a '%' sign
+        const rawYield = String(asset.divYield || '');
+        const divYield = rawYield ? (rawYield.endsWith('%') ? rawYield : `${rawYield}%`) : 'N/A';
+
         const pe = asset.pe || 'N/A';
         const growth = asset.growth || 'N/A';
         const pegy = asset.pegy || 'N/A';
@@ -95,5 +158,5 @@ function renderMatrixTable(assets) {
     });
 
     targetContainer.innerHTML = htmlContent;
-    console.log("Matrix table rendered completely.");
+    console.log(`Matrix table rendered completely for [${activeBucket}].`);
 }
