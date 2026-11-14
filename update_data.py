@@ -972,10 +972,12 @@ def fetch_ticker_info_with_backoff(ticker, max_retries=5):
             return ticker_object, info
         except Exception as e:
             error_msg = str(e).lower()
-            if "429" in error_msg or "rate limit" in error_msg or "too many requests" in error_msg:
+            is_rate_limit = ("429" in error_msg or "rate limit" in error_msg or "too many requests" in error_msg)
+            is_transient = any(kw in error_msg for kw in ["timeout", "connection", "retry", "temporary", "429", "408", "503"])
+            if is_rate_limit or is_transient:
                 wait_time = (base_delay ** (attempt + 1)) + random.uniform(1.0, 3.0)
                 logger.warning(
-                    f"⚠️ [Rate Limited] Triggered on {ticker}. Pausing for {wait_time:.2f}s "
+                    f"⚠️ [{('Rate Limited' if is_rate_limit else 'Transient failure')}] Retrying {ticker} after {wait_time:.2f}s "
                     f"(Attempt {attempt+1}/{max_retries})..."
                 )
                 time.sleep(wait_time)
@@ -991,25 +993,26 @@ def get_dividend_growth_rate(ticker_obj):
     try:
         divs = ticker_obj.dividends
         if divs.empty or len(divs) < 4:
-            logger.warning(f"Not enough dividend data for {ticker_obj.ticker}. Returning default CAGR.")
-            return 5.0
+            logger.warning(f"Not enough dividend data for {ticker_obj.ticker}. Using neutral default.")
+            return 1.0
         annual_divs = divs.resample('YE').sum()
         if len(annual_divs) < 5:
-            logger.warning(f"Not enough annual dividend data for {ticker_obj.ticker}. Returning default CAGR.")
-            return 5.0
+            logger.warning(f"Not enough annual dividend data for {ticker_obj.ticker}. Using neutral default.")
+            return 1.0
         start_val = float(annual_divs.iloc[-5])
         end_val = float(annual_divs.iloc[-1])
         if start_val <= 0 or end_val <= 0:
-            logger.warning(f"Invalid dividend values for {ticker_obj.ticker}. Returning default CAGR.")
-            return 5.0
+            logger.warning(f"Invalid dividend values for {ticker_obj.ticker}. Using neutral default.")
+            return 1.0
         cagr = ((end_val / start_val) ** (1 / 4) - 1) * 100
-        if cagr <= 0.1 or cagr > 20.0 or np.isnan(cagr):
-            logger.warning(f"Invalid CAGR for {ticker_obj.ticker}. Returning default CAGR.")
-            return 5.0
+        # Allow negative CAGR (dividend cuts/stagnation is real data). Only reject if impossibly high or non-numeric.
+        if cagr > 20.0 or np.isnan(cagr) or np.isinf(cagr):
+            logger.warning(f"Unrealistic CAGR for {ticker_obj.ticker}: {cagr:.2f}%. Using neutral default.")
+            return 1.0
         return cagr
     except Exception as e:
         logger.error(f"Error calculating dividend growth rate for {ticker_obj.ticker}: {e}")
-        return 5.0
+        return 1.0
 
 
 def check_performance_cagr(ticker_symbol, bulk_df):
@@ -1096,16 +1099,18 @@ def compute_pegy_matrix():
                         pb_ratio = 2.5
                     dynamic_fcf = (1.0 / pb_ratio) * 12.0
 
-            # Normalize dividend yield cleanly
+            # Normalize dividend yield cleanly (both Yahoo fields are decimal fractions)
             if info.get("trailingAnnualDividendYield") is not None:
-                yield_percentage = float(info["trailingAnnualDividendYield"]) * 100.0
+                raw_yield = float(info["trailingAnnualDividendYield"])
+                yield_percentage = raw_yield * 100.0
             elif info.get("dividendYield") is not None:
                 raw_yield = float(info["dividendYield"])
-                yield_percentage = raw_yield * 100.0 if raw_yield < 0.20 else raw_yield
+                # Yahoo always returns dividendYield as a decimal fraction (e.g. 0.035 → 3.5%)
+                yield_percentage = raw_yield * 100.0
             else:
                 yield_percentage = 0.0
 
-            # Filter for 1.5% to 8.0% total range
+            # Filter for 1.5% to 8.0% total range (Growth: 1.5%-5.0%, Harvest: >5.0%-8.0%)
             if yield_percentage < GROWTH_MIN_YIELD or yield_percentage > HARVEST_MAX_YIELD:
                 logger.warning(f"Yield {yield_percentage:.2f}% out of range for {ticker}. Skipping.")
                 continue
@@ -1124,10 +1129,11 @@ def compute_pegy_matrix():
                 logger.error(f"Error fetching historical data for {ticker}: {e}")
                 continue
 
-            pe = info.get("trailingPE") or info.get("forwardPE") or 16.2
-            if pe <= 2.0 or pe > 50.0 or np.isnan(pe):
-                logger.warning(f"Invalid P/E ratio for {ticker}. Using default value.")
-                pe = 16.2
+            # Use trailing PE if available, fall back to forward PE — do NOT substitute a fake value
+            pe = info.get("trailingPE") or info.get("forwardPE")
+            if pe is None or pe <= 0 or pe > 50.0 or np.isnan(pe):
+                logger.warning(f"No valid P/E ratio for {ticker} (got {pe}). Skipping.")
+                continue
 
             avg_cagr, is_trending_up = check_performance_cagr(ticker, bulk_data)
             growth_percentage = get_dividend_growth_rate(ticker_object)
@@ -1174,7 +1180,7 @@ def compute_pegy_matrix():
             if GROWTH_MIN_YIELD <= yield_percentage <= GROWTH_MAX_YIELD:
                 growth_assets.append(asset_payload)
                 logger.info(f"Hybrid Matrix Mapping -> {ticker} ({asset_type_label}) targeted to Growth [Tier {tier}]")
-            elif GROWTH_MAX_YIELD < yield_percentage <= HARVEST_MAX_YIELD:
+            elif yield_percentage > GROWTH_MAX_YIELD and yield_percentage <= HARVEST_MAX_YIELD:
                 harvest_assets.append(asset_payload)
                 logger.info(f"Hybrid Matrix Mapping -> {ticker} ({asset_type_label}) targeted to Harvest [Tier {tier}]")
 
