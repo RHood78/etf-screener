@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum Dividend Asset Screener</title>
-    <!-- LINK TO YOUR ORIGINAL CSS FILE RESTORED -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <div class="screener-card-frame" style="display: flex; justify-content: space-between; align-items: center; wrap: wrap; gap: 1rem;">
+        <div class="screener-card-frame" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <div>
                 <h1>Quantum Dividend Stock & ETF Screener</h1>
                 <p>Multi-Factor Dual-Path Parsing Mathematical Evaluation Matrix Pipeline</p>
@@ -33,12 +32,12 @@
         <!-- STRATEGY NAVIGATION PLATFORM -->
         <div class="filter-controls" style="margin: 25px 0; display: flex; gap: 12px;">
             <button id="filter-growth" class="filter-btn active" style="padding: 10px 20px; cursor: pointer; font-weight: bold;">Growth Yield Portfolio (1.5% - 5.0%)</button>
-            <button id="filter-harvest" class="filter-btn" style="padding: 10px 20px; cursor: pointer; font-weight: bold;">Harvest Yield Portfolio (5.1% - 8.0%)</button>
+            <button id="filter-harvest" class="filter-btn" style="padding: 10px 20px; cursor: pointer; font-weight: bold;">Harvest Yield Portfolio (>5.0% - 8.0%)</button>
         </div>
 
         <section class="matrix-container">
             <h2 id="matrix-portfolio-title">Top 20 Filtered Investment Assets (Growth)</h2>
-            <div class="table-responsive">
+            <div class="table-scroll-container">
                 <table id="asset-matrix-table">
                     <thead>
                         <tr>
